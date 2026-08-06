@@ -7,8 +7,29 @@
 
     <!-- Cada control nuevo se agrega aquí como una fila de estados, para comparar    -->
     <!-- contra las capturas de referencia sin tener que armar una app completa.      -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <!-- El margen inferior deja libre el grow box, que se dibuja encima del         -->
+    <!-- contenido: sin él, la flecha de bajar de la barra queda tapada.             -->
+    <!-- El margen derecho negativo hace que el filo de la barra coincida con el     -->
+    <!-- del marco en vez de sumarse a él, que es lo que lo hacía verse doble.       -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,-1,16">
     <StackPanel Margin="20,16">
+
+        <TabControl Margin="0,0,0,22" Height="150">
+            <TabItem Header="Alerts">
+                <StackPanel>
+                    <CheckBox Content="Play alert sounds" IsChecked="True" Margin="0,0,0,8" />
+                    <CheckBox Content="Play startup sound" />
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Output">
+                <RadioButton Content="Built-in speaker" IsChecked="True" />
+            </TabItem>
+            <TabItem Header="Input">
+                <TextBlock Text="Sin dispositivos de entrada."
+                           FontFamily="{StaticResource ViewFontFamily}"
+                           FontSize="{StaticResource ViewFontSize}" />
+            </TabItem>
+        </TabControl>
 
         <TextBlock Text="Push Button"
                    FontFamily="{StaticResource SystemFontFamily}"
@@ -89,8 +110,10 @@
             <StackPanel VerticalAlignment="Top">
                 <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
                            ViewportSize="40" Value="30" Margin="0,0,0,14" />
+                <!-- Al tope del recorrido: sirve para comprobar que el thumb se pega -->
+                <!-- a la flecha y no deja riel sobrante.                              -->
                 <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
-                           ViewportSize="120" Value="20" Margin="0,0,0,14" />
+                           ViewportSize="40" Value="100" Margin="0,0,0,14" />
                 <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
                            ViewportSize="40" Value="30" IsEnabled="False" />
             </StackPanel>

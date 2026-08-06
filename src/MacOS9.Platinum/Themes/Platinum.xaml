@@ -12,6 +12,7 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TextBox.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ComboBox.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ScrollBar.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TabControl.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Window.xaml" />
     </ResourceDictionary.MergedDictionaries>
 

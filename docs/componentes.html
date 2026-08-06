@@ -135,10 +135,28 @@
   .popup .arrows i.up { border-bottom: 4px solid #000; }
   .popup .arrows i.dn { border-top: 4px solid #000; }
 
+  /* Pestañas */
+  .tabs { display: flex; align-items: flex-end; padding-left: 10px; }
+  .tab {
+    position: relative; height: 20px; padding: 0 14px; margin-right: -1px;
+    display: flex; align-items: center; font-size: 12px;
+    background: var(--gray3);
+    border: 1px solid var(--gray12); border-bottom: 0;
+    clip-path: polygon(7px 0, calc(100% - 7px) 0, 100% 100%, 0 100%);
+  }
+  .tab.on-state { background: #E4E4E4; font-weight: bold; height: 22px; }
+  .tabpanel {
+    border: 1px solid var(--gray12); background: #E4E4E4;
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5);
+    padding: 14px; margin-top: -1px; min-height: 60px;
+  }
+
   /* Scrollbar */
   .sbar {
     display: inline-flex; align-items: stretch; height: 16px; width: 260px;
-    border: 1px solid var(--gray12); background: #BDBDBD;
+    border: 1px solid var(--gray12);
+    background:
+      repeating-conic-gradient(#C9C9C9 0% 25%, #B4B4B4 0% 50%) 0 0 / 4px 4px;
   }
   .sbar .arrow {
     width: 14px; display: flex; align-items: center; justify-content: center;
@@ -151,10 +169,11 @@
   .sbar .arrow i.lf { border-right: 4px solid #000; }
   .sbar .arrow i.rt { border-left: 4px solid #000; }
   .sbar .track { flex: 1 1 auto; position: relative; box-shadow: inset 1px 1px 0 var(--gray5); }
+  .sbar .arrow + .arrow { border-left: 1px solid var(--gray12); }
+  .sbar .track + .arrow { border-left: 1px solid var(--gray12); }
   .sbar .thumb {
     position: absolute; top: 0; bottom: 0; left: 30%; width: 34%;
     border: 1px solid var(--gray12); background: #8B8BC3;
-    box-shadow: inset 1px 1px 0 #B6B6DC;
     display: flex; align-items: center; justify-content: center; gap: 2px;
   }
   .sbar .thumb b { display: block; width: 1px; height: 9px; background: #5B5B92; }
@@ -322,8 +341,8 @@
         <div class="cell">
           <span class="label">Normal</span>
           <span class="sbar">
-            <span class="arrow"><i class="lf"></i></span>
             <span class="track"><span class="thumb"><b></b><b></b><b></b><b></b></span></span>
+            <span class="arrow"><i class="lf"></i></span>
             <span class="arrow"><i class="rt"></i></span>
           </span>
         </div>
@@ -340,6 +359,35 @@
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>PlatinumScrollBar</code></td><td>Vertical y horizontal; canal más oscuro que la cara de los controles, con sombra interior</td></tr>
         <tr><td><code>PlatinumScrollThumb*</code></td><td>Única pieza del chrome con color; asidero de cuatro rayitas y oscurecido al arrastrar. Deshabilitada, el canal queda vacío</td></tr>
+        <tr><td><code>ArrowGlyph</code></td><td>Triángulo rasterizado por escalones, con base impar para que el centrado sea exacto</td></tr>
+      </table>
+      <p class="pend" style="margin:12px 0 0; font-size:11px">
+        Las dos flechas van juntas al final del riel, no una en cada extremo: es la
+        disposición de Platinum con Smart Scrolling.
+      </p>
+    </div>
+  </div></div>
+
+  <!-- ============ PESTAÑAS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">TabControl</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="tabs">
+        <span class="tab on-state">Alerts</span>
+        <span class="tab">Output</span>
+        <span class="tab">Input</span>
+      </div>
+      <div class="tabpanel">Contenido de la pestaña seleccionada.</div>
+
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>TabShape</code></td><td>Trapecio de lados inclinados y esquinas redondeadas, con empalme tangente entre el lado y la curva. La figura se ajusta a la rejilla de píxeles para que los tramos rectos salgan nítidos</td></tr>
+        <tr><td><code>PlatinumTabItem</code></td><td>La activa sube dos píxeles, va en el tono del panel, en negrita, y prolonga su base para taparle el filo al panel y fundirse con él</td></tr>
+        <tr><td><code>PlatinumTabControl</code></td><td>Panel con bisel levantado, encima de la ventana en vez de metido en ella</td></tr>
       </table>
     </div>
   </div></div>
@@ -402,9 +450,12 @@
         <tr><td><code>Controls/DefaultRing.cs</code></td><td>Contorno del botón por omisión</td></tr>
         <tr><td><code>Themes/ComboBox.xaml</code></td><td>Popup menu y renglones del desplegable</td></tr>
         <tr><td><code>Themes/ScrollBar.xaml</code></td><td>Barra de desplazamiento, flechas y thumb</td></tr>
+        <tr><td><code>Themes/TabControl.xaml</code></td><td>Pestañas y panel</td></tr>
+        <tr><td><code>Controls/TabShape.cs</code></td><td>Trapecio de la pestaña</td></tr>
+        <tr><td><code>Controls/ArrowGlyph.cs</code></td><td>Triángulos de las flechas</td></tr>
       </table>
       <p class="pend" style="margin:14px 0 0; font-size:11px">
-        Pendientes: barra de menús, pestañas, listas y tablas, deslizador, group box.
+        Pendientes: barra de menús, listas y tablas, deslizador, group box.
         Nota de integración: la app consumidora debe apagar
         <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
       </p>

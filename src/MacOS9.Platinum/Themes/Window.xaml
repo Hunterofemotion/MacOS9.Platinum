@@ -85,7 +85,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:PlatinumWindow}">
-                    <Border BorderThickness="1" BorderBrush="{StaticResource TextBrush}">
+                    <Border x:Name="PART_Root"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}">
                         <!-- Realce blanco pegado al filo negro, solo arriba y a la    -->
                         <!-- izquierda: es lo que hace que la ventana se lea levantada -->
                         <!-- sobre el escritorio.                                      -->
@@ -166,30 +168,32 @@
                             <!-- y el filo negro interior son parte del marco de la        -->
                             <!-- ventana, no del contenido: en Platinum el área útil       -->
                             <!-- siempre queda hundida respecto del marco.                 -->
+                            <!-- El escalón de profundidad va por FUERA del filo, en el  -->
+                            <!-- canal. Por dentro se metía entre el contenido y el      -->
+                            <!-- marco, y la barra de desplazamiento dejaba de tocarlo.  -->
                             <Border x:Name="ContentArea"
                                     Grid.Row="1"
-                                    Margin="8,0,8,8"
+                                    Margin="7,0,7,7"
                                     BorderThickness="1"
-                                    BorderBrush="{StaticResource TextBrush}">
+                                    BorderBrush="{StaticResource FrameShadowBrush}">
+                                <Border BorderThickness="1"
+                                        BorderBrush="{StaticResource TextBrush}">
                                 <Grid>
+                                    <!-- El contenido llega a ras del filo. -->
                                     <ContentPresenter />
 
-                                    <!-- Sombra de un píxel por dentro del filo, igual   -->
-                                    <!-- en los cuatro lados: el contenido se lee metido  -->
-                                    <!-- de forma pareja, sin sugerir una dirección de    -->
-                                    <!-- luz.                                            -->
-                                    <Border BorderThickness="1"
-                                            BorderBrush="{StaticResource FrameShadowBrush}" />
-
+                                    <!-- Mismo lado que el ancho del scrollbar, para   -->
+                                    <!-- que ambos cierren la esquina a plomo.         -->
                                     <Border x:Name="PART_GrowBox"
-                                            Width="15"
-                                            Height="15"
+                                            Width="16"
+                                            Height="16"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Bottom"
                                             BorderThickness="1,1,0,0"
                                             BorderBrush="{StaticResource TextBrush}"
                                             Background="{StaticResource GrowBoxHatchBrush}" />
                                 </Grid>
+                                </Border>
                             </Border>
                         </Grid>
 

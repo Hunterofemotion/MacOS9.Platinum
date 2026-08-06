@@ -56,9 +56,18 @@
                             <!-- lados opuestos quedan limpios, sin realce.              -->
                             <!-- Va encima del contenido para que no se pierda cuando    -->
                             <!-- el texto llega al filo.                                 -->
+                            <!-- Luz en el lado opuesto a la sombra. Es lo que cierra   -->
+                            <!-- el pozo: con sombra sola el campo se lee plano con un  -->
+                            <!-- borde grueso, no hundido.                              -->
+                            <Border x:Name="WellLight"
+                                    BorderThickness="0,0,1,1"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}" />
                             <Border x:Name="WellShadow"
                                     BorderThickness="2,2,0,0"
                                     BorderBrush="{StaticResource WellShadowBrush}" />
+                            <Border x:Name="WellShadowDeep"
+                                    BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource BevelShadowBrush}" />
                         </Grid>
                     </Border>
 
@@ -69,6 +78,8 @@
                             <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
                             <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                             <Setter TargetName="WellShadow" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="WellShadowDeep" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="WellLight" Property="BorderBrush" Value="{x:Null}" />
                             <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
                         </Trigger>
 

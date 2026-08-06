@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace MacOS9.Platinum.Controls;
 
@@ -21,6 +22,7 @@ public class PlatinumWindow : Window
     public const string PartZoomBox = "PART_ZoomBox";
     public const string PartCollapseBox = "PART_CollapseBox";
     public const string PartGrowBox = "PART_GrowBox";
+    public const string PartRoot = "PART_Root";
 
     // Mensajes de Windows para delegar el redimensionado al sistema, que es lo que
     // da el rectángulo de arrastre y el acople nativos.
@@ -130,6 +132,60 @@ public class PlatinumWindow : Window
     }
 
     /// <summary>
+    /// Lado del grow box, en unidades de WPF. El grow box se dibuja encima del
+    /// contenido, igual que en Mac OS, así que cualquier vista que llegue hasta la
+    /// esquina inferior derecha —una barra de desplazamiento, por ejemplo— debe
+    /// reservar este espacio o quedará tapada.
+    /// </summary>
+    public const double GrowBoxSize = 16d;
+
+    /// <summary>
+    /// Hace que una unidad de WPF valga exactamente un píxel físico.
+    /// </summary>
+    /// <remarks>
+    /// Platinum está diseñado en píxeles: filos de uno, biseles de uno, rayados de uno.
+    /// Con la pantalla al 125 % una unidad de WPF vale 1.25 píxeles, así que ninguna de
+    /// esas líneas cae entera y todas se reparten entre dos píxeles. Aplicando la escala
+    /// inversa al contenido de la ventana, la rejilla de WPF coincide con la de la
+    /// pantalla y todo el tema queda nítido sin trucos por control. El costo es que la
+    /// interfaz se ve del tamaño que tendría en una pantalla de la época.
+    /// </remarks>
+    public static readonly DependencyProperty PixelPerfectProperty =
+        DependencyProperty.Register(
+            nameof(PixelPerfect),
+            typeof(bool),
+            typeof(PlatinumWindow),
+            new FrameworkPropertyMetadata(false, OnPixelPerfectChanged));
+
+    public bool PixelPerfect
+    {
+        get => (bool)GetValue(PixelPerfectProperty);
+        set => SetValue(PixelPerfectProperty, value);
+    }
+
+    private static void OnPixelPerfectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((PlatinumWindow)d).ApplyPixelPerfectScale();
+    }
+
+    private void ApplyPixelPerfectScale()
+    {
+        if (GetTemplateChild(PartRoot) is not FrameworkElement root)
+        {
+            return;
+        }
+
+        if (!PixelPerfect)
+        {
+            root.LayoutTransform = Transform.Identity;
+            return;
+        }
+
+        DpiScale dpi = VisualTreeHelper.GetDpi(this);
+        root.LayoutTransform = new ScaleTransform(1d / dpi.DpiScaleX, 1d / dpi.DpiScaleY);
+    }
+
+    /// <summary>
     /// Oculta el grow box en ventanas de tamaño fijo, como los diálogos.
     /// </summary>
     public static readonly DependencyProperty ShowGrowBoxProperty =
@@ -174,6 +230,14 @@ public class PlatinumWindow : Window
             grow.Cursor = Cursors.SizeNWSE;
             grow.MouseLeftButtonDown += OnGrowBoxPressed;
         }
+
+        ApplyPixelPerfectScale();
+    }
+
+    protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+    {
+        base.OnDpiChanged(oldDpi, newDpi);
+        ApplyPixelPerfectScale();
     }
 
     protected override void OnSourceInitialized(EventArgs e)

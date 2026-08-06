@@ -1,9 +1,37 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <!-- Textura del canal: tramado de dos grises en tablero de 2 px. Platinum no usa -->
+    <!-- un gris liso ahí, y ese punteado es lo que distingue el canal de la cara de  -->
+    <!-- los controles.                                                               -->
+    <DrawingBrush x:Key="ScrollTrackTextureBrush"
+                  TileMode="Tile"
+                  Viewport="0,0,2,2"
+                  ViewportUnits="Absolute"
+                  Stretch="None">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#FFB4B4B4">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="0,0,2,2" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFC9C9C9">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,1,1" />
+                            <RectangleGeometry Rect="1,1,1,1" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
 
     <!-- Botón de flecha. Comparte el cuerpo levantado del resto del tema, pero sin  -->
     <!-- esquinas redondeadas ni sombra: va embutido dentro del marco de la barra.    -->
@@ -73,10 +101,6 @@
                                 BorderThickness="1"
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
-                        <Border x:Name="ThumbHighlight"
-                                BorderThickness="1,1,0,0"
-                                BorderBrush="{StaticResource ScrollThumbHighlightBrush}"
-                                Margin="1" />
 
                         <StackPanel x:Name="Grip"
                                     HorizontalAlignment="Center"
@@ -93,7 +117,6 @@
                         <!-- hunde como un botón.                                        -->
                         <Trigger Property="IsDragging" Value="True">
                             <Setter TargetName="ThumbFace" Property="Background" Value="{StaticResource ScrollThumbPressedBrush}" />
-                            <Setter TargetName="ThumbHighlight" Property="BorderBrush" Value="{x:Null}" />
                         </Trigger>
 
                         <!-- Con la barra deshabilitada el canal queda vacío. Va aquí y -->
@@ -120,10 +143,6 @@
                                 BorderThickness="1"
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
-                        <Border x:Name="ThumbHighlight"
-                                BorderThickness="1,1,0,0"
-                                BorderBrush="{StaticResource ScrollThumbHighlightBrush}"
-                                Margin="1" />
 
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
@@ -137,7 +156,6 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDragging" Value="True">
                             <Setter TargetName="ThumbFace" Property="Background" Value="{StaticResource ScrollThumbPressedBrush}" />
-                            <Setter TargetName="ThumbHighlight" Property="BorderBrush" Value="{x:Null}" />
                         </Trigger>
 
                         <!-- Con la barra deshabilitada el canal queda vacío. Va aquí y -->
@@ -164,27 +182,34 @@
                             BorderBrush="{StaticResource TextBrush}"
                             Background="{StaticResource ScrollTrackBrush}">
                         <Grid>
+                            <!-- Las dos flechas van juntas al final, no una en cada    -->
+                            <!-- extremo. Es la disposición de Platinum con Smart        -->
+                            <!-- Scrolling, la que trae el modelo de referencia.         -->
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="14" />
                                 <RowDefinition Height="*" />
+                                <RowDefinition Height="14" />
                                 <RowDefinition Height="14" />
                             </Grid.RowDefinitions>
 
-                            <!-- Sombra interior del canal, arriba y a la izquierda. -->
-                            <Border Grid.Row="1"
-                                    BorderThickness="1,1,0,0"
-                                    BorderBrush="{StaticResource BevelShadowBrush}"
-                                    Panel.ZIndex="1"
+                            <!-- Canal con textura: un tramado fino, no un gris liso.   -->
+                            <Border Grid.Row="0"
+                                    Background="{StaticResource ScrollTrackTextureBrush}"
+                                    RenderOptions.EdgeMode="Aliased"
                                     IsHitTestVisible="False" />
 
-                            <RepeatButton Grid.Row="0"
+                            <Border Grid.Row="0"
+                                    BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource BevelShadowBrush}"
+                                    IsHitTestVisible="False" />
+
+                            <RepeatButton Grid.Row="1"
                                           Style="{StaticResource PlatinumScrollArrow}"
                                           Command="ScrollBar.LineUpCommand">
-                                <Path Data="M 0,4 L 4,0 L 8,4 Z" Fill="{StaticResource TextBrush}" />
+                                <controls:ArrowGlyph Direction="Up" Fill="{StaticResource TextBrush}" />
                             </RepeatButton>
 
                             <Track x:Name="PART_Track"
-                                   Grid.Row="1"
+                                   Grid.Row="0"
                                    IsDirectionReversed="True">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Style="{StaticResource PlatinumScrollPage}"
@@ -202,8 +227,14 @@
                             <RepeatButton Grid.Row="2"
                                           Style="{StaticResource PlatinumScrollArrow}"
                                           Command="ScrollBar.LineDownCommand">
-                                <Path Data="M 0,0 L 4,4 L 8,0 Z" Fill="{StaticResource TextBrush}" />
+                                <controls:ArrowGlyph Direction="Down" Fill="{StaticResource TextBrush}" />
                             </RepeatButton>
+
+                            <!-- Filo entre las dos flechas y entre el par y el canal. -->
+                            <Border Grid.Row="1" Height="1" VerticalAlignment="Top"
+                                    Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
+                            <Border Grid.Row="2" Height="1" VerticalAlignment="Top"
+                                    Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
                         </Grid>
                     </Border>
 
@@ -229,25 +260,31 @@
                                     BorderBrush="{StaticResource TextBrush}"
                                     Background="{StaticResource ScrollTrackBrush}">
                                 <Grid>
+                                    <!-- Las dos flechas juntas al final, como en el     -->
+                                    <!-- modelo de Platinum con Smart Scrolling.         -->
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="14" />
                                         <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="14" />
                                         <ColumnDefinition Width="14" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="1"
-                                            BorderThickness="1,1,0,0"
-                                            BorderBrush="{StaticResource BevelShadowBrush}"
-                                            Panel.ZIndex="1"
+                                    <Border Grid.Column="0"
+                                            Background="{StaticResource ScrollTrackTextureBrush}"
+                                            RenderOptions.EdgeMode="Aliased"
                                             IsHitTestVisible="False" />
 
-                                    <RepeatButton Grid.Column="0"
+                                    <Border Grid.Column="0"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource BevelShadowBrush}"
+                                            IsHitTestVisible="False" />
+
+                                    <RepeatButton Grid.Column="1"
                                                   Style="{StaticResource PlatinumScrollArrow}"
                                                   Command="ScrollBar.LineLeftCommand">
-                                        <Path Data="M 4,0 L 0,4 L 4,8 Z" Fill="{StaticResource TextBrush}" />
+                                        <controls:ArrowGlyph Direction="Left" Fill="{StaticResource TextBrush}" />
                                     </RepeatButton>
 
-                                    <Track x:Name="PART_Track" Grid.Column="1">
+                                    <Track x:Name="PART_Track" Grid.Column="0">
                                         <Track.DecreaseRepeatButton>
                                             <RepeatButton Style="{StaticResource PlatinumScrollPage}"
                                                           Command="ScrollBar.PageLeftCommand" />
@@ -264,8 +301,14 @@
                                     <RepeatButton Grid.Column="2"
                                                   Style="{StaticResource PlatinumScrollArrow}"
                                                   Command="ScrollBar.LineRightCommand">
-                                        <Path Data="M 0,0 L 4,4 L 0,8 Z" Fill="{StaticResource TextBrush}" />
+                                        <controls:ArrowGlyph Direction="Right" Fill="{StaticResource TextBrush}" />
                                     </RepeatButton>
+
+                                    <!-- Filo entre las flechas y entre el par y el canal. -->
+                                    <Border Grid.Column="1" Width="1" HorizontalAlignment="Left"
+                                            Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
+                                    <Border Grid.Column="2" Width="1" HorizontalAlignment="Left"
+                                            Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
                                 </Grid>
                             </Border>
 

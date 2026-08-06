@@ -88,6 +88,14 @@
         <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
     </LinearGradientBrush>
 
+    <!-- Cara del panel de pestañas. Va un paso más clara que la ventana para que el  -->
+    <!-- panel se lea como una hoja puesta encima.                                    -->
+    <SolidColorBrush x:Key="PanelFaceBrush" Color="#FFE4E4E4" />
+
+    <!-- Cara de la pestaña inactiva: plana y un paso más oscura que el panel, para   -->
+    <!-- que se lea detrás de la activa sin recurrir a un degradado.                  -->
+    <SolidColorBrush x:Key="TabInactiveFaceBrush" Color="{StaticResource Gray3}" />
+
     <!-- Barra de desplazamiento. El thumb es la única pieza del chrome que lleva    -->
     <!-- color: toma el acento del tema, no el gris de los controles.                -->
     <SolidColorBrush x:Key="ScrollTrackBrush" Color="#FFBDBDBD" />
