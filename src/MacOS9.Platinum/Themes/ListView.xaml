@@ -176,10 +176,10 @@
 
                         <!-- Respaldo del encabezado, incluido el tramo sobrante tras  -->
                         <!-- la última columna: sin él esa zona mostraba fondo blanco. -->
-                        <!-- Ocupa solo la columna del contenido: en el Finder la barra -->
-                        <!-- de desplazamiento corre de arriba abajo y el encabezado se -->
-                        <!-- detiene en su filo, no la cruza.                           -->
-                        <Border Grid.Row="0" Grid.Column="0"
+                        <!-- Cruza las dos columnas: medido sobre la captura de SyncPro,-->
+                        <!-- el encabezado corre a todo lo ancho y su filete inferior    -->
+                        <!-- pasa por encima de la barra, que arranca debajo de él.      -->
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                                 Background="{StaticResource ControlFaceBrush}"
                                 BorderThickness="0,0,0,1"
                                 BorderBrush="{StaticResource TextBrush}">
@@ -226,9 +226,10 @@
                                 BorderBrush="{StaticResource BevelHighlightBrush}"
                                 IsHitTestVisible="False" />
 
-                        <!-- De arriba abajo, a la altura del encabezado inclusive. -->
+                        <!-- Arranca bajo el encabezado, no a su altura: en la captura
+                             de referencia el filete del encabezado cruza por encima. -->
                         <ScrollBar x:Name="PART_VerticalScrollBar"
-                                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                   Grid.Row="1" Grid.Column="1"
                                    Orientation="Vertical"
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"
