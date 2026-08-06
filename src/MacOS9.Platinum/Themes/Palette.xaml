@@ -88,6 +88,10 @@
         <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
     </LinearGradientBrush>
 
+    <!-- Divisor entre renglones de una lista. Muy claro a propósito: separa sin      -->
+    <!-- competir con el texto ni con el resalte de selección.                        -->
+    <SolidColorBrush x:Key="RowDividerBrush" Color="#FFD6D6D6" />
+
     <!-- Cara del panel de pestañas. Va un paso más clara que la ventana para que el  -->
     <!-- panel se lea como una hoja puesta encima.                                    -->
     <SolidColorBrush x:Key="PanelFaceBrush" Color="#FFE4E4E4" />

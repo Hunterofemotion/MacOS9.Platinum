@@ -1,0 +1,173 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Encabezado de columna. Es el cuerpo levantado del tema, pero achatado: sin   -->
+    <!-- esquinas redondeadas ni sombra, porque va embutido en una fila continua.     -->
+    <Style x:Key="PlatinumColumnHeader" TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <!-- Los nombres de columna van un punto por debajo del resto del chrome: son -->
+        <!-- rótulos de estructura, no contenido.                                     -->
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="Height" Value="18" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                    <Grid>
+                        <Border x:Name="Face" Background="{StaticResource ControlFaceBrush}" />
+                        <Border x:Name="BevelLight"
+                                BorderThickness="0,1,0,0"
+                                BorderBrush="{StaticResource BevelHighlightBrush}" />
+
+                        <!-- Filo inferior y separador de columnas. La fila entera se  -->
+                        <!-- cierra abajo con negro; entre columnas basta el gris.      -->
+                        <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource TextBrush}" />
+                        <Border x:Name="Separator"
+                                BorderThickness="0,0,1,0"
+                                BorderBrush="{StaticResource BevelShadowBrush}" />
+
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+                        </Trigger>
+
+                        <!-- GridView agrega un encabezado de relleno al final para      -->
+                        <!-- cubrir el ancho sobrante. Se oculta por completo: la franja -->
+                        <!-- del mismo gris que va detrás ya cubre esa zona, así que no  -->
+                        <!-- hace falta y solo se leía como una columna sin nombre.      -->
+                        <Trigger Property="Role" Value="Padding">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Renglón. El resalte de Platinum es azul claro con el texto en negro, igual   -->
+    <!-- que en el campo de texto y el popup menu.                                    -->
+    <Style x:Key="PlatinumListViewItem" TargetType="{x:Type ListViewItem}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="0,2" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <!-- Divisor horizontal entre renglones. -->
+                    <Border x:Name="Row"
+                            Background="Transparent"
+                            Padding="{TemplateBinding Padding}"
+                            BorderThickness="0,0,0,1"
+                            BorderBrush="{StaticResource RowDividerBrush}">
+                        <GridViewRowPresenter Columns="{TemplateBinding GridView.ColumnCollection}"
+                                              Content="{TemplateBinding Content}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <!-- Con la lista sin foco el resalte pasa a gris, como en -->
+                            <!-- el campo de texto.                                     -->
+                            <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionInactiveBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumListView" TargetType="{x:Type ListView}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource PlatinumListViewItem}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <!-- Mismo pozo hundido del campo de texto: filo negro y sombra    -->
+                    <!-- gris por dentro, arriba y a la izquierda.                     -->
+                    <Border x:Name="Frame"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <!-- Franja detrás de la fila de encabezados. Rellena la    -->
+                            <!-- esquina que queda encima de la barra de desplazamiento: -->
+                            <!-- los encabezados y la barra ocupan celdas distintas de   -->
+                            <!-- la plantilla y esa esquina se quedaba vacía.            -->
+                            <Border x:Name="HeaderStrip"
+                                    Height="18"
+                                    VerticalAlignment="Top"
+                                    Background="{StaticResource ControlFaceBrush}"
+                                    BorderThickness="0,1,0,1"
+                                    BorderBrush="{StaticResource TextBrush}"
+                                    IsHitTestVisible="False" />
+
+                            <!-- Sin este estilo la fila de encabezados desaparece: el -->
+                            <!-- presentador de columnas vive dentro de la plantilla   -->
+                            <!-- del ScrollViewer, no del ListView.                    -->
+                            <ScrollViewer Focusable="False"
+                                          Padding="0"
+                                          Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                                <ItemsPresenter SnapsToDevicePixels="True" />
+                            </ScrollViewer>
+
+                            <Border BorderThickness="0,0,1,1"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}"
+                                    IsHitTestVisible="False" />
+                            <Border BorderThickness="2,2,0,0"
+                                    BorderBrush="{StaticResource WellShadowBrush}"
+                                    IsHitTestVisible="False" />
+                            <Border BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource BevelShadowBrush}"
+                                    IsHitTestVisible="False" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource PlatinumListView}" />
+    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource PlatinumListViewItem}" />
+    <Style TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource PlatinumColumnHeader}" />
+
+</ResourceDictionary>

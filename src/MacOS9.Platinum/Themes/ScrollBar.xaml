@@ -97,8 +97,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid x:Name="Root">
+                        <!-- Sin filos laterales: los costados los cierra el propio -->
+                        <!-- marco de la barra, no el thumb.                        -->
                         <Border x:Name="ThumbFace"
-                                BorderThickness="1"
+                                BorderThickness="0,1,0,1"
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
 
@@ -140,7 +142,7 @@
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid x:Name="Root">
                         <Border x:Name="ThumbFace"
-                                BorderThickness="1"
+                                BorderThickness="1,0,1,0"
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
 
@@ -198,6 +200,14 @@
                                     IsHitTestVisible="False" />
 
                             <Border Grid.Row="0"
+                                    BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource FrameShadowBrush}"
+                                    IsHitTestVisible="False" />
+
+                            <!-- Segundo paso de sombra, más claro. La profundidad se  -->
+                            <!-- construye con dos tonos de gris, sin recurrir a luz.  -->
+                            <Border Grid.Row="0"
+                                    Margin="1,1,0,0"
                                     BorderThickness="1,1,0,0"
                                     BorderBrush="{StaticResource BevelShadowBrush}"
                                     IsHitTestVisible="False" />
@@ -274,6 +284,12 @@
                                             IsHitTestVisible="False" />
 
                                     <Border Grid.Column="0"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource FrameShadowBrush}"
+                                            IsHitTestVisible="False" />
+
+                                    <Border Grid.Column="0"
+                                            Margin="1,1,0,0"
                                             BorderThickness="1,1,0,0"
                                             BorderBrush="{StaticResource BevelShadowBrush}"
                                             IsHitTestVisible="False" />

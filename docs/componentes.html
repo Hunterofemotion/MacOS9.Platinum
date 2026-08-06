@@ -392,6 +392,46 @@
     </div>
   </div></div>
 
+  <!-- ============ LISTA CON COLUMNAS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">ListView</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <table style="border:1px solid var(--gray12); border-collapse:collapse; width:420px; background:#fff; font-size:12px">
+        <tr>
+          <th style="background:var(--gray2); border-bottom:1px solid var(--gray12); border-right:1px solid var(--gray5); font-size:10px; padding:2px 6px; box-shadow: inset 0 1px 0 #fff">From</th>
+          <th style="background:var(--gray2); border-bottom:1px solid var(--gray12); border-right:1px solid var(--gray5); font-size:10px; padding:2px 6px; box-shadow: inset 0 1px 0 #fff">Subject</th>
+          <th style="background:var(--gray2); border-bottom:1px solid var(--gray12); font-size:10px; padding:2px 6px; box-shadow: inset 0 1px 0 #fff">Size</th>
+        </tr>
+        <tr>
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">Alex Morgan</td>
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">Project Orion status update</td>
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">12K</td>
+        </tr>
+        <tr style="background:var(--accent)">
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">Team Sync</td>
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">Monthly planning meeting</td>
+          <td style="border-bottom:1px solid #D6D6D6; padding:3px 6px">7K</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 6px">Dana White</td>
+          <td style="padding:3px 6px">Lunch this week?</td>
+          <td style="padding:3px 6px">3K</td>
+        </tr>
+      </table>
+
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumColumnHeader</code></td><td>Encabezado achatado con rótulo en 10 px, filo negro abajo y separador gris entre columnas; el encabezado de relleno de GridView se colapsa</td></tr>
+        <tr><td><code>PlatinumListViewItem</code></td><td>Renglón con divisor horizontal claro y resalte azul con texto negro; gris cuando la lista pierde el foco</td></tr>
+        <tr><td><code>PlatinumListView</code></td><td>Pozo hundido del campo de texto llevado a lista; franja gris tras los encabezados que rellena la esquina sobre la barra de desplazamiento</td></tr>
+      </table>
+    </div>
+  </div></div>
+
   <!-- ============ FUNDAMENTOS ============ -->
   <div class="win"><div class="inner">
     <div class="titlebar">
@@ -451,11 +491,12 @@
         <tr><td><code>Themes/ComboBox.xaml</code></td><td>Popup menu y renglones del desplegable</td></tr>
         <tr><td><code>Themes/ScrollBar.xaml</code></td><td>Barra de desplazamiento, flechas y thumb</td></tr>
         <tr><td><code>Themes/TabControl.xaml</code></td><td>Pestañas y panel</td></tr>
+        <tr><td><code>Themes/ListView.xaml</code></td><td>Lista con columnas: encabezados, renglones y pozo</td></tr>
         <tr><td><code>Controls/TabShape.cs</code></td><td>Trapecio de la pestaña</td></tr>
         <tr><td><code>Controls/ArrowGlyph.cs</code></td><td>Triángulos de las flechas</td></tr>
       </table>
       <p class="pend" style="margin:14px 0 0; font-size:11px">
-        Pendientes: barra de menús, listas y tablas, deslizador, group box.
+        Pendientes: barra de menús, deslizador, group box, árbol de carpetas.
         Nota de integración: la app consumidora debe apagar
         <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
       </p>

@@ -59,7 +59,11 @@ No puede resolverse desde un `ResourceDictionary`: es un ajuste de proceso.
 - **CheckBox** y **RadioButton** — marcado, vacío, indeterminado, deshabilitado
 - **TextBox** — editable, solo lectura, deshabilitado, con selección opaca
 - **ComboBox** — popup menu con flechas y menú desplegable
-- **ScrollBar** — vertical y horizontal, con thumb arrastrable y estado deshabilitado
+- **ScrollBar** — vertical y horizontal, flechas agrupadas al final del riel, canal
+  con textura y estado deshabilitado
+- **TabControl** — pestañas trapezoidales con la activa fundida con el panel
+- **ListView** — lista con columnas: encabezados con relieve, divisores y selección
+  de fila completa
 
 ### Detalles que no se resuelven con layout
 

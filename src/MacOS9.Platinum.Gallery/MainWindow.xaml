@@ -96,6 +96,37 @@
             </ComboBox>
         </StackPanel>
 
+        <TextBlock Text="Lista con columnas"
+                   FontFamily="{StaticResource SystemFontFamily}"
+                   FontSize="{StaticResource SystemFontSize}"
+                   Margin="0,22,0,10" />
+
+        <ListView Height="130" SelectedIndex="2" ItemsSource="{Binding Messages}">
+            <ListView.View>
+                <GridView>
+                    <!-- Sobre dibujado a escala del tema, sin archivos externos. -->
+                    <GridViewColumn Header="" Width="26">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Width="13" Height="10" HorizontalAlignment="Center">
+                                    <Border BorderThickness="1"
+                                            BorderBrush="{StaticResource TextBrush}"
+                                            Background="{StaticResource ContentFaceBrush}" />
+                                    <Path Data="M 0,0 L 6.5,5 L 13,0"
+                                          Stroke="{StaticResource TextBrush}"
+                                          StrokeThickness="1" />
+                                </Grid>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Header="From" Width="130" DisplayMemberBinding="{Binding Sender}" />
+                    <GridViewColumn Header="Subject" Width="200" DisplayMemberBinding="{Binding Subject}" />
+                    <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding Size}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+
         <TextBlock Text="ScrollBar"
                    FontFamily="{StaticResource SystemFontFamily}"
                    FontSize="{StaticResource SystemFontSize}"
