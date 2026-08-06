@@ -27,9 +27,11 @@
                                 BorderThickness="0,1,0,0"
                                 BorderBrush="{StaticResource BevelHighlightBrush}" />
 
-                        <!-- Filo inferior y separador de columnas. La fila entera se  -->
-                        <!-- cierra abajo con negro; entre columnas basta el gris.      -->
-                        <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource TextBrush}" />
+                        <!-- Filo inferior y separador de columnas. La fila se cierra   -->
+                        <!-- abajo con el gris medido en la referencia, no con negro:   -->
+                        <!-- el negro chocaba con el filo de la barra de desplazamiento -->
+                        <!-- y los dos juntos se leían como una raya gruesa.            -->
+                        <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource HeaderRuleBrush}" />
                         <!-- El divisor va del lado izquierdo, no del derecho. Con el   -->
                         <!-- derecho quedaba una raya después de la última columna y el -->
                         <!-- tramo sobrante se leía como una columna sin nombre; con el -->
@@ -182,7 +184,7 @@
                         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
                                 Background="{StaticResource ControlFaceBrush}"
                                 BorderThickness="0,0,0,1"
-                                BorderBrush="{StaticResource TextBrush}">
+                                BorderBrush="{StaticResource HeaderRuleBrush}">
                             <Border BorderThickness="0,1,0,0"
                                     BorderBrush="{StaticResource BevelHighlightBrush}" />
                         </Border>

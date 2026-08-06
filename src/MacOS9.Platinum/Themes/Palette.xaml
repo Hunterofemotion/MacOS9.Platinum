@@ -78,6 +78,10 @@
     <!-- Divisor entre renglones de una lista. Muy claro a propósito: separa sin      -->
     <!-- competir con el texto ni con el resalte de selección.                        -->
     <SolidColorBrush x:Key="RowDividerBrush" Color="#FFD6D6D6" />
+    <!-- Filete que cierra la fila de encabezados. Medido sobre la captura de
+         referencia: es gris, no negro. Con negro la unión con la barra de
+         desplazamiento suma dos filos oscuros y se lee como una raya gruesa. -->
+    <SolidColorBrush x:Key="HeaderRuleBrush" Color="{StaticResource Gray5}" />
 
     <!-- Cara del panel de pestañas. Va un paso más clara que la ventana para que el  -->
     <!-- panel se lea como una hoja puesta encima.                                    -->
