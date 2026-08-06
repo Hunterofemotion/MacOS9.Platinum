@@ -117,9 +117,13 @@
                                 </Grid>
                             </Border>
 
+                            <!-- Anclado abajo: cada renglón cierra el suyo. Arriba la  -->
+                            <!-- raya entre dos filas era del de abajo, así que el      -->
+                            <!-- último quedaba sin cerrar y una lista de un solo        -->
+                            <!-- elemento no mostraba ninguna.                           -->
                             <Rectangle x:Name="Divider"
                                        Height="1"
-                                       VerticalAlignment="Top"
+                                       VerticalAlignment="Bottom"
                                        Fill="{StaticResource RowDividerBrush}" />
                         </Grid>
                     </Border>
@@ -230,8 +234,11 @@
 
                         <!-- Arranca bajo el encabezado, no a su altura: en la captura
                              de referencia el filete del encabezado cruza por encima. -->
+                        <!-- Solo el filo izquierdo es suyo: arriba lo cierra el filete
+                             del encabezado, y a la derecha y abajo el marco de la lista. -->
                         <ScrollBar x:Name="PART_VerticalScrollBar"
                                    Grid.Row="1" Grid.Column="1"
+                                   BorderThickness="1,0,0,0"
                                    Orientation="Vertical"
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"
@@ -240,6 +247,7 @@
 
                         <ScrollBar x:Name="PART_HorizontalScrollBar"
                                    Grid.Row="2" Grid.Column="0"
+                                   BorderThickness="0,1,0,0"
                                    Orientation="Horizontal"
                                    Maximum="{TemplateBinding ScrollableWidth}"
                                    ViewportSize="{TemplateBinding ViewportWidth}"
