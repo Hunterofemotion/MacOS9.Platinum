@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
@@ -30,8 +30,14 @@
                         <!-- Filo inferior y separador de columnas. La fila entera se  -->
                         <!-- cierra abajo con negro; entre columnas basta el gris.      -->
                         <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource TextBrush}" />
+                        <!-- El divisor va del lado izquierdo, no del derecho. Con el   -->
+                        <!-- derecho quedaba una raya después de la última columna y el -->
+                        <!-- tramo sobrante se leía como una columna sin nombre; con el -->
+                        <!-- izquierdo, ese tramo continúa la última columna, como en   -->
+                        <!-- el Finder. El primer encabezado esconde el suyo contra el  -->
+                        <!-- filo de la caja.                                           -->
                         <Border x:Name="Separator"
-                                BorderThickness="0,0,1,0"
+                                BorderThickness="1,0,0,0"
                                 BorderBrush="{StaticResource BevelShadowBrush}" />
 
                         <ContentPresenter Margin="{TemplateBinding Padding}"
@@ -70,26 +76,49 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Padding" Value="0,2" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
+
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
-                    <!-- Divisor horizontal entre renglones. -->
+
+                    <!-- Sangra dos unidades hacia abajo. El panel coloca los renglones cada
+                         20.8 unidades pero cada uno se redondea a 20, así que entre uno
+                         y otro quedan una o dos filas de píxeles que nadie pinta. No se
+                         ven entre renglones blancos; bajo la banda de selección salían
+                         como una raya clara pegada al divisor. La sangría solo llena esa
+                         costura: el renglón de abajo se dibuja después y cubre lo que
+                         sobre.                                                          -->
                     <Border x:Name="Row"
                             Background="Transparent"
-                            Padding="{TemplateBinding Padding}"
-                            BorderThickness="0,0,0,1"
-                            BorderBrush="{StaticResource RowDividerBrush}">
+                            Margin="0,-2,0,0">
                         <Grid>
-                            <!-- Sin GridView no hay ColumnCollection y el presentador -->
-                            <!-- de fila no dibuja nada: la lista salía vacía. El      -->
-                            <!-- ContentPresenter es el camino para una lista simple.  -->
-                            <GridViewRowPresenter x:Name="Columns"
-                                                  Columns="{TemplateBinding GridView.ColumnCollection}"
-                                                  Content="{TemplateBinding Content}" />
-                            <ContentPresenter x:Name="Plain"
-                                              Margin="4,0,0,0"
-                                              VerticalAlignment="Center"
-                                              Visibility="Collapsed" />
+                            <!-- El relleno envuelve solo al contenido. Cuando el       -->
+                            <!-- divisor vivía dentro del relleno quedaba tres píxeles  -->
+                            <!-- por encima del borde real del renglón, y esas tres     -->
+                            <!-- filas —que son del renglón de arriba— se veían como    -->
+                            <!-- una raya blanca justo debajo del divisor en cuanto el  -->
+                            <!-- renglón de abajo estaba seleccionado.                  -->
+                            <Border Padding="{TemplateBinding Padding}">
+                                <Grid>
+                                    <!-- Sin GridView no hay ColumnCollection y el     -->
+                                    <!-- presentador de fila no dibuja nada: la lista  -->
+                                    <!-- salía vacía. El ContentPresenter es el camino -->
+                                    <!-- para una lista simple.                        -->
+                                    <GridViewRowPresenter x:Name="Columns"
+                                                          Columns="{TemplateBinding GridView.ColumnCollection}"
+                                                          Content="{TemplateBinding Content}" />
+                                    <ContentPresenter x:Name="Plain"
+                                                      Margin="4,0,0,0"
+                                                      VerticalAlignment="Center"
+                                                      Visibility="Collapsed" />
+                                </Grid>
+                            </Border>
+
+                            <Rectangle x:Name="Divider"
+                                       Height="1"
+                                       VerticalAlignment="Top"
+                                       Fill="{StaticResource RowDividerBrush}" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -97,8 +126,12 @@
                             <Setter TargetName="Columns" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="Plain" Property="Visibility" Value="Visible" />
                         </Trigger>
+                        <!-- El divisor también se tiñe: si no, la banda de selección   -->
+                        <!-- termina un píxel antes y queda una raya clara pegada al    -->
+                        <!-- renglón siguiente.                                         -->
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionBrush}" />
+                            <Setter TargetName="Divider" Property="Fill" Value="{StaticResource SelectionBrush}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -108,6 +141,7 @@
                             <!-- Con la lista sin foco el resalte pasa a gris, como en -->
                             <!-- el campo de texto.                                     -->
                             <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionInactiveBrush}" />
+                            <Setter TargetName="Divider" Property="Fill" Value="{StaticResource SelectionInactiveBrush}" />
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
@@ -140,10 +174,12 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <!-- Respaldo de la fila completa de encabezados, incluidos el  -->
-                        <!-- tramo sobrante tras la última columna y la esquina sobre   -->
-                        <!-- la barra: sin él esas zonas mostraban el fondo blanco.     -->
-                        <Border Grid.Row="0" Grid.ColumnSpan="2"
+                        <!-- Respaldo del encabezado, incluido el tramo sobrante tras  -->
+                        <!-- la última columna: sin él esa zona mostraba fondo blanco. -->
+                        <!-- Ocupa solo la columna del contenido: en el Finder la barra -->
+                        <!-- de desplazamiento corre de arriba abajo y el encabezado se -->
+                        <!-- detiene en su filo, no la cruza.                           -->
+                        <Border Grid.Row="0" Grid.Column="0"
                                 Background="{StaticResource ControlFaceBrush}"
                                 BorderThickness="0,0,0,1"
                                 BorderBrush="{StaticResource TextBrush}">
@@ -190,8 +226,9 @@
                                 BorderBrush="{StaticResource BevelHighlightBrush}"
                                 IsHitTestVisible="False" />
 
+                        <!-- De arriba abajo, a la altura del encabezado inclusive. -->
                         <ScrollBar x:Name="PART_VerticalScrollBar"
-                                   Grid.Row="1" Grid.Column="1"
+                                   Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
                                    Orientation="Vertical"
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"
@@ -223,7 +260,12 @@
             <ScrollViewer Focusable="False"
                           Padding="0"
                           Style="{StaticResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
-                <ItemsPresenter SnapsToDevicePixels="True" />
+                <!-- Sin redondeo de layout: es quien acomoda la pila de renglones y con
+                                 él cada uno redondea sus orillas por separado, dejando una
+                                 fila del fondo entre uno y otro. Invisible entre renglones
+                                 blancos, pero bajo la banda de selección salía como una
+                                 raya blanca pegada al divisor. -->
+                            <ItemsPresenter SnapsToDevicePixels="True" UseLayoutRounding="False" />
             </ScrollViewer>
         </Border>
 
@@ -241,7 +283,12 @@
                 BorderBrush="{StaticResource TextBrush}"
                 Background="{TemplateBinding Background}">
             <ScrollViewer Focusable="False" Padding="0">
-                <ItemsPresenter SnapsToDevicePixels="True" />
+                <!-- Sin redondeo de layout: es quien acomoda la pila de renglones y con
+                                 él cada uno redondea sus orillas por separado, dejando una
+                                 fila del fondo entre uno y otro. Invisible entre renglones
+                                 blancos, pero bajo la banda de selección salía como una
+                                 raya blanca pegada al divisor. -->
+                            <ItemsPresenter SnapsToDevicePixels="True" UseLayoutRounding="False" />
             </ScrollViewer>
         </Border>
 

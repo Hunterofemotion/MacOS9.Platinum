@@ -288,10 +288,20 @@ internal static class Program
 
     private static FrameworkElement List()
     {
+        // Columna de icono igual a la de la galería: 26 de ancho con una imagen de 16.
+        var cell = new DataTemplate();
+        var img = new FrameworkElementFactory(typeof(Image));
+        img.SetValue(Image.SourceProperty, (ImageSource)Application.Current.Resources["IconEnvelope"]);
+        img.SetValue(FrameworkElement.WidthProperty, 16d);
+        img.SetValue(FrameworkElement.HeightProperty, 16d);
+        img.SetValue(FrameworkElement.HorizontalAlignmentProperty, HorizontalAlignment.Center);
+        cell.VisualTree = img;
+
         var view = new GridView();
-        view.Columns.Add(new GridViewColumn { Header = "Nombre", Width = 150 });
-        view.Columns.Add(new GridViewColumn { Header = "Tamaño", Width = 70 });
-        var lv = new ListView { View = view, Width = 260, Height = 120 };
+        view.Columns.Add(new GridViewColumn { Header = string.Empty, Width = 26, CellTemplate = cell });
+        view.Columns.Add(new GridViewColumn { Header = "From", Width = 130 });
+        view.Columns.Add(new GridViewColumn { Header = "Size", Width = 60 });
+        var lv = new ListView { View = view, Width = 260, Height = 120, SelectedIndex = 2 };
         for (var i = 0; i < 8; i++)
         {
             lv.Items.Add(new { });
