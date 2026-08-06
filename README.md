@@ -2,6 +2,14 @@
 
 Biblioteca de controles WPF con el aspecto de la interfaz Platinum de Mac OS 9.
 
+![Galería de controles](docs/galeria.png)
+
+*Captura real de la aplicación de galería, no una recreación.*
+
+Hay además un catálogo navegable en [docs/componentes.html](docs/componentes.html),
+con cada control desglosado por estados y el archivo donde vive. Ese sí es una
+recreación en CSS: sirve como inventario, no como prueba del render.
+
 ## Estructura
 
 | Proyecto | Qué es |
@@ -53,7 +61,16 @@ No puede resolverse desde un `ResourceDictionary`: es un ajuste de proceso.
 - **ComboBox** — popup menu con flechas y menú desplegable
 - **ScrollBar** — vertical y horizontal, con thumb arrastrable y estado deshabilitado
 
-Hay un catálogo visual en [docs/componentes.html](docs/componentes.html).
+### Detalles que no se resuelven con layout
+
+Tres piezas se dibujan midiendo el píxel físico de la pantalla en vez de dejarlas al
+sistema de layout, porque WPF redondea cada borde por separado y con la pantalla
+escalada el resultado sale asimétrico o borroso:
+
+| Pieza | Archivo |
+|---|---|
+| Rayado de la barra de título | `Controls/Pinstripe.cs` |
+| Contorno del botón por omisión | `Controls/DefaultRing.cs` |
 
 ## Tipografía
 

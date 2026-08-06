@@ -65,33 +65,31 @@
   .cell { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
   .label { font-size: 10px; color: var(--gray9); letter-spacing: .02em; }
 
-  /* Botón */
+  /* Botón: cara plana, el relieve lo dan filo, bisel y sombra */
   .btn {
     position: relative;
     display: inline-flex; align-items: center; justify-content: center;
-    min-width: 68px; height: 20px; padding: 0 10px;
+    min-width: 68px; height: 22px; padding: 0 10px;
     font-family: inherit; font-size: 12px; color: #000;
-    border: 1px solid var(--gray12); border-radius: 2px;
-    background: linear-gradient(to bottom, #fff 0%, var(--gray2) 50%, var(--gray4) 100%);
-    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5), 2px 2px 0 var(--gray7);
+    border: 1px solid var(--gray12); border-radius: 3px;
+    background: var(--gray2);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5), 1px 1px 0 var(--gray7);
   }
   .btn.pressed {
-    background: linear-gradient(to bottom, var(--gray7), var(--gray5) 50%, var(--gray4));
-    color: #fff;
-    box-shadow: inset 1px 1px 0 var(--gray8), inset -1px -1px 0 #fff;
-    transform: translate(2px, 2px);
+    background: var(--gray7); color: #fff;
+    box-shadow: inset 1px 1px 0 var(--gray8);
   }
   .btn.disabled {
     color: var(--gray6); border-color: var(--gray5);
     background: var(--gray2); box-shadow: none;
   }
-  .ring { display: inline-block; padding: 2px; border: 1px solid var(--gray12); border-radius: 3px; }
+  .ring { display: inline-block; padding: 2px; border: 1px solid var(--gray12); border-radius: 4px; }
 
-  /* Checkbox y radio: cuerpo levantado */
+  /* Checkbox y radio: cuerpo levantado, cara plana */
   .mark {
     position: relative; width: 14px; height: 14px; flex: 0 0 auto;
     border: 1px solid var(--gray12);
-    background: linear-gradient(to bottom, #fff 0%, var(--gray2) 50%, var(--gray4) 100%);
+    background: var(--gray2);
     box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5);
   }
   .mark.round { border-radius: 50%; }
@@ -110,11 +108,59 @@
 
   /* Campo de texto: pozo hundido */
   .field {
-    width: 150px; height: 20px; display: flex; align-items: center;
-    padding: 0 3px; font-family: Verdana, Tahoma, sans-serif; font-size: 12px;
+    width: 150px; height: 22px; display: flex; align-items: center;
+    padding: 0 3px;
+    font-family: "Franklin Gothic Medium", Tahoma, sans-serif; font-size: 12px;
     background: #fff; border: 1px solid var(--gray12);
-    box-shadow: inset 1px 1px 0 var(--gray5);
+    box-shadow: inset 2px 2px 0 var(--gray4);
   }
+
+  /* Popup menu: cuerpo de botón con flechas a la derecha */
+  .popup {
+    width: 150px; height: 22px; display: inline-flex; align-items: center;
+    padding: 0 0 0 8px;
+    font-family: "Franklin Gothic Medium", Tahoma, sans-serif; font-size: 12px;
+    border: 1px solid var(--gray12); border-radius: 3px;
+    background: var(--gray2);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5), 1px 1px 0 var(--gray7);
+  }
+  .popup .arrows {
+    margin-left: auto; width: 19px; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; border-left: 1px solid var(--gray5);
+  }
+  .popup .arrows i {
+    width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent;
+  }
+  .popup .arrows i.up { border-bottom: 4px solid #000; }
+  .popup .arrows i.dn { border-top: 4px solid #000; }
+
+  /* Scrollbar */
+  .sbar {
+    display: inline-flex; align-items: stretch; height: 16px; width: 260px;
+    border: 1px solid var(--gray12); background: #BDBDBD;
+  }
+  .sbar .arrow {
+    width: 14px; display: flex; align-items: center; justify-content: center;
+    background: var(--gray2);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5);
+  }
+  .sbar .arrow i {
+    width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  }
+  .sbar .arrow i.lf { border-right: 4px solid #000; }
+  .sbar .arrow i.rt { border-left: 4px solid #000; }
+  .sbar .track { flex: 1 1 auto; position: relative; box-shadow: inset 1px 1px 0 var(--gray5); }
+  .sbar .thumb {
+    position: absolute; top: 0; bottom: 0; left: 30%; width: 34%;
+    border: 1px solid var(--gray12); background: #8B8BC3;
+    box-shadow: inset 1px 1px 0 #B6B6DC;
+    display: flex; align-items: center; justify-content: center; gap: 2px;
+  }
+  .sbar .thumb b { display: block; width: 1px; height: 9px; background: #5B5B92; }
+  .sbar.off-state .thumb { display: none; }
+  .sbar.off-state .arrow i { opacity: .3; }
+  .sbar.off-state .arrow { box-shadow: none; }
   .field.disabled { background: var(--gray2); border-color: var(--gray5); color: var(--gray6); box-shadow: none; }
   .field.readonly { background: var(--gray2); }
   .sel { background: var(--accent); }
@@ -242,6 +288,62 @@
     </div>
   </div></div>
 
+  <!-- ============ POPUP MENU ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">ComboBox</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell">
+          <span class="label">Cerrado</span>
+          <span class="popup">Breeze<span class="arrows"><i class="up"></i><i class="dn"></i></span></span>
+        </div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumComboBox</code></td><td>Mismo cuerpo físico del botón más línea separadora y par de flechas; al desplegarse el cuerpo se queda hundido</td></tr>
+        <tr><td><code>PlatinumComboBoxItem</code></td><td>Renglón del menú con resalte azul claro y texto negro</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ SCROLLBAR ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">ScrollBar</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell">
+          <span class="label">Normal</span>
+          <span class="sbar">
+            <span class="arrow"><i class="lf"></i></span>
+            <span class="track"><span class="thumb"><b></b><b></b><b></b><b></b></span></span>
+            <span class="arrow"><i class="rt"></i></span>
+          </span>
+        </div>
+        <div class="cell">
+          <span class="label">Deshabilitada</span>
+          <span class="sbar off-state">
+            <span class="arrow"><i class="lf"></i></span>
+            <span class="track"><span class="thumb"><b></b><b></b><b></b><b></b></span></span>
+            <span class="arrow"><i class="rt"></i></span>
+          </span>
+        </div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumScrollBar</code></td><td>Vertical y horizontal; canal más oscuro que la cara de los controles, con sombra interior</td></tr>
+        <tr><td><code>PlatinumScrollThumb*</code></td><td>Única pieza del chrome con color; asidero de cuatro rayitas y oscurecido al arrastrar. Deshabilitada, el canal queda vacío</td></tr>
+      </table>
+    </div>
+  </div></div>
+
   <!-- ============ FUNDAMENTOS ============ -->
   <div class="win"><div class="inner">
     <div class="titlebar">
@@ -298,9 +400,11 @@
         <tr><td><code>Controls/PlatinumWindow.cs</code></td><td>Ventana: windowshade, grow box, maximizado acotado</td></tr>
         <tr><td><code>Controls/Pinstripe.cs</code></td><td>Rayado en píxeles físicos</td></tr>
         <tr><td><code>Controls/DefaultRing.cs</code></td><td>Contorno del botón por omisión</td></tr>
+        <tr><td><code>Themes/ComboBox.xaml</code></td><td>Popup menu y renglones del desplegable</td></tr>
+        <tr><td><code>Themes/ScrollBar.xaml</code></td><td>Barra de desplazamiento, flechas y thumb</td></tr>
       </table>
       <p class="pend" style="margin:14px 0 0; font-size:11px">
-        Pendientes acordados: popup menu, scrollbar, barra de menús, pestañas, listas y tablas.
+        Pendientes: barra de menús, pestañas, listas y tablas, deslizador, group box.
         Nota de integración: la app consumidora debe apagar
         <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
       </p>
