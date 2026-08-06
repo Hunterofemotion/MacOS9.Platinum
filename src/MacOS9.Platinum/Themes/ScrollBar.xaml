@@ -6,8 +6,8 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Botón de flecha. Comparte el cuerpo levantado del resto del tema, pero sin  -->
-    <!-- esquinas redondeadas ni sombra: va embutido dentro del marco de la barra.    -->
+    <!-- Botón de flecha. Cara plana, sin bisel: va embutido dentro del marco de la  -->
+    <!-- barra y el relieve solo ensuciaba el filo que ya cierra ese marco.           -->
     <Style x:Key="PlatinumScrollArrow" TargetType="{x:Type RepeatButton}">
         <Setter Property="Focusable" Value="False" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -17,27 +17,19 @@
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
                     <Grid>
                         <Border x:Name="Face" Background="{StaticResource ControlFaceBrush}" />
-                        <Border x:Name="BevelLight"
-                                BorderThickness="1,1,0,0"
-                                BorderBrush="{StaticResource BevelHighlightBrush}" />
-                        <Border x:Name="BevelDark"
-                                BorderThickness="0,0,1,1"
-                                BorderBrush="{StaticResource BevelShadowBrush}" />
                         <ContentPresenter x:Name="Glyph"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <!-- Al presionar solo oscurece la cara: sin bisel, ese cambio -->
+                        <!-- de tono es toda la realimentación que queda.              -->
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
-                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelDeepShadowBrush}" />
-                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
                         </Trigger>
-                        <!-- Sin bisel y con la flecha desvanecida: la barra sigue    -->
-                        <!-- ocupando su lugar pero se lee como inactiva.              -->
+                        <!-- Con la flecha desvanecida la barra sigue ocupando su      -->
+                        <!-- lugar pero se lee como inactiva.                          -->
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
-                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
                             <Setter TargetName="Glyph" Property="Opacity" Value="0.3" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -70,11 +62,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid x:Name="Root">
-                        <!-- Sin filos laterales: los costados los cierra el propio -->
-                        <!-- marco de la barra, no el thumb.                        -->
+                        <!-- Sin filos de ningún lado: los costados los cierra el      -->
+                        <!-- marco de la barra, y por donde corre no lleva nada, así   -->
+                        <!-- que se lee como una pieza que se desliza y no como una    -->
+                        <!-- caja pintada sobre el canal.                              -->
                         <Border x:Name="ThumbFace"
-                                BorderThickness="0,1,0,1"
-                                BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
 
                         <StackPanel x:Name="Grip"
@@ -115,8 +107,6 @@
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid x:Name="Root">
                         <Border x:Name="ThumbFace"
-                                BorderThickness="1,0,1,0"
-                                BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollThumbBrush}" />
 
                         <StackPanel Orientation="Horizontal"
@@ -146,6 +136,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Width" Value="16" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
@@ -156,7 +147,10 @@
                     <Grid>
                         <Border x:Name="Face" Background="{StaticResource ScrollTrackBrush}" />
 
-                        <Grid Margin="1">
+                        <!-- Sin margen: con él se asomaba la cara por la orilla y se  -->
+                        <!-- leía como un filo gris alrededor de la barra y de las     -->
+                        <!-- flechas.                                                   -->
+                        <Grid>
                             <!-- Las dos flechas van juntas al final, no una en cada    -->
                             <!-- extremo. Es la disposición de Platinum con Smart        -->
                             <!-- Scrolling, la que trae el modelo de referencia.         -->
@@ -173,21 +167,6 @@
                                                      Grid.Row="0"
                                                      LightBrush="{StaticResource ScrollTrackLightBrush}"
                                                      DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
-
-                            <!-- Una sola fila de sombra, y del gris del bisel, no del  -->
-                            <!-- marco: con dos filas y el tono oscuro la orilla de     -->
-                            <!-- arriba se leía como una banda pintada y no como el     -->
-                            <!-- canto de un canal hundido.                             -->
-                            <Border x:Name="ShadowDeep"
-                                    Grid.Row="0"
-                                    BorderThickness="1,1,0,0"
-                                    BorderBrush="{StaticResource WellShadowBrush}"
-                                    IsHitTestVisible="False" />
-
-                            <Border x:Name="ShadowSoft"
-                                    Grid.Row="0"
-                                    Visibility="Collapsed"
-                                    IsHitTestVisible="False" />
 
                             <RepeatButton Grid.Row="1"
                                           Style="{StaticResource PlatinumScrollArrow}"
@@ -224,8 +203,12 @@
                                     Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
                         </Grid>
 
+                        <!-- El grosor sale de la propiedad del control, no fijo, para -->
+                        <!-- que quien la aloje pueda apagar los lados que ya cierra   -->
+                        <!-- su propio marco. Dos filos negros encimados se leen como  -->
+                        <!-- una raya del doble de grueso.                             -->
                         <Border x:Name="Edge"
-                                BorderThickness="1"
+                                BorderThickness="{TemplateBinding BorderThickness}"
                                 BorderBrush="{StaticResource TextBrush}"
                                 IsHitTestVisible="False" />
                     </Grid>
@@ -240,8 +223,6 @@
                             <Setter TargetName="Sep1" Property="Background" Value="{StaticResource BevelShadowBrush}" />
                             <Setter TargetName="Sep2" Property="Background" Value="{StaticResource BevelShadowBrush}" />
                             <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
-                            <Setter TargetName="ShadowDeep" Property="Visibility" Value="Hidden" />
-                            <Setter TargetName="ShadowSoft" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -259,7 +240,7 @@
                             <Grid>
                                 <Border x:Name="Face" Background="{StaticResource ScrollTrackBrush}" />
 
-                                <Grid Margin="1">
+                                <Grid>
                                     <!-- Las dos flechas juntas al final, como en el     -->
                                     <!-- modelo de Platinum con Smart Scrolling.         -->
                                     <Grid.ColumnDefinitions>
@@ -272,19 +253,6 @@
                                                              Grid.Column="0"
                                                              LightBrush="{StaticResource ScrollTrackLightBrush}"
                                                              DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
-
-                                    <!-- Una sola fila de sombra y del gris del bisel:  -->
-                                    <!-- misma razón que en la vertical.                -->
-                                    <Border x:Name="ShadowDeep"
-                                            Grid.Column="0"
-                                            BorderThickness="1,1,0,0"
-                                            BorderBrush="{StaticResource WellShadowBrush}"
-                                            IsHitTestVisible="False" />
-
-                                    <Border x:Name="ShadowSoft"
-                                            Grid.Column="0"
-                                            Visibility="Collapsed"
-                                            IsHitTestVisible="False" />
 
                                     <RepeatButton Grid.Column="1"
                                                   Style="{StaticResource PlatinumScrollArrow}"
@@ -320,7 +288,7 @@
                                 </Grid>
 
                                 <Border x:Name="Edge"
-                                        BorderThickness="1"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
                                         BorderBrush="{StaticResource TextBrush}"
                                         IsHitTestVisible="False" />
                             </Grid>
@@ -332,8 +300,6 @@
                                     <Setter TargetName="Sep1" Property="Background" Value="{StaticResource BevelShadowBrush}" />
                                     <Setter TargetName="Sep2" Property="Background" Value="{StaticResource BevelShadowBrush}" />
                                     <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
-                                    <Setter TargetName="ShadowDeep" Property="Visibility" Value="Hidden" />
-                                    <Setter TargetName="ShadowSoft" Property="Visibility" Value="Hidden" />
                                     <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
