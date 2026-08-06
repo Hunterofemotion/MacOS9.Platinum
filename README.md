@@ -1,25 +1,25 @@
 # MacOS9.Platinum
 
-Biblioteca de controles WPF con el aspecto de la interfaz Platinum de Mac OS 9.
+A WPF control library with the look of the Mac OS 9 Platinum interface.
 
-![Galería de controles](docs/galeria.png)
+![Control gallery](docs/galeria.png)
 
-*Captura real de la aplicación de galería, no una recreación.*
+*An actual screenshot of the gallery application, not a mock-up.*
 
-Hay además un catálogo navegable en [docs/componentes.html](docs/componentes.html),
-con cada control desglosado por estados y el archivo donde vive. Ese sí es una
-recreación en CSS: sirve como inventario, no como prueba del render.
+There is also a browsable catalogue in [docs/componentes.html](docs/componentes.html),
+with every control broken down by state and the file it lives in. That one *is* a
+CSS re-creation: treat it as an inventory, not as proof of how things render.
 
-## Estructura
+## Layout
 
-| Proyecto | Qué es |
+| Project | What it is |
 |---|---|
-| `src/MacOS9.Platinum` | La biblioteca: diccionarios de recursos y controles propios |
-| `src/MacOS9.Platinum.Gallery` | Catálogo visual para revisar cada control durante el desarrollo |
+| `src/MacOS9.Platinum` | The library: resource dictionaries and custom controls |
+| `src/MacOS9.Platinum.Gallery` | A visual catalogue for reviewing each control while developing |
 
-## Uso
+## Usage
 
-La aplicación consumidora fusiona un solo diccionario:
+The consuming application merges a single dictionary:
 
 ```xml
 <Application.Resources>
@@ -27,21 +27,21 @@ La aplicación consumidora fusiona un solo diccionario:
 </Application.Resources>
 ```
 
-Con eso, todos los `Button`, `CheckBox`, `RadioButton`, `TextBox`, `ComboBox` y
-`ScrollBar` adoptan el aspecto Platinum sin tocar el marcado existente.
+That is enough for every `Button`, `CheckBox`, `RadioButton`, `TextBox`, `ComboBox`
+and `ScrollBar` to take on the Platinum look without touching existing markup.
 
-Para el chrome de ventana se usa el control `PlatinumWindow` en lugar de `Window`:
+For the window chrome, use the `PlatinumWindow` control instead of `Window`:
 
 ```xml
 <platinum:PlatinumWindow
     xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum">
 ```
 
-### Requisito de integración
+### One integration requirement
 
-WPF trae dos motores para dibujar la selección de texto. El viejo la pinta como un
-adorno encima del texto, así que un resalte opaco lo tapa. Hay que apagarlo en el
-arranque de la aplicación, antes de mostrar la primera ventana:
+WPF ships two engines for painting text selection. The older one draws it as an
+adornment on top of the text, so an opaque highlight hides the glyphs. Turn it off
+during application start-up, before the first window is shown:
 
 ```csharp
 AppContext.SetSwitch(
@@ -49,98 +49,114 @@ AppContext.SetSwitch(
     false);
 ```
 
-No puede resolverse desde un `ResourceDictionary`: es un ajuste de proceso.
+This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 
-## Controles
+## Controls
 
-- **PlatinumWindow** — barra de título rayada, close/zoom/collapse box, grow box,
-  marco de tres capas, windowshade, maximizado acotado al área de trabajo
-- **Button** — normal, por omisión (con contorno), presionado, deshabilitado
-- **CheckBox** y **RadioButton** — marcado, vacío, indeterminado, deshabilitado
-- **TextBox** — editable, solo lectura, deshabilitado, con selección opaca
-- **ComboBox** — popup menu con flechas y menú desplegable
-- **ScrollBar** — vertical y horizontal, flechas agrupadas al final del riel, canal
-  con textura de tablero a píxel físico y estado deshabilitado
-- **TabControl** — pestañas trapezoidales con la activa fundida con el panel
-- **ListView** — lista con columnas: encabezados con relieve, divisores, selección
-  de fila completa y plantilla propia del ScrollViewer de GridView
-- **Menu** y **ContextMenu** — barra de menús con submenús, elementos marcables,
-  gestos de teclado y separadores; resalte invertido azul, el único del tema
-- **Slider** — horizontal y vertical, con marcas; el pentágono del cursor se
-  rasteriza a píxel físico
-- **GroupBox** y **Separator** — línea grabada de dos tonos con el título
-  interrumpiéndola; alias de separador para ToolBar y StatusBar
-- **TreeView** — árbol con triángulos de despliegue e indentación del Finder
-- **ProgressBar** — determinada, indeterminada (franjas diagonales), vertical y
-  deshabilitada
-- **ToolTip** — la nota amarilla de la ayuda de Mac OS 9
-- **Iconos** — diez íconos vectoriales de 16×16 (carpeta, documento, disquete,
-  disco, papelera, alerta, info, sobre, computadora, lupa) en `Themes/Icons.xaml`
+- **PlatinumWindow** — pinstriped title bar, close/zoom/collapse box, grow box,
+  three-layer frame, windowshade, maximise bounded to the work area
+- **Button** — normal, default (with its ring), pressed, disabled
+- **CheckBox** and **RadioButton** — checked, unchecked, indeterminate, disabled
+- **TextBox** — editable, read-only, disabled, with opaque selection
+- **ComboBox** — popup menu with arrows, and drop-down menu
+- **ScrollBar** — vertical and horizontal, arrows grouped at the end of the track,
+  channel with a checkerboard texture snapped to physical pixels, disabled state.
+  The frame is bound to `BorderThickness`, so a host that already closes an edge
+  can switch off that side and avoid two rules stacking into one thick line
+- **TabControl** — trapezoidal tabs, the active one fused with the panel
+- **ListView** — list with columns: embossed headers, row dividers anchored to the
+  bottom of each row so the last one is closed too, full-row selection, and a
+  dedicated template for the GridView `ScrollViewer`
+- **Menu** and **ContextMenu** — menu bar with submenus, checkable items, keyboard
+  gestures and separators; inverted blue highlight, the only one in the theme
+- **Slider** — horizontal and vertical, with tick marks; the thumb pentagon is
+  rasterised to physical pixels
+- **GroupBox** and **Separator** — engraved two-tone line with the title breaking
+  it; separator aliases for `ToolBar` and `StatusBar`
+- **TreeView** — tree with disclosure triangles and Finder indentation
+- **ProgressBar** — determinate, indeterminate (diagonal stripes), vertical and
+  disabled
+- **ToolTip** — the yellow help note from Mac OS 9
+- **Icons** — ten 16×16 vector icons (folder, document, floppy, disk, trash, alert,
+  info, envelope, computer, magnifier) in `Themes/Icons.xaml`
 
-### Detalles que no se resuelven con layout
+### Details that layout alone cannot solve
 
-Varias piezas se dibujan midiendo el píxel físico de la pantalla en vez de dejarlas
-al sistema de layout, porque WPF redondea cada borde por separado y con la pantalla
-escalada el resultado sale asimétrico o borroso:
+Several pieces are drawn by measuring the physical pixel instead of leaving them to
+the layout system, because WPF rounds each edge independently and on a scaled
+display the result comes out asymmetric or blurry:
 
-| Pieza | Archivo |
+| Piece | File |
 |---|---|
-| Rayado de la barra de título | `Controls/Pinstripe.cs` |
-| Contorno del botón por omisión | `Controls/DefaultRing.cs` |
-| Triángulos de flechas y despliegues | `Controls/ArrowGlyph.cs` |
-| Tablero del canal de las barras | `Controls/CheckerTexture.cs` |
-| Pentágono del cursor del deslizador | `Controls/SliderThumbShape.cs` |
+| Title bar pinstripe | `Controls/Pinstripe.cs` |
+| Default button ring | `Controls/DefaultRing.cs` |
+| Arrow and disclosure triangles | `Controls/ArrowGlyph.cs` |
+| Scrollbar channel checkerboard | `Controls/CheckerTexture.cs` |
+| Slider thumb pentagon | `Controls/SliderThumbShape.cs` |
 
-La excepción deliberada son las pestañas (`Controls/TabShape.cs`): sus diagonales y
-curvas necesitan suavizado, así que se dibujan como vector y sólo se ajustan a la
-retícula los tramos rectos, igual que hace `Border` con los botones.
+Tabs (`Controls/TabShape.cs`) are the deliberate exception: their diagonals and
+curves need anti-aliasing, so they are drawn as vectors and only the straight runs
+are snapped to the grid, the same way `Border` does for buttons.
 
-El tema también fija `TextOptions.TextFormattingMode="Display"`, porque el modo
-`Ideal` de WPF posiciona las astas en fracciones de píxel y a 11 px un trazo de uno
-se reparte entre tres columnas.
+The theme also sets `TextOptions.TextFormattingMode="Display"`, because WPF's
+`Ideal` mode positions stems on fractional pixels, and at 11 px a one-pixel stroke
+gets spread across three columns.
 
-## Tipografía
+## Typography
 
-Platinum usa Charcoal para el chrome y Geneva para el contenido. Ninguna existe en
-Windows, así que el tema sustituye Charcoal por Tahoma y Geneva por Franklin Gothic
-Medium. El reparto es una regla del tema: todo control que muestre datos del usuario
-usa `ViewFontFamily`, y todo lo que sea chrome usa `SystemFontFamily`.
+Platinum uses Charcoal for chrome and Geneva for content. Neither exists on Windows,
+so the theme substitutes Tahoma for Charcoal and Franklin Gothic Medium for Geneva.
+The split is a rule of the theme: every control that displays user data uses
+`ViewFontFamily`, and everything that is chrome uses `SystemFontFamily`.
 
-## Compilar
+## Building
 
 ```
 dotnet build MacOS9.Platinum.slnx
 dotnet run --project src/MacOS9.Platinum.Gallery
 ```
 
-Requiere .NET 9 o superior con la carga de escritorio de Windows.
+Requires .NET 9 or later with the Windows desktop workload.
 
-## Verificación
+## Verification
 
-Dos herramientas en [tools/](tools/), fuera de la solución porque no son parte de la
-biblioteca:
+Two tools live in [tools/](tools/), outside the solution because they are not part
+of the library:
 
 ```
 pwsh -File tools/check-resources.ps1
 dotnet run --project tools/Probe
 ```
 
-`check-resources.ps1` comprueba que cada `{StaticResource}` se resuelva con las
-llaves que su propio diccionario alcanza, que ningún `TargetName` apunte a un
-`x:Name` inexistente y que ninguna llave se defina dos veces. Nada de eso falla al
-compilar: un `StaticResource` dentro de un `ControlTemplate` se resuelve al
-instanciar la plantilla, así que una llave mal escrita en la rama del submenú tira la
-aplicación la primera vez que alguien abre ese submenú, no al arrancar.
+`check-resources.ps1` checks that every `{StaticResource}` resolves against the keys
+its own dictionary can reach, that no `TargetName` points at a missing `x:Name`, and
+that no key is defined twice. None of that fails at compile time: a `StaticResource`
+inside a `ControlTemplate` is resolved when the template is instantiated, so a
+misspelled key in the submenu branch brings the application down the first time
+somebody opens that submenu, not at start-up.
 
-`Probe` instancia todas las plantillas y estilos del tema —lo que obliga a WPF a
-resolverlos— y renderiza cada control con `RenderTargetBitmap` a `tools/Probe/bin/.../render`.
-No abre ninguna ventana ni toca el escritorio, así que sirve para revisar estados que
-una captura de pantalla no alcanza: deshabilitados, contenido que desborda, ventana
-enrollada, anchos extremos. Cambiar `dpiAware` a `false` en `app.manifest` y recompilar
-produce el caso de 100 %.
+`Probe` instantiates every template and style in the theme — which forces WPF to
+resolve them — and renders each control with `RenderTargetBitmap` into
+`tools/Probe/bin/.../render`. It opens no window and never touches the desktop, so
+it is useful for states a screenshot cannot reach: disabled, overflowing content,
+a rolled-up window, extreme widths. Switching `dpiAware` to `false` in
+`app.manifest` and rebuilding produces the 100% case.
 
-## Licencia
+### Measuring instead of eyeballing
 
-MIT. Puedes clonar, modificar, usar y redistribuir la biblioteca, incluso en
-proyectos comerciales; lo único que se pide es conservar el aviso de copyright.
-El texto completo está en [LICENSE](LICENSE).
+Visual defects in this library are settled by sampling pixels, not by opinion. The
+recurring cause is two elements painting the same place: if an edge looks twice as
+thick, look for the second owner rather than adjusting the neighbour. Capture the
+window, profile the row or column across the defect, name the colours, fix the
+element that paints too much, then profile the same cut again.
+
+When a defect is structural, dumping WPF's own stock template answers "how does the
+framework solve this by default?" in seconds. That is how the doubled scrollbar edge
+was traced: the stock `GridView` scroll viewer draws no frame around the scrollbar
+at all, because the frame belongs to the list and there is exactly one owner.
+
+## Licence
+
+MIT. You may clone, modify, use and redistribute the library, including in
+commercial projects; the only requirement is that you keep the copyright notice.
+The full text is in [LICENSE](LICENSE).
