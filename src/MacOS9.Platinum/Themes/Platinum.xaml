@@ -1,0 +1,18 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Punto de entrada único del tema. La aplicación consumidora solo fusiona      -->
+    <!-- este diccionario en App.xaml. El orden importa: paleta y tipografía primero, -->
+    <!-- porque los controles resuelven sus StaticResource contra ellas.              -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Button.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Selection.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TextBox.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ComboBox.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ScrollBar.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Window.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

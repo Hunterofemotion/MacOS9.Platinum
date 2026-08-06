@@ -1,0 +1,105 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Rampa de grises de la Appearance Manager de Mac OS 8.5/9. Platinum usa       -->
+    <!-- una escala fija de 13 pasos; todo el chrome sale de combinar estos valores.  -->
+    <Color x:Key="Gray0">#FFFFFFFF</Color>
+    <Color x:Key="Gray1">#FFEEEEEE</Color>
+    <Color x:Key="Gray2">#FFDDDDDD</Color>
+    <Color x:Key="Gray3">#FFCCCCCC</Color>
+    <Color x:Key="Gray4">#FFBBBBBB</Color>
+    <Color x:Key="Gray5">#FFAAAAAA</Color>
+    <Color x:Key="Gray6">#FF999999</Color>
+    <Color x:Key="Gray7">#FF888888</Color>
+    <Color x:Key="Gray8">#FF777777</Color>
+    <Color x:Key="Gray9">#FF666666</Color>
+    <Color x:Key="Gray10">#FF555555</Color>
+    <Color x:Key="Gray11">#FF444444</Color>
+    <Color x:Key="Gray12">#FF000000</Color>
+
+    <!-- Acentos. El azul de selección es el resaltado por omisión del tema Platinum; -->
+    <!-- el lavanda es el color de escritorio clásico.                               -->
+    <Color x:Key="AccentColor">#FFC8D4ED</Color>
+    <Color x:Key="AccentDarkColor">#FF3A5FA8</Color>
+    <Color x:Key="DesktopColor">#FF8081A4</Color>
+
+    <!-- Superficies -->
+    <SolidColorBrush x:Key="WindowFaceBrush" Color="{StaticResource Gray2}" />
+    <SolidColorBrush x:Key="ContentFaceBrush" Color="{StaticResource Gray0}" />
+    <SolidColorBrush x:Key="ControlFaceBrush" Color="{StaticResource Gray2}" />
+    <SolidColorBrush x:Key="DesktopBrush" Color="{StaticResource DesktopColor}" />
+
+    <!-- Bordes y biseles. En Platinum un control es siempre marco oscuro + realce    -->
+    <!-- blanco arriba/izquierda + sombra gris abajo/derecha.                         -->
+    <SolidColorBrush x:Key="FrameBrush" Color="{StaticResource Gray10}" />
+    <SolidColorBrush x:Key="FrameLightBrush" Color="{StaticResource Gray7}" />
+    <SolidColorBrush x:Key="BevelHighlightBrush" Color="{StaticResource Gray0}" />
+    <SolidColorBrush x:Key="BevelShadowBrush" Color="{StaticResource Gray5}" />
+    <SolidColorBrush x:Key="BevelDeepShadowBrush" Color="{StaticResource Gray7}" />
+
+    <!-- Texto -->
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource Gray12}" />
+    <SolidColorBrush x:Key="TextDisabledBrush" Color="{StaticResource Gray6}" />
+    <SolidColorBrush x:Key="TextInvertedBrush" Color="{StaticResource Gray0}" />
+
+    <!-- Selección -->
+    <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="SelectionInactiveBrush" Color="{StaticResource Gray3}" />
+    <SolidColorBrush x:Key="SelectionStrongBrush" Color="{StaticResource AccentDarkColor}" />
+
+    <!-- Degradado de cara de control: sutil, de casi blanco a gris medio. Es lo que  -->
+    <!-- distingue Platinum del gris plano de System 7.                               -->
+    <LinearGradientBrush x:Key="ControlFaceGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Gray0}" />
+        <GradientStop Offset="0.5" Color="{StaticResource Gray2}" />
+        <GradientStop Offset="1.0" Color="{StaticResource Gray4}" />
+    </LinearGradientBrush>
+
+    <!-- Cara presionada: el degradado se invierte y se oscurece un paso. -->
+    <LinearGradientBrush x:Key="ControlFacePressedGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Gray7}" />
+        <GradientStop Offset="0.5" Color="{StaticResource Gray5}" />
+        <GradientStop Offset="1.0" Color="{StaticResource Gray4}" />
+    </LinearGradientBrush>
+
+    <!-- Pozo hundido: es la cara de los controles en los que se "entra" algo         -->
+    <!-- (checkbox, radio, campo de texto). Va casi blanco y con el degradado al      -->
+    <!-- revés que un botón: oscuro arriba, claro abajo.                              -->
+    <LinearGradientBrush x:Key="WellFaceGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Gray4}" />
+        <GradientStop Offset="0.5" Color="{StaticResource Gray2}" />
+        <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
+    </LinearGradientBrush>
+
+    <!-- Sombra del escalón del marco de ventana. Va un paso más oscura que la del   -->
+    <!-- bisel porque tiene que leerse como cambio de nivel, no como filo.           -->
+    <SolidColorBrush x:Key="FrameShadowBrush" Color="{StaticResource Gray6}" />
+
+    <!-- Sombra interior de los pozos. Va más clara que la sombra de bisel porque    -->
+    <!-- ocupa más grosor: a 2 px, un gris medio se leería como un borde y no como   -->
+    <!-- profundidad.                                                                -->
+    <SolidColorBrush x:Key="WellShadowBrush" Color="{StaticResource Gray4}" />
+
+    <!-- Bisel hundido: sombra arriba/izquierda, realce abajo/derecha. -->
+    <LinearGradientBrush x:Key="WellBevelBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Gray6}" />
+        <GradientStop Offset="0.5" Color="{StaticResource Gray5}" />
+        <GradientStop Offset="0.5" Color="{StaticResource Gray1}" />
+        <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
+    </LinearGradientBrush>
+
+    <!-- Barra de desplazamiento. El thumb es la única pieza del chrome que lleva    -->
+    <!-- color: toma el acento del tema, no el gris de los controles.                -->
+    <SolidColorBrush x:Key="ScrollTrackBrush" Color="#FFBDBDBD" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#FF8B8BC3" />
+    <SolidColorBrush x:Key="ScrollThumbPressedBrush" Color="#FF6B6BA8" />
+    <SolidColorBrush x:Key="ScrollThumbGripBrush" Color="#FF5B5B92" />
+    <SolidColorBrush x:Key="ScrollThumbHighlightBrush" Color="#FFB6B6DC" />
+
+    <!-- Cara presionada plana, para los controles que no usan degradado. -->
+    <SolidColorBrush x:Key="ControlFacePressedBrush" Color="{StaticResource Gray7}" />
+
+    <!-- Cara deshabilitada: sin realce, plana. -->
+    <SolidColorBrush x:Key="ControlFaceDisabledBrush" Color="{StaticResource Gray2}" />
+
+</ResourceDictionary>

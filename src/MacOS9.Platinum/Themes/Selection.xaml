@@ -1,0 +1,182 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Checkbox y radio comparten el mismo pozo hundido de 12 px; solo cambia la    -->
+    <!-- forma y la marca de estado, por eso viven en el mismo archivo.               -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="PlatinumCheckBox" TargetType="{x:Type CheckBox}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Grid Width="14" Height="14" VerticalAlignment="Center">
+                            <!-- Cuerpo levantado, igual que el botón: marco negro, cara -->
+                            <!-- con degradado claro arriba y el bisel repartido por     -->
+                            <!-- lado, luz arriba-izquierda y sombra abajo-derecha.      -->
+                            <Border x:Name="Frame"
+                                    BorderThickness="1"
+                                    BorderBrush="{StaticResource TextBrush}">
+                                <Grid>
+                                    <Border x:Name="Face" Background="{StaticResource ControlFaceBrush}" />
+                                    <Border x:Name="BevelLight"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource BevelHighlightBrush}" />
+                                    <Border x:Name="BevelDark"
+                                            BorderThickness="0,0,1,1"
+                                            BorderBrush="{StaticResource BevelShadowBrush}" />
+                                </Grid>
+                            </Border>
+
+                            <Path x:Name="CheckMark"
+                                  Data="M 3,7 L 6,10 L 11,3"
+                                  Stroke="{StaticResource TextBrush}"
+                                  StrokeThickness="2"
+                                  StrokeStartLineCap="Square"
+                                  StrokeEndLineCap="Square"
+                                  Visibility="Collapsed" />
+
+                            <!-- Estado indeterminado: guion horizontal. -->
+                            <Rectangle x:Name="IndeterminateMark"
+                                       Width="7"
+                                       Height="2"
+                                       Fill="{StaticResource TextBrush}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Visibility="Collapsed" />
+                        </Grid>
+
+                        <ContentPresenter Margin="6,0,0,0"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          RecognizesAccessKey="True" />
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="IndeterminateMark" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!-- Al presionar se hunde: el bisel se invierte. -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelDeepShadowBrush}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="CheckMark" Property="Stroke" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="IndeterminateMark" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumRadioButton" TargetType="{x:Type RadioButton}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <Grid Width="14" Height="14" VerticalAlignment="Center">
+                            <!-- Mismo cuerpo levantado que el checkbox; solo cambia la  -->
+                            <!-- forma. Con CornerRadius, un borde de un solo lado se    -->
+                            <!-- dibuja como media circunferencia, que es justo el       -->
+                            <!-- reparto de luz y sombra que necesita un círculo.        -->
+                            <Border x:Name="Frame"
+                                    CornerRadius="7"
+                                    BorderThickness="1"
+                                    BorderBrush="{StaticResource TextBrush}">
+                                <Grid>
+                                    <Border x:Name="Face"
+                                            CornerRadius="6"
+                                            Background="{StaticResource ControlFaceBrush}" />
+                                    <Border x:Name="BevelLight"
+                                            CornerRadius="6"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource BevelHighlightBrush}" />
+                                    <Border x:Name="BevelDark"
+                                            CornerRadius="6"
+                                            BorderThickness="0,0,1,1"
+                                            BorderBrush="{StaticResource BevelShadowBrush}" />
+                                </Grid>
+                            </Border>
+
+                            <!-- El punto no es un disco plano: lleva un reflejo arriba  -->
+                            <!-- a la izquierda que lo convierte en una esfera.          -->
+                            <Grid x:Name="Dot"
+                                  Width="8"
+                                  Height="8"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Visibility="Collapsed">
+                                <Ellipse x:Name="DotFill" Fill="{StaticResource TextBrush}" />
+                                <Ellipse x:Name="DotGlint"
+                                         Width="2.5"
+                                         Height="2.5"
+                                         Margin="1.5,1.5,0,0"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Top"
+                                         Fill="{StaticResource BevelHighlightBrush}" />
+                            </Grid>
+                        </Grid>
+
+                        <ContentPresenter Margin="6,0,0,0"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          RecognizesAccessKey="True" />
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Dot" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelDeepShadowBrush}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="DotFill" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="DotGlint" Property="Visibility" Value="Collapsed" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource PlatinumCheckBox}" />
+    <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource PlatinumRadioButton}" />
+
+</ResourceDictionary>

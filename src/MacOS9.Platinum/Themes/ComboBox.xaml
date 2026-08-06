@@ -1,0 +1,183 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Cuerpo del popup: es el mismo botón físico, con una línea separadora a la    -->
+    <!-- derecha y el par de flechas. No hereda del estilo de Button para poder       -->
+    <!-- alinear el texto a la izquierda y reservar el espacio de las flechas.        -->
+    <Style x:Key="PlatinumComboBoxToggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClickMode" Value="Press" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="Shadow"
+                                Margin="1,1,0,0"
+                                CornerRadius="3"
+                                Background="{StaticResource BevelDeepShadowBrush}" />
+
+                        <Border x:Name="Frame"
+                                Margin="0,0,1,1"
+                                CornerRadius="3"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}">
+                            <Grid>
+                                <Border x:Name="Face"
+                                        CornerRadius="2"
+                                        Background="{StaticResource ControlFaceBrush}" />
+                                <Border x:Name="BevelLight"
+                                        CornerRadius="2"
+                                        BorderThickness="1,1,0,0"
+                                        BorderBrush="{StaticResource BevelHighlightBrush}" />
+                                <Border x:Name="BevelDark"
+                                        CornerRadius="2"
+                                        BorderThickness="0,0,1,1"
+                                        BorderBrush="{StaticResource BevelShadowBrush}" />
+
+                                <!-- Zona de flechas, separada del texto por una línea. -->
+                                <Grid HorizontalAlignment="Right" Width="19">
+                                    <Border Width="1"
+                                            HorizontalAlignment="Left"
+                                            Margin="0,2"
+                                            Background="{StaticResource BevelShadowBrush}" />
+
+                                    <StackPanel HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                        <Path x:Name="ArrowUp"
+                                              Data="M 0,4 L 4,0 L 8,4 Z"
+                                              Fill="{StaticResource TextBrush}"
+                                              Margin="0,0,0,2" />
+                                        <Path x:Name="ArrowDown"
+                                              Data="M 0,0 L 4,4 L 8,0 Z"
+                                              Fill="{StaticResource TextBrush}" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Mientras el menú está desplegado, el cuerpo se queda      -->
+                        <!-- hundido, igual que un botón presionado.                    -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Shadow" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelDeepShadowBrush}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="ArrowUp" Property="Fill" Value="{StaticResource TextInvertedBrush}" />
+                            <Setter TargetName="ArrowDown" Property="Fill" Value="{StaticResource TextInvertedBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Shadow" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="ArrowUp" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="ArrowDown" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Renglón del menú desplegado. El resalte de Platinum es el azul claro con el  -->
+    <!-- texto en negro, no un azul fuerte con texto blanco.                          -->
+    <Style x:Key="PlatinumComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Padding" Value="8,3" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border x:Name="Row" Background="Transparent">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="MinHeight" Value="22" />
+        <Setter Property="MinWidth" Value="80" />
+        <Setter Property="Padding" Value="8,0,25,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="ItemContainerStyle" Value="{StaticResource PlatinumComboBoxItem}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <ToggleButton Style="{StaticResource PlatinumComboBoxToggle}"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+
+                        <ContentPresenter x:Name="Selected"
+                                          Margin="{TemplateBinding Padding}"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          IsHitTestVisible="False" />
+
+                        <Popup x:Name="PART_Popup"
+                               AllowsTransparency="True"
+                               Placement="Bottom"
+                               VerticalOffset="1"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               PopupAnimation="None">
+                            <!-- El menú desplegado no lleva bisel: es una hoja plana  -->
+                            <!-- con filo negro y sombra, como los menús del sistema.  -->
+                            <Grid Margin="0,0,2,2"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border Margin="2,2,-2,-2" Background="{StaticResource BevelDeepShadowBrush}" />
+                                <Border BorderThickness="1"
+                                        BorderBrush="{StaticResource TextBrush}"
+                                        Background="{StaticResource ContentFaceBrush}">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter SnapsToDevicePixels="True" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource PlatinumComboBox}" />
+    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource PlatinumComboBoxItem}" />
+
+</ResourceDictionary>

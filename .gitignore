@@ -1,0 +1,14 @@
+# Salida de compilación
+bin/
+obj/
+
+# Carpetas de herramientas
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Imágenes de referencia usadas para muestrear colores y medidas.
+# Son capturas generadas, no fuentes del proyecto.
+*.png
+!docs/**/*.png

@@ -1,0 +1,86 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Color del resalte cuando la ventana está inactiva. WPF lo resuelve por esta -->
+    <!-- llave de SystemColors, así que se reemplaza aquí en vez de por control.     -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                     Color="{StaticResource Gray3}" />
+
+    <!-- Campo de texto. Es el pozo hundido del checkbox llevado a un rectángulo      -->
+    <!-- grande: filo negro, sombra de un píxel por dentro arriba e izquierda, y      -->
+    <!-- relleno blanco. El contenido usa la tipografía de vistas, no la del sistema. -->
+    <Style x:Key="PlatinumTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <!-- Selección al estilo Platinum: bloque azul opaco con el texto negro      -->
+        <!-- encima. SelectionTextBrush es lo que permite la opacidad total sin      -->
+        <!-- perder lo escrito, porque redibuja el texto sobre el resalte.           -->
+        <Setter Property="SelectionBrush" Value="{StaticResource SelectionBrush}" />
+        <Setter Property="SelectionTextBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="SelectionOpacity" Value="1" />
+        <!-- Platinum sigue mostrando la selección cuando la ventana pierde el foco, -->
+        <!-- solo que en gris. WPF la esconde por omisión.                           -->
+        <Setter Property="IsInactiveSelectionHighlightEnabled" Value="True" />
+        <Setter Property="CaretBrush" Value="{StaticResource TextBrush}" />
+        <!-- La sombra interior se dibuja encima del contenido y le quita espacio; se -->
+        <!-- deja así a propósito, sin agrandar el campo para compensarla.            -->
+        <Setter Property="Padding" Value="3,1" />
+        <Setter Property="MinHeight" Value="22" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="Frame"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}"
+                            Background="{StaticResource ContentFaceBrush}">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Focusable="False"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden" />
+
+                            <!-- Una sola línea gris por dentro, arriba y a la           -->
+                            <!-- izquierda: es la forma en que Platinum insinúa que la   -->
+                            <!-- luz entra desde arriba y el campo está rehundido. Los   -->
+                            <!-- lados opuestos quedan limpios, sin realce.              -->
+                            <!-- Va encima del contenido para que no se pierda cuando    -->
+                            <!-- el texto llega al filo.                                 -->
+                            <Border x:Name="WellShadow"
+                                    BorderThickness="2,2,0,0"
+                                    BorderBrush="{StaticResource WellShadowBrush}" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Deshabilitado: el pozo se aplana y toma el gris de la     -->
+                        <!-- ventana, como si no hubiera dónde escribir.               -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="WellShadow" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsReadOnly" Value="True">
+                            <Setter TargetName="Frame" Property="Background" Value="{StaticResource WindowFaceBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PlatinumTextBox}" />
+
+</ResourceDictionary>

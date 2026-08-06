@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MacOS9.Platinum.Gallery/MacOS9.Platinum.Gallery.csproj" />
+    <Project Path="src/MacOS9.Platinum/MacOS9.Platinum.csproj" />
+  </Folder>
+</Solution>

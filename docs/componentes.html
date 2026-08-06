@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacOS9.Platinum — componentes</title>
+<style>
+  :root {
+    --gray0:#FFFFFF; --gray1:#EEEEEE; --gray2:#DDDDDD; --gray3:#CCCCCC;
+    --gray4:#BBBBBB; --gray5:#AAAAAA; --gray6:#999999; --gray7:#888888;
+    --gray8:#777777; --gray9:#666666; --gray10:#555555; --gray11:#444444;
+    --gray12:#000000;
+    --accent:#C8D4ED; --accent-dark:#3A5FA8; --desktop:#8081A4;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 32px 24px 64px;
+    background: var(--desktop);
+    font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: #111;
+  }
+
+  .page { max-width: 1000px; margin: 0 auto; }
+
+  h1 {
+    font-size: 20px; margin: 0 0 4px; color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,.35);
+  }
+  .sub { color: #e6e6f2; margin: 0 0 24px; font-size: 12px; }
+
+  /* Ventana Platinum, usada como contenedor de cada sección */
+  .win {
+    background: var(--gray2);
+    border: 1px solid var(--gray12);
+    box-shadow: 2px 2px 0 rgba(0,0,0,.25);
+    margin-bottom: 22px;
+  }
+  .win > .inner { border-top: 1px solid #fff; border-left: 1px solid #fff; }
+
+  .titlebar {
+    height: 24px; display: flex; align-items: center; gap: 4px;
+    padding: 0 4px;
+    background: linear-gradient(to bottom, #fff 0%, var(--gray2) 30%, var(--gray3) 100%);
+  }
+  .tbox {
+    width: 15px; height: 15px; flex: 0 0 auto;
+    border: 1px solid var(--gray12);
+    background: linear-gradient(to bottom, #fff, var(--gray2) 50%, var(--gray4));
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5);
+  }
+  .stripes {
+    flex: 1 1 auto; height: 14px;
+    background: repeating-linear-gradient(to bottom,
+      #F8F8F8 0 1px, #8A8A8A 1px 2px);
+  }
+  .title { font-weight: bold; font-size: 12px; padding: 0 6px; white-space: nowrap; }
+
+  .body { margin: 0 5px 5px; border: 1px solid var(--gray12); background: var(--gray2); padding: 16px; }
+
+  .row { display: flex; flex-wrap: wrap; gap: 26px; align-items: flex-start; }
+  .cell { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
+  .label { font-size: 10px; color: var(--gray9); letter-spacing: .02em; }
+
+  /* Botón */
+  .btn {
+    position: relative;
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 68px; height: 20px; padding: 0 10px;
+    font-family: inherit; font-size: 12px; color: #000;
+    border: 1px solid var(--gray12); border-radius: 2px;
+    background: linear-gradient(to bottom, #fff 0%, var(--gray2) 50%, var(--gray4) 100%);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5), 2px 2px 0 var(--gray7);
+  }
+  .btn.pressed {
+    background: linear-gradient(to bottom, var(--gray7), var(--gray5) 50%, var(--gray4));
+    color: #fff;
+    box-shadow: inset 1px 1px 0 var(--gray8), inset -1px -1px 0 #fff;
+    transform: translate(2px, 2px);
+  }
+  .btn.disabled {
+    color: var(--gray6); border-color: var(--gray5);
+    background: var(--gray2); box-shadow: none;
+  }
+  .ring { display: inline-block; padding: 2px; border: 1px solid var(--gray12); border-radius: 3px; }
+
+  /* Checkbox y radio: cuerpo levantado */
+  .mark {
+    position: relative; width: 14px; height: 14px; flex: 0 0 auto;
+    border: 1px solid var(--gray12);
+    background: linear-gradient(to bottom, #fff 0%, var(--gray2) 50%, var(--gray4) 100%);
+    box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 var(--gray5);
+  }
+  .mark.round { border-radius: 50%; }
+  .mark.off-state { border-color: var(--gray6); background: var(--gray2); box-shadow: none; }
+  .mark svg { position: absolute; inset: 0; }
+  .dot {
+    position: absolute; left: 50%; top: 50%; width: 6px; height: 6px;
+    margin: -3px 0 0 -3px; border-radius: 50%; background: #000;
+  }
+  .dash {
+    position: absolute; left: 50%; top: 50%; width: 7px; height: 2px;
+    margin: -1px 0 0 -3.5px; background: #000;
+  }
+  .opt { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+  .opt.off-state { color: var(--gray6); }
+
+  /* Campo de texto: pozo hundido */
+  .field {
+    width: 150px; height: 20px; display: flex; align-items: center;
+    padding: 0 3px; font-family: Verdana, Tahoma, sans-serif; font-size: 12px;
+    background: #fff; border: 1px solid var(--gray12);
+    box-shadow: inset 1px 1px 0 var(--gray5);
+  }
+  .field.disabled { background: var(--gray2); border-color: var(--gray5); color: var(--gray6); box-shadow: none; }
+  .field.readonly { background: var(--gray2); }
+  .sel { background: var(--accent); }
+
+  /* Grow box */
+  .grow {
+    width: 15px; height: 15px; border-top: 1px solid #000; border-left: 1px solid #000;
+    background: repeating-linear-gradient(135deg,
+      var(--gray9) 0 1.5px, var(--gray2) 1.5px 4px);
+  }
+
+  /* Paleta */
+  .swatches { display: flex; flex-wrap: wrap; gap: 2px; }
+  .sw { width: 54px; }
+  .sw i { display: block; height: 30px; border: 1px solid var(--gray9); }
+  .sw span { display: block; font-size: 9px; color: var(--gray9); padding-top: 3px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 11px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--gray4); vertical-align: top; }
+  th { color: var(--gray9); font-weight: bold; }
+  code { font-family: Consolas, monospace; font-size: 11px; }
+  .pend { color: var(--gray8); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>MacOS9.Platinum</h1>
+  <p class="sub">Biblioteca de controles WPF con el aspecto de Mac OS 9. Inventario de lo construido hasta ahora.</p>
+
+  <!-- ============ VENTANA ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">PlatinumWindow</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell"><span class="label">Close box</span><div class="tbox"></div></div>
+        <div class="cell"><span class="label">Zoom box</span><div class="tbox"></div></div>
+        <div class="cell"><span class="label">Collapse box</span><div class="tbox"></div></div>
+        <div class="cell"><span class="label">Pinstripe</span><div class="stripes" style="width:120px"></div></div>
+        <div class="cell"><span class="label">Grow box</span><div class="grow"></div></div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumWindow</code></td><td>Chrome completo: barra de 24 px, marco de tres capas (filo negro, canal gris, filo interior), arrastre y redimensionado nativos vía <code>WindowChrome</code>, maximizado acotado al área de trabajo, windowshade</td></tr>
+        <tr><td><code>Pinstripe</code></td><td>Rayado dibujado en píxeles físicos exactos; un mosaico en unidades lógicas se interpola y se ve lavado</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ BOTONES ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Button</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell"><span class="label">Normal</span><span class="btn">Normal</span></div>
+        <div class="cell"><span class="label">Por omisión</span><span class="ring"><span class="btn">OK</span></span></div>
+        <div class="cell"><span class="label">Presionado</span><span class="btn pressed">Presionado</span></div>
+        <div class="cell"><span class="label">Deshabilitado</span><span class="btn disabled">Disabled</span></div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumPushButton</code></td><td>Cuerpo físico: filo negro, bisel repartido por lado y sombra proyectada; al presionar baja sobre su propia sombra</td></tr>
+        <tr><td><code>DefaultRing</code></td><td>Contorno del botón por omisión, a 2 px equidistantes del filo negro, dibujado en píxeles físicos</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ SELECCIÓN ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">CheckBox · RadioButton</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell">
+          <span class="label">CheckBox</span>
+          <span class="opt"><span class="mark"><svg viewBox="0 0 14 14"><path d="M 3 7 L 6 10 L 11 3" fill="none" stroke="#000" stroke-width="2"/></svg></span> Marcado</span>
+          <span class="opt"><span class="mark"></span> Vacío</span>
+          <span class="opt"><span class="mark"><span class="dash"></span></span> Indeterminado</span>
+          <span class="opt off-state"><span class="mark off-state"></span> Deshabilitado</span>
+        </div>
+        <div class="cell">
+          <span class="label">RadioButton</span>
+          <span class="opt"><span class="mark round"><span class="dot"></span></span> Seleccionado</span>
+          <span class="opt"><span class="mark round"></span> Vacío</span>
+          <span class="opt off-state"><span class="mark round off-state"></span> Deshabilitado</span>
+        </div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumCheckBox</code></td><td>Cuadro levantado de 14 px con palomita contenida; estados marcado, vacío, indeterminado y deshabilitado</td></tr>
+        <tr><td><code>PlatinumRadioButton</code></td><td>Mismo cuerpo en círculo; el bisel de un solo lado con radio dibuja las medias circunferencias de luz y sombra</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ TEXTO ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">TextBox</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <div class="cell"><span class="label">Editable</span><span class="field">192.168.0.45</span></div>
+        <div class="cell"><span class="label">Con selección</span><span class="field"><span class="sel">192.168.0.45</span></span></div>
+        <div class="cell"><span class="label">Solo lectura</span><span class="field readonly">Solo lectura</span></div>
+        <div class="cell"><span class="label">Deshabilitado</span><span class="field disabled">Deshabilitado</span></div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumTextBox</code></td><td>Pozo hundido con relleno blanco y tipografía de vistas; selección azul opaca con el texto legible encima</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ FUNDAMENTOS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Paleta y tipografía</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="swatches">
+        <div class="sw"><i style="background:var(--gray0)"></i><span>Gray0</span></div>
+        <div class="sw"><i style="background:var(--gray1)"></i><span>Gray1</span></div>
+        <div class="sw"><i style="background:var(--gray2)"></i><span>Gray2</span></div>
+        <div class="sw"><i style="background:var(--gray3)"></i><span>Gray3</span></div>
+        <div class="sw"><i style="background:var(--gray4)"></i><span>Gray4</span></div>
+        <div class="sw"><i style="background:var(--gray5)"></i><span>Gray5</span></div>
+        <div class="sw"><i style="background:var(--gray6)"></i><span>Gray6</span></div>
+        <div class="sw"><i style="background:var(--gray7)"></i><span>Gray7</span></div>
+        <div class="sw"><i style="background:var(--gray8)"></i><span>Gray8</span></div>
+        <div class="sw"><i style="background:var(--gray9)"></i><span>Gray9</span></div>
+        <div class="sw"><i style="background:var(--gray10)"></i><span>Gray10</span></div>
+        <div class="sw"><i style="background:var(--gray11)"></i><span>Gray11</span></div>
+        <div class="sw"><i style="background:var(--gray12)"></i><span>Gray12</span></div>
+        <div class="sw"><i style="background:var(--accent)"></i><span>Accent</span></div>
+        <div class="sw"><i style="background:var(--accent-dark)"></i><span>AccentDark</span></div>
+        <div class="sw"><i style="background:var(--desktop)"></i><span>Desktop</span></div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>Palette.xaml</code></td><td>Rampa de 13 grises de la Appearance Manager, acentos, degradados de cara levantada y hundida, biseles</td></tr>
+        <tr><td><code>Typography.xaml</code></td><td>Charcoal para el chrome y Geneva para las vistas, con cadena de reserva para Windows</td></tr>
+        <tr><td><code>Platinum.xaml</code></td><td>Punto de entrada único: la app consumidora fusiona solo este diccionario</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ MAPA DE ARCHIVOS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Archivos</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <table>
+        <tr><th style="width:330px">Archivo</th><th>Contenido</th></tr>
+        <tr><td><code>Themes/Palette.xaml</code></td><td>Colores, degradados y biseles</td></tr>
+        <tr><td><code>Themes/Typography.xaml</code></td><td>Familias y tamaños de fuente</td></tr>
+        <tr><td><code>Themes/Button.xaml</code></td><td>Botón de acción y su anillo por omisión</td></tr>
+        <tr><td><code>Themes/Selection.xaml</code></td><td>Checkbox y radio</td></tr>
+        <tr><td><code>Themes/TextBox.xaml</code></td><td>Campo de texto</td></tr>
+        <tr><td><code>Themes/Window.xaml</code></td><td>Chrome de ventana y cajas de la barra de título</td></tr>
+        <tr><td><code>Themes/Generic.xaml</code></td><td>Redirección que WPF usa para los controles propios</td></tr>
+        <tr><td><code>Themes/Platinum.xaml</code></td><td>Diccionario raíz</td></tr>
+        <tr><td><code>Controls/PlatinumWindow.cs</code></td><td>Ventana: windowshade, grow box, maximizado acotado</td></tr>
+        <tr><td><code>Controls/Pinstripe.cs</code></td><td>Rayado en píxeles físicos</td></tr>
+        <tr><td><code>Controls/DefaultRing.cs</code></td><td>Contorno del botón por omisión</td></tr>
+      </table>
+      <p class="pend" style="margin:14px 0 0; font-size:11px">
+        Pendientes acordados: popup menu, scrollbar, barra de menús, pestañas, listas y tablas.
+        Nota de integración: la app consumidora debe apagar
+        <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
+      </p>
+    </div>
+  </div></div>
+
+</div>
+</body>
+</html>

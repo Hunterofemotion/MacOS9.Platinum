@@ -1,0 +1,123 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <!-- Un StaticResource solo busca en el propio diccionario y en los que este      -->
+    <!-- fusiona, nunca en diccionarios hermanos. Por eso cada archivo de control     -->
+    <!-- declara aquí sus dependencias; WPF cachea los diccionarios por URI, así que  -->
+    <!-- repetirlos no duplica los recursos.                                          -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- El bisel se arma con dos Border superpuestos, uno que pinta solo arriba e    -->
+    <!-- izquierda y otro solo abajo y derecha. El degradado diagonal que se usaba    -->
+    <!-- antes cruzaba de esquina a esquina, así que dejaba blanco el filo inferior   -->
+    <!-- izquierdo y oscuro el superior derecho.                                      -->
+
+    <!-- Botón de acción estándar. Medidas del HIG clásico: 20 px de alto y 68 px de  -->
+    <!-- ancho mínimo, esquinas redondeadas.                                          -->
+    <Style x:Key="PlatinumPushButton" TargetType="{x:Type Button}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <!-- Platinum no dibuja rectángulo punteado de foco en los botones; el foco  -->
+        <!-- de teclado se indica con el anillo del botón por omisión.               -->
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <!-- Mismo alto que el campo de texto, para que ambos se alineen al ponerlos -->
+        <!-- en una misma fila de un diálogo.                                        -->
+        <Setter Property="MinHeight" Value="22" />
+        <Setter Property="MinWidth" Value="68" />
+        <Setter Property="Padding" Value="10,1" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <!-- Anillo del botón por omisión. Se dibuja por fuera del     -->
+                        <!-- botón, separado por un canal, y no reserva espacio: la    -->
+                        <!-- ventana debe dejarle margen, igual que en Mac OS.         -->
+                        <!-- Se alinea con el marco, no con la celda, para que el canal -->
+                        <!-- se mida contra el filo negro y no contra la sombra.        -->
+                        <controls:DefaultRing x:Name="DefaultRing"
+                                              Margin="0,0,1,1"
+                                              Stroke="{StaticResource TextBrush}"
+                                              Thickness="1"
+                                              Gap="2"
+                                              CornerRadius="4"
+                                              Visibility="Collapsed" />
+
+                        <!-- Sombra proyectada, la misma construcción que el popup menu: -->
+                        <!-- asoma un píxel abajo y a la derecha.                        -->
+                        <Border x:Name="Shadow"
+                                Margin="1,1,0,0"
+                                CornerRadius="3"
+                                Background="{StaticResource BevelDeepShadowBrush}" />
+
+                        <Border x:Name="Frame"
+                                Margin="0,0,1,1"
+                                CornerRadius="3"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}">
+                            <Grid>
+                                <Border x:Name="Face"
+                                        CornerRadius="3"
+                                        Background="{StaticResource ControlFaceBrush}" />
+                                <Border x:Name="BevelLight"
+                                        CornerRadius="3"
+                                        BorderThickness="1,1,0,0"
+                                        BorderBrush="{StaticResource BevelHighlightBrush}" />
+                                <Border x:Name="BevelDark"
+                                        CornerRadius="3"
+                                        BorderThickness="0,0,1,1"
+                                        BorderBrush="{StaticResource BevelShadowBrush}" />
+                                <ContentPresenter x:Name="Content"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  RecognizesAccessKey="True" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefault" Value="True">
+                            <Setter TargetName="DefaultRing" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!-- Al presionar el botón no se mueve: pierde la sombra, que   -->
+                        <!-- es lo que lo tenía levantado, y la cara se oscurece. No se -->
+                        <!-- invierte el bisel porque con la cara ya oscura un realce   -->
+                        <!-- abajo se lee como una línea blanca suelta.                 -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Shadow" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelDeepShadowBrush}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Shadow" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Estilo implícito: basta con fusionar el diccionario para que todos los       -->
+    <!-- botones de la aplicación adopten el aspecto Platinum.                        -->
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PlatinumPushButton}" />
+
+</ResourceDictionary>

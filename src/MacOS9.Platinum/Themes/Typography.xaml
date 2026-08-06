@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Platinum usa Charcoal para el chrome del sistema (menús, títulos, botones) y  -->
+    <!-- Geneva para el contenido de las vistas. Ninguna de las dos existe en Windows. -->
+    <!-- Tahoma queda en el chrome y Franklin Gothic Medium en el contenido.           -->
+    <FontFamily x:Key="SystemFontFamily">Tahoma, Segoe UI</FontFamily>
+    <FontFamily x:Key="ViewFontFamily">Franklin Gothic Medium, Tahoma, Segoe UI</FontFamily>
+    <FontFamily x:Key="MonoFontFamily">Monaco, Consolas, Courier New</FontFamily>
+
+    <!-- Las pantallas clásicas eran de 72 ppp, así que un punto equivalía a un píxel. -->
+    <!-- WPF trabaja a 96 ppp, pero se conservan los tamaños en píxeles para mantener  -->
+    <!-- las proporciones originales del chrome.                                       -->
+    <sys:Double x:Key="SystemFontSize">12</sys:Double>
+    <sys:Double x:Key="ViewFontSize">12</sys:Double>
+    <sys:Double x:Key="SmallFontSize">10</sys:Double>
+
+</ResourceDictionary>
