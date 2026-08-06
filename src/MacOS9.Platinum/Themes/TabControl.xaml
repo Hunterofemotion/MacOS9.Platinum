@@ -55,7 +55,10 @@
                             <Setter TargetName="Root" Property="Panel.ZIndex" Value="1" />
                             <Setter TargetName="Shape" Property="Fill" Value="{StaticResource PanelFaceBrush}" />
                             <Setter TargetName="Shape" Property="ShadowBrush" Value="{x:Null}" />
-                            <Setter Property="FontWeight" Value="Bold" />
+                            <!-- La negrita va dirigida al presentador del rótulo:      -->
+                            <!-- puesta en el control se heredaría a TODO el contenido  -->
+                            <!-- del tab, que saldría en bold sin pedirlo.              -->
+                            <Setter TargetName="Header" Property="TextElement.FontWeight" Value="Bold" />
                         </Trigger>
 
                         <Trigger Property="IsEnabled" Value="False">

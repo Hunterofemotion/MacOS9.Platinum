@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace MacOS9.Platinum.Controls;
@@ -25,9 +25,9 @@ public class Pinstripe : FrameworkElement
             typeof(Pinstripe),
             new FrameworkPropertyMetadata(Brushes.White, FrameworkPropertyMetadataOptions.AffectsRender));
 
-    public Brush LightBrush
+    public Brush? LightBrush
     {
-        get => (Brush)GetValue(LightBrushProperty);
+        get => (Brush?)GetValue(LightBrushProperty);
         set => SetValue(LightBrushProperty, value);
     }
 
@@ -61,14 +61,20 @@ public class Pinstripe : FrameworkElement
 
         // Un píxel físico expresado en unidades de WPF. A 100 % vale 1, a 150 % vale
         // 0.666..., y así cada franja aterriza justo en el borde de un píxel.
-        double pixel = 1d / VisualTreeHelper.GetDpi(this).DpiScaleY;
+        double pixel = 1d / DeviceScale.Of(this).Y;
 
-        Brush light = LightBrush;
+        // Con LightBrush nulo solo se pintan las filas oscuras y las claras dejan
+        // ver el fondo: es lo que permite rayar sobre el degradado de la barra de
+        // título sin que el bloque se lea como un parche plano más claro.
+        Brush? light = LightBrush;
         Brush dark = DarkBrush;
 
         for (double y = 0; y + pixel <= height; y += pixel * 2)
         {
-            dc.DrawRectangle(light, null, new Rect(0, y, width, pixel));
+            if (light is not null)
+            {
+                dc.DrawRectangle(light, null, new Rect(0, y, width, pixel));
+            }
 
             if (y + pixel * 2 <= height)
             {

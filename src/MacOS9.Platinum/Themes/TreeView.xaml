@@ -1,0 +1,149 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Triángulo de despliegue: apunta a la derecha cerrado y hacia abajo abierto,  -->
+    <!-- como en el Finder. Usa el mismo glifo rasterizado de las flechas del         -->
+    <!-- scrollbar para que el trazo caiga a píxel.                                   -->
+    <Style x:Key="PlatinumTreeToggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="Transparent">
+                        <controls:ArrowGlyph x:Name="Glyph"
+                                             Direction="Right"
+                                             Steps="4"
+                                             Fill="{StaticResource TextBrush}"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Glyph" Property="controls:ArrowGlyph.Direction" Value="Down" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumTreeViewItem" TargetType="{x:Type TreeViewItem}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="IsExpanded" Value="False" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <StackPanel>
+                        <Grid MinHeight="18">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ToggleButton x:Name="Expander"
+                                          Style="{StaticResource PlatinumTreeToggle}"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+
+                            <!-- El resalte cubre solo el rótulo, como en el Finder de -->
+                            <!-- Mac OS 9; azul de contenido con texto negro, gris al  -->
+                            <!-- perder el foco.                                       -->
+                            <Border x:Name="Bd"
+                                    Grid.Column="1"
+                                    Background="Transparent"
+                                    Padding="2,1"
+                                    HorizontalAlignment="Left">
+                                <ContentPresenter ContentSource="Header"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+
+                        <ItemsPresenter x:Name="ItemsHost" Margin="16,0,0,0" />
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="False">
+                            <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectionBrush}" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="IsSelectionActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource SelectionInactiveBrush}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- El contenedor es el mismo pozo hundido de la lista con columnas. -->
+    <Style x:Key="PlatinumTreeView" TargetType="{x:Type TreeView}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeView}">
+                    <Border x:Name="Frame"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ScrollViewer Focusable="False">
+                                <ItemsPresenter Margin="4,3" SnapsToDevicePixels="True" />
+                            </ScrollViewer>
+
+                            <Border BorderThickness="0,0,1,1"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}"
+                                    IsHitTestVisible="False" />
+                            <Border BorderThickness="2,2,0,0"
+                                    BorderBrush="{StaticResource WellShadowBrush}"
+                                    IsHitTestVisible="False" />
+                            <Border BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource BevelShadowBrush}"
+                                    IsHitTestVisible="False" />
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type TreeView}" BasedOn="{StaticResource PlatinumTreeView}" />
+    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource PlatinumTreeViewItem}" />
+
+</ResourceDictionary>

@@ -6,33 +6,6 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Textura del canal: tramado de dos grises en tablero de 2 px. Platinum no usa -->
-    <!-- un gris liso ahí, y ese punteado es lo que distingue el canal de la cara de  -->
-    <!-- los controles.                                                               -->
-    <DrawingBrush x:Key="ScrollTrackTextureBrush"
-                  TileMode="Tile"
-                  Viewport="0,0,2,2"
-                  ViewportUnits="Absolute"
-                  Stretch="None">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Brush="#FFB4B4B4">
-                    <GeometryDrawing.Geometry>
-                        <RectangleGeometry Rect="0,0,2,2" />
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-                <GeometryDrawing Brush="#FFC9C9C9">
-                    <GeometryDrawing.Geometry>
-                        <GeometryGroup>
-                            <RectangleGeometry Rect="0,0,1,1" />
-                            <RectangleGeometry Rect="1,1,1,1" />
-                        </GeometryGroup>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-
     <!-- Botón de flecha. Comparte el cuerpo levantado del resto del tema, pero sin  -->
     <!-- esquinas redondeadas ni sombra: va embutido dentro del marco de la barra.    -->
     <Style x:Key="PlatinumScrollArrow" TargetType="{x:Type RepeatButton}">
@@ -160,10 +133,6 @@
                             <Setter TargetName="ThumbFace" Property="Background" Value="{StaticResource ScrollThumbPressedBrush}" />
                         </Trigger>
 
-                        <!-- Con la barra deshabilitada el canal queda vacío. Va aquí y -->
-                        <!-- no en el template de la barra porque ocultar el Track desde -->
-                        <!-- allá no surte efecto; IsEnabled sí se propaga hasta el      -->
-                        <!-- thumb.                                                      -->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Visibility" Value="Collapsed" />
                         </Trigger>
@@ -180,10 +149,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Border BorderThickness="1"
-                            BorderBrush="{StaticResource TextBrush}"
-                            Background="{StaticResource ScrollTrackBrush}">
-                        <Grid>
+                    <!-- El contorno negro va como capa superior, no como Border       -->
+                    <!-- contenedor: con redondeo fraccional los hijos alcanzaban a    -->
+                    <!-- sobrepintar la fila del borde en el extremo de las flechas y  -->
+                    <!-- la barra quedaba abierta. Dibujado encima, siempre cierra.    -->
+                    <Grid>
+                        <Border x:Name="Face" Background="{StaticResource ScrollTrackBrush}" />
+
+                        <Grid Margin="1">
                             <!-- Las dos flechas van juntas al final, no una en cada    -->
                             <!-- extremo. Es la disposición de Platinum con Smart        -->
                             <!-- Scrolling, la que trae el modelo de referencia.         -->
@@ -193,20 +166,24 @@
                                 <RowDefinition Height="14" />
                             </Grid.RowDefinitions>
 
-                            <!-- Canal con textura: un tramado fino, no un gris liso.   -->
-                            <Border Grid.Row="0"
-                                    Background="{StaticResource ScrollTrackTextureBrush}"
-                                    RenderOptions.EdgeMode="Aliased"
-                                    IsHitTestVisible="False" />
+                            <!-- Canal con textura rasterizada a píxel físico: el       -->
+                            <!-- mosaico de 2 unidades lógicas se interpolaba en moiré  -->
+                            <!-- a escalas fraccionarias.                               -->
+                            <controls:CheckerTexture x:Name="Texture"
+                                                     Grid.Row="0"
+                                                     LightBrush="{StaticResource ScrollTrackLightBrush}"
+                                                     DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
 
-                            <Border Grid.Row="0"
+                            <Border x:Name="ShadowDeep"
+                                    Grid.Row="0"
                                     BorderThickness="1,1,0,0"
                                     BorderBrush="{StaticResource FrameShadowBrush}"
                                     IsHitTestVisible="False" />
 
                             <!-- Segundo paso de sombra, más claro. La profundidad se  -->
                             <!-- construye con dos tonos de gris, sin recurrir a luz.  -->
-                            <Border Grid.Row="0"
+                            <Border x:Name="ShadowSoft"
+                                    Grid.Row="0"
                                     Margin="1,1,0,0"
                                     BorderThickness="1,1,0,0"
                                     BorderBrush="{StaticResource BevelShadowBrush}"
@@ -241,18 +218,31 @@
                             </RepeatButton>
 
                             <!-- Filo entre las dos flechas y entre el par y el canal. -->
-                            <Border Grid.Row="1" Height="1" VerticalAlignment="Top"
+                            <Border x:Name="Sep1" Grid.Row="1" Height="1" VerticalAlignment="Top"
                                     Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
-                            <Border Grid.Row="2" Height="1" VerticalAlignment="Top"
+                            <Border x:Name="Sep2" Grid.Row="2" Height="1" VerticalAlignment="Top"
                                     Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
                         </Grid>
-                    </Border>
+
+                        <Border x:Name="Edge"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}"
+                                IsHitTestVisible="False" />
+                    </Grid>
 
                     <ControlTemplate.Triggers>
-                        <!-- Deshabilitada, Platinum deja el canal vacío: sin thumb no -->
-                        <!-- hay nada que arrastrar y eso mismo lo comunica.            -->
+                        <!-- Deshabilitada, todo el control baja de intensidad, como en -->
+                        <!-- el resto del tema: marco y filos a gris, canal plano sin   -->
+                        <!-- textura ni sombras, y sin thumb.                           -->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="PART_Track" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Edge" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Sep1" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Sep2" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="ShadowDeep" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="ShadowSoft" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -266,10 +256,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ScrollBar}">
-                            <Border BorderThickness="1"
-                                    BorderBrush="{StaticResource TextBrush}"
-                                    Background="{StaticResource ScrollTrackBrush}">
-                                <Grid>
+                            <Grid>
+                                <Border x:Name="Face" Background="{StaticResource ScrollTrackBrush}" />
+
+                                <Grid Margin="1">
                                     <!-- Las dos flechas juntas al final, como en el     -->
                                     <!-- modelo de Platinum con Smart Scrolling.         -->
                                     <Grid.ColumnDefinitions>
@@ -278,17 +268,19 @@
                                         <ColumnDefinition Width="14" />
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0"
-                                            Background="{StaticResource ScrollTrackTextureBrush}"
-                                            RenderOptions.EdgeMode="Aliased"
-                                            IsHitTestVisible="False" />
+                                    <controls:CheckerTexture x:Name="Texture"
+                                                             Grid.Column="0"
+                                                             LightBrush="{StaticResource ScrollTrackLightBrush}"
+                                                             DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
 
-                                    <Border Grid.Column="0"
+                                    <Border x:Name="ShadowDeep"
+                                            Grid.Column="0"
                                             BorderThickness="1,1,0,0"
                                             BorderBrush="{StaticResource FrameShadowBrush}"
                                             IsHitTestVisible="False" />
 
-                                    <Border Grid.Column="0"
+                                    <Border x:Name="ShadowSoft"
+                                            Grid.Column="0"
                                             Margin="1,1,0,0"
                                             BorderThickness="1,1,0,0"
                                             BorderBrush="{StaticResource BevelShadowBrush}"
@@ -321,16 +313,28 @@
                                     </RepeatButton>
 
                                     <!-- Filo entre las flechas y entre el par y el canal. -->
-                                    <Border Grid.Column="1" Width="1" HorizontalAlignment="Left"
+                                    <Border x:Name="Sep1" Grid.Column="1" Width="1" HorizontalAlignment="Left"
                                             Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
-                                    <Border Grid.Column="2" Width="1" HorizontalAlignment="Left"
+                                    <Border x:Name="Sep2" Grid.Column="2" Width="1" HorizontalAlignment="Left"
                                             Background="{StaticResource TextBrush}" IsHitTestVisible="False" />
                                 </Grid>
-                            </Border>
+
+                                <Border x:Name="Edge"
+                                        BorderThickness="1"
+                                        BorderBrush="{StaticResource TextBrush}"
+                                        IsHitTestVisible="False" />
+                            </Grid>
 
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter TargetName="PART_Track" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Edge" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                                    <Setter TargetName="Sep1" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                                    <Setter TargetName="Sep2" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                                    <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="ShadowDeep" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="ShadowSoft" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>

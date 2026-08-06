@@ -1,0 +1,120 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Franjas del estado indeterminado: diagonales lavanda, como el barber pole de -->
+    <!-- Mac OS 9. El degradado es absoluto y de paradas duras para que las bandas    -->
+    <!-- midan siempre lo mismo sin importar el ancho de la barra. Sin animación por  -->
+    <!-- ahora; queda anotado como pendiente.                                         -->
+    <LinearGradientBrush x:Key="ProgressStripesBrush"
+                         MappingMode="Absolute"
+                         StartPoint="0,0"
+                         EndPoint="12,12"
+                         SpreadMethod="Repeat">
+        <GradientStop Offset="0.0" Color="{StaticResource ThumbBlueColor}" />
+        <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueColor}" />
+        <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueDarkColor}" />
+        <GradientStop Offset="1.0" Color="{StaticResource ThumbBlueDarkColor}" />
+    </LinearGradientBrush>
+
+    <!-- Barra de progreso: pozo blanco con filo negro y relleno lavanda con realce   -->
+    <!-- superior, los mismos materiales del thumb del scrollbar.                     -->
+    <Style x:Key="PlatinumProgressBar" TargetType="{x:Type ProgressBar}">
+        <Setter Property="Height" Value="14" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <!-- Root con nombre: la variante vertical se resuelve rotando el  -->
+                    <!-- template, como hacen los temas de referencia, porque WPF     -->
+                    <!-- solo calcula el ancho del indicador sobre el eje horizontal. -->
+                    <Grid x:Name="Root">
+                        <Border x:Name="Well"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}"
+                                Background="{StaticResource ContentFaceBrush}">
+                            <!-- PART_Track tiene que ser el interior del pozo, no el  -->
+                            <!-- borde: ProgressBar calcula el largo del indicador     -->
+                            <!-- como porcentaje de su ActualWidth. Cuando el marco    -->
+                            <!-- iba en el propio PART_Track el relleno medía dos      -->
+                            <!-- píxeles de más y al 100 % tapaba el filo derecho.     -->
+                            <Grid x:Name="PART_Track">
+                                <!-- La sombra interior va antes que el indicador:     -->
+                                <!-- encima lo tapaba fila por fila y el realce        -->
+                                <!-- prometido no se veía nunca. El tramo vacío        -->
+                                <!-- conserva su sombra; el lleno la cubre, como el    -->
+                                <!-- thumb cubre el canal.                             -->
+                                <Border x:Name="WellShadow"
+                                        BorderThickness="1,1,0,0"
+                                        BorderBrush="{StaticResource WellShadowBrush}"
+                                        IsHitTestVisible="False" />
+
+                                <Border x:Name="PART_Indicator"
+                                        HorizontalAlignment="Left"
+                                        Background="{StaticResource ScrollThumbBrush}">
+                                    <Border x:Name="IndicatorGlint"
+                                            BorderThickness="0,1,0,0"
+                                            BorderBrush="{StaticResource ScrollThumbHighlightBrush}" />
+                                </Border>
+
+                                <Border x:Name="Stripes"
+                                        Background="{StaticResource ProgressStripesBrush}"
+                                        Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            <Setter TargetName="PART_Indicator" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="Stripes" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!-- Vertical: se rota el interior. El indicador sigue         -->
+                        <!-- midiendo su porcentaje sobre el eje horizontal del        -->
+                        <!-- template, que ahora corre de abajo hacia arriba.          -->
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter TargetName="Root" Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="-90" />
+                                </Setter.Value>
+                            </Setter>
+                            <!-- El giro de -90° manda el borde izquierdo abajo y el    -->
+                            <!-- superior a la izquierda: con el grosor horizontal la   -->
+                            <!-- sombra del pozo caía abajo, o sea con la luz viniendo  -->
+                            <!-- de abajo. Arriba y derecha en local dan arriba e       -->
+                            <!-- izquierda en pantalla, que es de donde ilumina el tema.-->
+                            <Setter TargetName="WellShadow" Property="BorderThickness" Value="0,1,1,0" />
+                        </Trigger>
+
+                        <!-- Deshabilitada baja a gris, como todo el tema. El realce   -->
+                        <!-- del indicador también: si se queda, la barra apagada       -->
+                        <!-- conserva una línea lavanda encima del relleno gris.        -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Well" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Well" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="PART_Indicator" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="IndicatorGlint" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Stripes" Property="Background" Value="{StaticResource BevelShadowBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <!-- La altura declarada pasa a ser el ancho visual al rotar. -->
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Width" Value="14" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource PlatinumProgressBar}" />
+
+</ResourceDictionary>

@@ -6,11 +6,6 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Color del resalte cuando la ventana está inactiva. WPF lo resuelve por esta -->
-    <!-- llave de SystemColors, así que se reemplaza aquí en vez de por control.     -->
-    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                     Color="{StaticResource Gray3}" />
-
     <!-- Campo de texto. Es el pozo hundido del checkbox llevado a un rectángulo      -->
     <!-- grande: filo negro, sombra de un píxel por dentro arriba e izquierda, y      -->
     <!-- relleno blanco. El contenido usa la tipografía de vistas, no la del sistema. -->

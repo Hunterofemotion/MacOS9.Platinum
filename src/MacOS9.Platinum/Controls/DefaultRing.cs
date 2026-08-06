@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace MacOS9.Platinum.Controls;
@@ -86,7 +86,7 @@ public class DefaultRing : FrameworkElement
         }
 
         // Un píxel físico expresado en unidades de WPF.
-        double pixel = 1d / VisualTreeHelper.GetDpi(this).DpiScaleX;
+        double pixel = 1d / DeviceScale.Of(this).X;
 
         double stroke = Thickness * pixel;
         // El trazo se pinta centrado, así que el desplazamiento hacia afuera es el

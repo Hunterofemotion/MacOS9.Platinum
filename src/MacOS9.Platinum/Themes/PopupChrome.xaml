@@ -1,0 +1,30 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Hoja emergente del tema: filo negro, cara plana y la sombra proyectada de    -->
+    <!-- 2 px. La comparten el menú de barra, el submenú, el menú contextual y el     -->
+    <!-- tooltip, para que un cambio de sombra no exija tocar cuatro archivos. La     -->
+    <!-- cara llega por Background y el espacio interior por Padding del              -->
+    <!-- ContentControl que aplica la plantilla.                                      -->
+    <!-- Única excepción: el popup del ComboBox arma su hoja en línea porque tiene    -->
+    <!-- que descontar un píxel del filo derecho (ver ComboBox.xaml).                 -->
+    <ControlTemplate x:Key="PlatinumPopupChrome" TargetType="{x:Type ContentControl}">
+        <!-- El modo de texto se repite aquí porque una hoja puede abrirse desde una  -->
+        <!-- ventana que no sea PlatinumWindow y entonces no hereda el ajuste.        -->
+        <Grid Margin="0,0,2,2"
+              TextOptions.TextFormattingMode="Display"
+              TextOptions.TextHintingMode="Fixed">
+            <Border Background="{StaticResource BevelDeepShadowBrush}" Margin="2,2,-2,-2" />
+            <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{StaticResource TextBrush}"
+                    BorderThickness="1">
+                <ContentPresenter Margin="{TemplateBinding Padding}" />
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+</ResourceDictionary>

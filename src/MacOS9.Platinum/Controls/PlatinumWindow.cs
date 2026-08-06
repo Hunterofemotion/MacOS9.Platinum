@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Shell;
 
 namespace MacOS9.Platinum.Controls;
 
@@ -123,7 +124,7 @@ public class PlatinumWindow : Window
             nameof(TitleBarHeight),
             typeof(double),
             typeof(PlatinumWindow),
-            new FrameworkPropertyMetadata(24d));
+            new FrameworkPropertyMetadata(24d, OnTitleBarHeightChanged));
 
     public double TitleBarHeight
     {
@@ -165,7 +166,60 @@ public class PlatinumWindow : Window
 
     private static void OnPixelPerfectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        ((PlatinumWindow)d).ApplyPixelPerfectScale();
+        var window = (PlatinumWindow)d;
+        window.ApplyPixelPerfectScale();
+        window.UpdateCaptionHeight();
+    }
+
+    private static void OnTitleBarHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ((PlatinumWindow)d).UpdateCaptionHeight();
+    }
+
+    /// <summary>
+    /// Alto de la barra en unidades de WPF. TitleBarHeight se declara en unidades
+    /// salvo con PixelPerfect, donde mide píxeles físicos; todo cálculo de layout
+    /// tiene que pasar por aquí o unas partes quedan a escala y otras no.
+    /// </summary>
+    /// <summary>
+    /// Filas que el marco aporta por encima de la cara de la barra: el filo negro
+    /// exterior y el realce blanco pegado a él (Themes/Window.xaml, PART_Root y su
+    /// Border interior). Abajo aporta una sola, el filo negro.
+    /// </summary>
+    private const double FrameTopDips = 2d;
+
+    private const double FrameBottomDips = 1d;
+
+    private double TitleBarHeightInDips =>
+        PixelPerfect
+            ? TitleBarHeight / VisualTreeHelper.GetDpi(this).DpiScaleY
+            : TitleBarHeight;
+
+    /// <summary>
+    /// Mantiene la franja arrastrable del sistema del mismo alto que la barra
+    /// visible. El template trae un CaptionHeight fijo de 24 que solo vale para el
+    /// caso por omisión: si el consumidor cambia TitleBarHeight, o PixelPerfect
+    /// encoge la barra visual, la zona de arrastre quedaría desfasada y robaría
+    /// clics a los controles pegados a ella.
+    /// </summary>
+    private void UpdateCaptionHeight()
+    {
+        // La franja arrastrable se mide desde el borde de la VENTANA, y la cara de la
+        // barra empieza dos unidades más abajo: filo negro del marco y realce blanco
+        // pegado a él. Sin sumarlas, las dos últimas filas de la barra de título no
+        // arrastran la ventana.
+        double caption = TitleBarHeightInDips + FrameTopDips;
+
+        // El WindowChrome del estilo es compartido (y congelado) entre ventanas, así
+        // que se instala una instancia propia con la altura calculada.
+        WindowChrome.SetWindowChrome(this, new WindowChrome
+        {
+            CaptionHeight = caption,
+            ResizeBorderThickness = new Thickness(4),
+            GlassFrameThickness = new Thickness(0),
+            CornerRadius = new CornerRadius(0),
+            UseAeroCaptionButtons = false,
+        });
     }
 
     private void ApplyPixelPerfectScale()
@@ -232,12 +286,14 @@ public class PlatinumWindow : Window
         }
 
         ApplyPixelPerfectScale();
+        UpdateCaptionHeight();
     }
 
     protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
     {
         base.OnDpiChanged(oldDpi, newDpi);
         ApplyPixelPerfectScale();
+        UpdateCaptionHeight();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -282,6 +338,23 @@ public class PlatinumWindow : Window
         minMax.MaxSize.X = info.Work.Right - info.Work.Left;
         minMax.MaxSize.Y = info.Work.Bottom - info.Work.Top;
 
+        // Tamaño mínimo propio: por debajo de esto el mobiliario de la barra de
+        // título (close box, título, zoom y collapse) ya no cabe y se recorta. El
+        // sistema solo impone ~110 unidades, insuficiente para este chrome.
+        //
+        // Enrollada la ventana debe poder bajar hasta la barra: Windows aplica
+        // MinTrackSize también al redimensionado por programa mientras el marco
+        // conserve WS_THICKFRAME, y el windowshade fija Height antes de pasar a
+        // NoResize. Sin esta excepción la ventana se quedaba en el mínimo normal
+        // con una franja vacía debajo de la barra.
+        DpiScale dpi = VisualTreeHelper.GetDpi(this);
+        double barDips = TitleBarHeightInDips;
+        int minWidth = (int)Math.Ceiling(150d * dpi.DpiScaleX);
+        int minHeight = (int)Math.Ceiling(
+            (barDips + (IsCollapsed ? FrameTopDips + FrameBottomDips : 40d)) * dpi.DpiScaleY);
+        minMax.MinTrackSize.X = Math.Max(minMax.MinTrackSize.X, minWidth);
+        minMax.MinTrackSize.Y = Math.Max(minMax.MinTrackSize.Y, minHeight);
+
         Marshal.StructureToPtr(minMax, lParam, false);
         handled = true;
         return 0;
@@ -306,21 +379,33 @@ public class PlatinumWindow : Window
         e.Handled = true;
     }
 
+    // ResizeMode vigente antes de colapsar, para devolverlo tal cual al expandir:
+    // un diálogo NoResize no debe despertar como CanResize.
+    private ResizeMode expandedResizeMode = ResizeMode.CanResize;
+
     private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var window = (PlatinumWindow)d;
 
         if ((bool)e.NewValue)
         {
-            window.expandedHeight = window.ActualHeight;
-            // El marco aporta un píxel arriba y otro abajo de la barra de título.
-            window.Height = window.TitleBarHeight + 2;
+            // Si aún no hay layout (IsCollapsed=True desde XAML), ActualHeight es 0
+            // y expandir dejaría la ventana en cero: se conserva el Height declarado.
+            window.expandedHeight = window.ActualHeight > 0
+                ? window.ActualHeight
+                : window.Height;
+            window.expandedResizeMode = window.ResizeMode;
+
+            // El marco aporta tres filas al alto, no dos: filo negro exterior arriba,
+            // realce blanco pegado a él y filo negro abajo. Con dos, la ventana
+            // enrollada recortaba la última fila de la barra de título.
+            window.Height = window.TitleBarHeightInDips + FrameTopDips + FrameBottomDips;
             window.ResizeMode = ResizeMode.NoResize;
         }
         else
         {
             window.Height = window.expandedHeight;
-            window.ResizeMode = ResizeMode.CanResize;
+            window.ResizeMode = window.expandedResizeMode;
         }
     }
 }

@@ -65,15 +65,18 @@
                                 BorderThickness="1"
                                 BorderBrush="{StaticResource TextBrush}">
                             <Grid>
+                                <!-- Radio interior 2, no 3: descontando el grosor del  -->
+                                <!-- marco es lo concéntrico; con 3 el bisel pisaba el   -->
+                                <!-- marco en las esquinas.                              -->
                                 <Border x:Name="Face"
-                                        CornerRadius="3"
+                                        CornerRadius="2"
                                         Background="{StaticResource ControlFaceBrush}" />
                                 <Border x:Name="BevelLight"
-                                        CornerRadius="3"
+                                        CornerRadius="2"
                                         BorderThickness="1,1,0,0"
                                         BorderBrush="{StaticResource BevelHighlightBrush}" />
                                 <Border x:Name="BevelDark"
-                                        CornerRadius="3"
+                                        CornerRadius="2"
                                         BorderThickness="0,0,1,1"
                                         BorderBrush="{StaticResource BevelShadowBrush}" />
                                 <ContentPresenter x:Name="Content"
@@ -86,7 +89,15 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsDefault" Value="True">
+                        <!-- El anillo sigue al botón que Enter dispararía, no a una    -->
+                        <!-- marca estática: IsDefaulted se apaga cuando otro control   -->
+                        <!-- toma el foco, e IsKeyboardFocused lo enciende en el botón  -->
+                        <!-- enfocado. Sin esto, el anillo se quedaba en OK mientras    -->
+                        <!-- Enter activaba el botón con foco: señal engañosa.          -->
+                        <Trigger Property="IsDefaulted" Value="True">
+                            <Setter TargetName="DefaultRing" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="DefaultRing" Property="Visibility" Value="Visible" />
                         </Trigger>
 

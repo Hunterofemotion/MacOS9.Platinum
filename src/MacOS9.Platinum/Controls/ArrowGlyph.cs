@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -33,12 +33,17 @@ public class ArrowGlyph : FrameworkElement
         set => SetValue(FillProperty, value);
     }
 
+    // AffectsMeasure además de AffectsRender: la medida intercambia ancho y alto
+    // según la dirección, y sin invalidarla el triángulo del árbol conservaba la
+    // caja vieja al girar de Right a Down y se dibujaba descentrado.
     public static readonly DependencyProperty DirectionProperty =
         DependencyProperty.Register(
             nameof(Direction),
             typeof(ArrowDirection),
             typeof(ArrowGlyph),
-            new FrameworkPropertyMetadata(ArrowDirection.Down, FrameworkPropertyMetadataOptions.AffectsRender));
+            new FrameworkPropertyMetadata(
+                ArrowDirection.Down,
+                FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
     public ArrowDirection Direction
     {
@@ -55,7 +60,9 @@ public class ArrowGlyph : FrameworkElement
             nameof(Steps),
             typeof(int),
             typeof(ArrowGlyph),
-            new FrameworkPropertyMetadata(5, FrameworkPropertyMetadataOptions.AffectsRender));
+            new FrameworkPropertyMetadata(
+                5,
+                FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
     public int Steps
     {
@@ -75,7 +82,7 @@ public class ArrowGlyph : FrameworkElement
     /// </summary>
     protected override Size MeasureOverride(Size availableSize)
     {
-        double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+        double scale = DeviceScale.Of(this).X;
         if (scale <= 0d)
         {
             scale = 1d;
@@ -96,7 +103,7 @@ public class ArrowGlyph : FrameworkElement
             return;
         }
 
-        double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+        double scale = DeviceScale.Of(this).X;
         double pixel = 1d / scale;
 
         int width = (int)Math.Round(ActualWidth * scale);

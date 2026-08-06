@@ -1,0 +1,304 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/PopupChrome.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- El resalte de menú es el único de todo el tema que invierte el texto: azul   -->
+    <!-- fuerte con letras blancas, como en Mac OS 9. El azul claro con texto negro   -->
+    <!-- queda para selecciones de contenido (listas, campos de texto).               -->
+
+    <!-- Título de menú en la barra. -->
+    <ControlTemplate x:Key="PlatinumTopLevelHeader" TargetType="{x:Type MenuItem}">
+        <Grid SnapsToDevicePixels="True">
+            <Border x:Name="Bg"
+                    Background="Transparent"
+                    Padding="9,0">
+                <ContentPresenter ContentSource="Header"
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True" />
+            </Border>
+
+            <Popup x:Name="PART_Popup"
+                   Placement="Bottom"
+                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                   AllowsTransparency="True"
+                   Focusable="False"
+                   PopupAnimation="None">
+                <ContentControl Template="{StaticResource PlatinumPopupChrome}"
+                                Background="{StaticResource ContentFaceBrush}"
+                                Padding="1"
+                                MinWidth="150"
+                                IsTabStop="False">
+                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                </ContentControl>
+            </Popup>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <!-- El título queda invertido mientras su menú esté abierto, aunque el    -->
+            <!-- puntero ande dentro de la hoja.                                       -->
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsSubmenuOpen" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Título sin submenú (raro, pero existe). -->
+    <ControlTemplate x:Key="PlatinumTopLevelItem" TargetType="{x:Type MenuItem}">
+        <Border x:Name="Bg" Background="Transparent" Padding="9,0" SnapsToDevicePixels="True">
+            <ContentPresenter ContentSource="Header"
+                              VerticalAlignment="Center"
+                              RecognizesAccessKey="True" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Renglón de menú. -->
+    <ControlTemplate x:Key="PlatinumSubmenuItem" TargetType="{x:Type MenuItem}">
+        <Border x:Name="Bg" Background="Transparent" Padding="0,3" SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="13" />
+                </Grid.ColumnDefinitions>
+
+                <!-- La palomita de los elementos marcables comparte trazo con la del  -->
+                <!-- checkbox; hereda el color del renglón para invertirse con él.     -->
+                <Path x:Name="CheckGlyph"
+                      Grid.Column="0"
+                      Data="M 0,4 L 3,7 L 8,0"
+                      Stroke="{TemplateBinding Foreground}"
+                      StrokeThickness="2"
+                      Width="9" Height="8"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Visibility="Collapsed" />
+
+                <ContentPresenter x:Name="IconHost"
+                                  Grid.Column="0"
+                                  ContentSource="Icon"
+                                  Width="16" Height="16"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+
+                <ContentPresenter Grid.Column="1"
+                                  ContentSource="Header"
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True" />
+
+                <TextBlock Grid.Column="2"
+                           Text="{TemplateBinding InputGestureText}"
+                           Foreground="{TemplateBinding Foreground}"
+                           VerticalAlignment="Center"
+                           Margin="24,0,4,0" />
+            </Grid>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <!-- Marcado gana la columna: si el elemento además trae Icon, el icono   -->
+            <!-- se oculta en vez de encimarse con la palomita.                       -->
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="CheckGlyph" Property="Visibility" Value="Visible" />
+                <Setter TargetName="IconHost" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="Icon" Value="{x:Null}">
+                <Setter TargetName="IconHost" Property="Visibility" Value="Collapsed" />
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Renglón con submenú. -->
+    <ControlTemplate x:Key="PlatinumSubmenuHeader" TargetType="{x:Type MenuItem}">
+        <Border x:Name="Bg" Background="Transparent" Padding="0,3" SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="13" />
+                </Grid.ColumnDefinitions>
+
+                <ContentPresenter Grid.Column="1"
+                                  ContentSource="Header"
+                                  VerticalAlignment="Center"
+                                  RecognizesAccessKey="True" />
+
+                <controls:ArrowGlyph Grid.Column="3"
+                                     Direction="Right"
+                                     Steps="4"
+                                     Fill="{TemplateBinding Foreground}"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center" />
+
+                <Popup x:Name="PART_Popup"
+                       Placement="Right"
+                       HorizontalOffset="-1"
+                       VerticalOffset="-4"
+                       IsOpen="{TemplateBinding IsSubmenuOpen}"
+                       AllowsTransparency="True"
+                       Focusable="False"
+                       PopupAnimation="None">
+                    <ContentControl Template="{StaticResource PlatinumPopupChrome}"
+                                    Background="{StaticResource ContentFaceBrush}"
+                                    Padding="1"
+                                    MinWidth="150"
+                                    IsTabStop="False">
+                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </ContentControl>
+                </Popup>
+            </Grid>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsSubmenuOpen" Value="True">
+                <Setter TargetName="Bg" Property="Background" Value="{StaticResource SelectionStrongBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextInvertedBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- Menú contextual. Sin él, el clic derecho abría renglones Platinum dentro de  -->
+    <!-- una hoja del tema de Windows: esquina redondeada, fondo y sombra ajenos.     -->
+    <!-- HasDropShadow no se apaga porque es lo que deja al popup ser transparente,   -->
+    <!-- y sin transparencia las dos esquinas que la sombra no cubre saldrían opacas. -->
+    <Style x:Key="PlatinumContextMenu" TargetType="{x:Type ContextMenu}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <ContentControl Template="{StaticResource PlatinumPopupChrome}"
+                                    Background="{StaticResource ContentFaceBrush}"
+                                    Padding="1"
+                                    MinWidth="120"
+                                    IsTabStop="False">
+                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </ContentControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumMenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template" Value="{StaticResource PlatinumSubmenuItem}" />
+        <Style.Triggers>
+            <Trigger Property="Role" Value="TopLevelHeader">
+                <Setter Property="Template" Value="{StaticResource PlatinumTopLevelHeader}" />
+            </Trigger>
+            <Trigger Property="Role" Value="TopLevelItem">
+                <Setter Property="Template" Value="{StaticResource PlatinumTopLevelItem}" />
+            </Trigger>
+            <Trigger Property="Role" Value="SubmenuHeader">
+                <Setter Property="Template" Value="{StaticResource PlatinumSubmenuHeader}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Separador de menú: una sola línea gris sobre la hoja blanca. -->
+    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <Grid Height="5" Background="Transparent">
+                        <Border Height="1"
+                                VerticalAlignment="Center"
+                                Background="{StaticResource BevelShadowBrush}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Barra de menús: cara gris con realce blanco arriba y filo negro abajo, la    -->
+    <!-- misma anatomía achatada del resto del chrome.                                -->
+    <Style x:Key="PlatinumMenu" TargetType="{x:Type Menu}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource ControlFaceBrush}" />
+        <Setter Property="MinHeight" Value="22" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <!-- El panel por omisión del Menu (WrapPanel) no estira los títulos: quedan  -->
+        <!-- con su alto natural, anclados arriba, el resalte no llena la barra y la  -->
+        <!-- hoja se abre al pie del título en vez del pie de la barra. Un StackPanel -->
+        <!-- horizontal estira cada título a la altura completa y corrige las tres.   -->
+        <!-- El precio es que la barra deja de pasar títulos al siguiente renglón     -->
+        <!-- cuando la ventana se angosta: el último se recorta. Es la conducta de la -->
+        <!-- barra de Mac OS 9, que era de un solo renglón, no la de WPF. Un WrapPanel-->
+        <!-- no sirve para recuperarlo porque el alto de renglón lo fija el título más-->
+        <!-- alto, no la barra, y volvería el hueco bajo el resalte.                  -->
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Menu}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderThickness="0,0,0,1"
+                            BorderBrush="{StaticResource TextBrush}">
+                        <Border BorderThickness="0,1,0,0"
+                                BorderBrush="{StaticResource BevelHighlightBrush}">
+                            <ItemsPresenter Margin="4,0" />
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource PlatinumMenu}" />
+    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource PlatinumMenuItem}" />
+    <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource PlatinumContextMenu}" />
+
+</ResourceDictionary>

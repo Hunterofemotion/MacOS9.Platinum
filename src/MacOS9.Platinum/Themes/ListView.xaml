@@ -79,10 +79,24 @@
                             Padding="{TemplateBinding Padding}"
                             BorderThickness="0,0,0,1"
                             BorderBrush="{StaticResource RowDividerBrush}">
-                        <GridViewRowPresenter Columns="{TemplateBinding GridView.ColumnCollection}"
-                                              Content="{TemplateBinding Content}" />
+                        <Grid>
+                            <!-- Sin GridView no hay ColumnCollection y el presentador -->
+                            <!-- de fila no dibuja nada: la lista salía vacía. El      -->
+                            <!-- ContentPresenter es el camino para una lista simple.  -->
+                            <GridViewRowPresenter x:Name="Columns"
+                                                  Columns="{TemplateBinding GridView.ColumnCollection}"
+                                                  Content="{TemplateBinding Content}" />
+                            <ContentPresenter x:Name="Plain"
+                                              Margin="4,0,0,0"
+                                              VerticalAlignment="Center"
+                                              Visibility="Collapsed" />
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                            <Setter TargetName="Columns" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="Plain" Property="Visibility" Value="Visible" />
+                        </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Row" Property="Background" Value="{StaticResource SelectionBrush}" />
                         </Trigger>
@@ -104,6 +118,141 @@
         </Setter>
     </Style>
 
+    <!-- Plantilla propia del ScrollViewer que GridView usa por dentro. En la de      -->
+    <!-- serie, la barra vertical abarca también la fila de encabezados (el thumb     -->
+    <!-- arrancaba a la altura de los títulos) y cualquier adorno del ListView se     -->
+    <!-- pintaba encima de las barras. Aquí el encabezado tiene su propia fila, la    -->
+    <!-- esquina sobre la barra se cubre con el mismo material del encabezado, y el   -->
+    <!-- pozo hundido vive dentro de la celda de contenido, sin tocar las barras.     -->
+    <Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Respaldo de la fila completa de encabezados, incluidos el  -->
+                        <!-- tramo sobrante tras la última columna y la esquina sobre   -->
+                        <!-- la barra: sin él esas zonas mostraban el fondo blanco.     -->
+                        <Border Grid.Row="0" Grid.ColumnSpan="2"
+                                Background="{StaticResource ControlFaceBrush}"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{StaticResource TextBrush}">
+                            <Border BorderThickness="0,1,0,0"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}" />
+                        </Border>
+
+                        <!-- Fila de encabezados, desplazada en horizontal junto con el -->
+                        <!-- contenido por el propio GridViewHeaderRowPresenter.        -->
+                        <ScrollViewer Grid.Row="0" Grid.Column="0"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      Focusable="False">
+                            <GridViewHeaderRowPresenter Margin="0"
+                                Columns="{Binding Path=TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}"
+                                ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}"
+                                ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}"
+                                ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}"
+                                AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}"
+                                ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
+                                ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip, RelativeSource={RelativeSource TemplatedParent}}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </ScrollViewer>
+
+                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                                Grid.Row="1" Grid.Column="0"
+                                                Content="{TemplateBinding Content}"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                                KeyboardNavigation.DirectionalNavigation="Local"
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                        <!-- Pozo hundido, solo sobre la celda de contenido. -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                BorderThickness="2,0,0,0"
+                                BorderBrush="{StaticResource WellShadowBrush}"
+                                IsHitTestVisible="False" />
+                        <Border Grid.Row="1" Grid.Column="0"
+                                BorderThickness="1,0,0,0"
+                                BorderBrush="{StaticResource BevelShadowBrush}"
+                                IsHitTestVisible="False" />
+                        <Border Grid.Row="1" Grid.Column="0"
+                                BorderThickness="0,0,1,1"
+                                BorderBrush="{StaticResource BevelHighlightBrush}"
+                                IsHitTestVisible="False" />
+
+                        <ScrollBar x:Name="PART_VerticalScrollBar"
+                                   Grid.Row="1" Grid.Column="1"
+                                   Orientation="Vertical"
+                                   Maximum="{TemplateBinding ScrollableHeight}"
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+
+                        <ScrollBar x:Name="PART_HorizontalScrollBar"
+                                   Grid.Row="2" Grid.Column="0"
+                                   Orientation="Horizontal"
+                                   Maximum="{TemplateBinding ScrollableWidth}"
+                                   ViewportSize="{TemplateBinding ViewportWidth}"
+                                   Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+
+                        <!-- Esquina entre las dos barras. -->
+                        <Border Grid.Row="2" Grid.Column="1"
+                                Background="{StaticResource ControlFaceBrush}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="PlatinumListViewColumns" TargetType="{x:Type ListView}">
+        <Border x:Name="Frame"
+                BorderThickness="1"
+                BorderBrush="{StaticResource TextBrush}"
+                Background="{TemplateBinding Background}">
+            <ScrollViewer Focusable="False"
+                          Padding="0"
+                          Style="{StaticResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                <ItemsPresenter SnapsToDevicePixels="True" />
+            </ScrollViewer>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="PlatinumListViewPlain" TargetType="{x:Type ListView}">
+        <Border x:Name="Frame"
+                BorderThickness="1"
+                BorderBrush="{StaticResource TextBrush}"
+                Background="{TemplateBinding Background}">
+            <ScrollViewer Focusable="False" Padding="0">
+                <ItemsPresenter SnapsToDevicePixels="True" />
+            </ScrollViewer>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <Style x:Key="PlatinumListView" TargetType="{x:Type ListView}">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
@@ -112,58 +261,21 @@
         <Setter Property="ItemContainerStyle" Value="{StaticResource PlatinumListViewItem}" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListView}">
-                    <!-- Mismo pozo hundido del campo de texto: filo negro y sombra    -->
-                    <!-- gris por dentro, arriba y a la izquierda.                     -->
-                    <Border x:Name="Frame"
-                            BorderThickness="1"
-                            BorderBrush="{StaticResource TextBrush}"
-                            Background="{TemplateBinding Background}">
-                        <Grid>
-                            <!-- Franja detrás de la fila de encabezados. Rellena la    -->
-                            <!-- esquina que queda encima de la barra de desplazamiento: -->
-                            <!-- los encabezados y la barra ocupan celdas distintas de   -->
-                            <!-- la plantilla y esa esquina se quedaba vacía.            -->
-                            <Border x:Name="HeaderStrip"
-                                    Height="18"
-                                    VerticalAlignment="Top"
-                                    Background="{StaticResource ControlFaceBrush}"
-                                    BorderThickness="0,1,0,1"
-                                    BorderBrush="{StaticResource TextBrush}"
-                                    IsHitTestVisible="False" />
+        <!-- Con View de GridView: el filo negro exterior, y el pozo hundido más la    -->
+        <!-- geometría de encabezados y barras en la plantilla del ScrollViewer de    -->
+        <!-- GridView definida arriba.                                                -->
+        <Setter Property="Template" Value="{StaticResource PlatinumListViewColumns}" />
 
-                            <!-- Sin este estilo la fila de encabezados desaparece: el -->
-                            <!-- presentador de columnas vive dentro de la plantilla   -->
-                            <!-- del ScrollViewer, no del ListView.                    -->
-                            <ScrollViewer Focusable="False"
-                                          Padding="0"
-                                          Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
-                                <ItemsPresenter SnapsToDevicePixels="True" />
-                            </ScrollViewer>
-
-                            <Border BorderThickness="0,0,1,1"
-                                    BorderBrush="{StaticResource BevelHighlightBrush}"
-                                    IsHitTestVisible="False" />
-                            <Border BorderThickness="2,2,0,0"
-                                    BorderBrush="{StaticResource WellShadowBrush}"
-                                    IsHitTestVisible="False" />
-                            <Border BorderThickness="1,1,0,0"
-                                    BorderBrush="{StaticResource BevelShadowBrush}"
-                                    IsHitTestVisible="False" />
-                        </Grid>
-                    </Border>
-
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
-                            <Setter TargetName="Frame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <!-- Sin View no hay columnas, así que la fila de encabezados sobra: se       -->
+        <!-- cambia de plantilla. El cambio va por trigger dentro de este mismo       -->
+        <!-- estilo y no por la llave GridView.GridViewStyleKey, que es un estilo de  -->
+        <!-- tema: el estilo implícito de más abajo le gana en precedencia y la lista -->
+        <!-- con columnas se quedaría sin encabezados.                                -->
+        <Style.Triggers>
+            <Trigger Property="View" Value="{x:Null}">
+                <Setter Property="Template" Value="{StaticResource PlatinumListViewPlain}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type ListView}" BasedOn="{StaticResource PlatinumListView}" />

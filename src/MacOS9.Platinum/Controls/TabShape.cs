@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -165,7 +165,7 @@ public class TabShape : FrameworkElement
             return;
         }
 
-        double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+        double scale = DeviceScale.Of(this).X;
         double pixel = 1d / scale;
 
         // Ajuste a la rejilla de píxeles físicos. El trazo se pinta centrado, de ahí

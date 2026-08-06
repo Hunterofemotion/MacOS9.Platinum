@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Fuera de MacOS9.Platinum.slnx a propósito: es una herramienta de verificación,
+       no parte de la biblioteca. Se compila y se corre a mano. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Probe</AssemblyName>
+    <RootNamespace>Probe</RootNamespace>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MacOS9.Platinum\MacOS9.Platinum.csproj" />
+  </ItemGroup>
+
+</Project>

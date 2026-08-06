@@ -60,21 +60,44 @@ No puede resolverse desde un `ResourceDictionary`: es un ajuste de proceso.
 - **TextBox** — editable, solo lectura, deshabilitado, con selección opaca
 - **ComboBox** — popup menu con flechas y menú desplegable
 - **ScrollBar** — vertical y horizontal, flechas agrupadas al final del riel, canal
-  con textura y estado deshabilitado
+  con textura de tablero a píxel físico y estado deshabilitado
 - **TabControl** — pestañas trapezoidales con la activa fundida con el panel
-- **ListView** — lista con columnas: encabezados con relieve, divisores y selección
-  de fila completa
+- **ListView** — lista con columnas: encabezados con relieve, divisores, selección
+  de fila completa y plantilla propia del ScrollViewer de GridView
+- **Menu** y **ContextMenu** — barra de menús con submenús, elementos marcables,
+  gestos de teclado y separadores; resalte invertido azul, el único del tema
+- **Slider** — horizontal y vertical, con marcas; el pentágono del cursor se
+  rasteriza a píxel físico
+- **GroupBox** y **Separator** — línea grabada de dos tonos con el título
+  interrumpiéndola; alias de separador para ToolBar y StatusBar
+- **TreeView** — árbol con triángulos de despliegue e indentación del Finder
+- **ProgressBar** — determinada, indeterminada (franjas diagonales), vertical y
+  deshabilitada
+- **ToolTip** — la nota amarilla de la ayuda de Mac OS 9
+- **Iconos** — diez íconos vectoriales de 16×16 (carpeta, documento, disquete,
+  disco, papelera, alerta, info, sobre, computadora, lupa) en `Themes/Icons.xaml`
 
 ### Detalles que no se resuelven con layout
 
-Tres piezas se dibujan midiendo el píxel físico de la pantalla en vez de dejarlas al
-sistema de layout, porque WPF redondea cada borde por separado y con la pantalla
+Varias piezas se dibujan midiendo el píxel físico de la pantalla en vez de dejarlas
+al sistema de layout, porque WPF redondea cada borde por separado y con la pantalla
 escalada el resultado sale asimétrico o borroso:
 
 | Pieza | Archivo |
 |---|---|
 | Rayado de la barra de título | `Controls/Pinstripe.cs` |
 | Contorno del botón por omisión | `Controls/DefaultRing.cs` |
+| Triángulos de flechas y despliegues | `Controls/ArrowGlyph.cs` |
+| Tablero del canal de las barras | `Controls/CheckerTexture.cs` |
+| Pentágono del cursor del deslizador | `Controls/SliderThumbShape.cs` |
+
+La excepción deliberada son las pestañas (`Controls/TabShape.cs`): sus diagonales y
+curvas necesitan suavizado, así que se dibujan como vector y sólo se ajustan a la
+retícula los tramos rectos, igual que hace `Border` con los botones.
+
+El tema también fija `TextOptions.TextFormattingMode="Display"`, porque el modo
+`Ideal` de WPF posiciona las astas en fracciones de píxel y a 11 px un trazo de uno
+se reparte entre tres columnas.
 
 ## Tipografía
 
@@ -91,3 +114,27 @@ dotnet run --project src/MacOS9.Platinum.Gallery
 ```
 
 Requiere .NET 9 o superior con la carga de escritorio de Windows.
+
+## Verificación
+
+Dos herramientas en [tools/](tools/), fuera de la solución porque no son parte de la
+biblioteca:
+
+```
+pwsh -File tools/check-resources.ps1
+dotnet run --project tools/Probe
+```
+
+`check-resources.ps1` comprueba que cada `{StaticResource}` se resuelva con las
+llaves que su propio diccionario alcanza, que ningún `TargetName` apunte a un
+`x:Name` inexistente y que ninguna llave se defina dos veces. Nada de eso falla al
+compilar: un `StaticResource` dentro de un `ControlTemplate` se resuelve al
+instanciar la plantilla, así que una llave mal escrita en la rama del submenú tira la
+aplicación la primera vez que alguien abre ese submenú, no al arrancar.
+
+`Probe` instancia todas las plantillas y estilos del tema —lo que obliga a WPF a
+resolverlos— y renderiza cada control con `RenderTargetBitmap` a `tools/Probe/bin/.../render`.
+No abre ninguna ventana ni toca el escritorio, así que sirve para revisar estados que
+una captura de pantalla no alcanza: deshabilitados, contenido que desborda, ventana
+enrollada, anchos extremos. Cambiar `dpiAware` a `false` en `app.manifest` y recompilar
+produce el caso de 100 %.

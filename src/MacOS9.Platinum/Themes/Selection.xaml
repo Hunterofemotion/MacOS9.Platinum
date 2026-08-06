@@ -9,6 +9,9 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="PlatinumCheckBox" TargetType="{x:Type CheckBox}">
+        <!-- Como en el resto del tema: Platinum no dibuja rectángulo punteado de     -->
+        <!-- foco. Eran los únicos controles enfocables que lo conservaban.           -->
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
@@ -92,6 +95,7 @@
     </Style>
 
     <Style x:Key="PlatinumRadioButton" TargetType="{x:Type RadioButton}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
@@ -135,13 +139,23 @@
                                   VerticalAlignment="Center"
                                   Visibility="Collapsed">
                                 <Ellipse x:Name="DotFill" Fill="{StaticResource TextBrush}" />
-                                <Ellipse x:Name="DotGlint"
-                                         Width="2.5"
-                                         Height="2.5"
-                                         Margin="1.5,1.5,0,0"
-                                         HorizontalAlignment="Left"
-                                         VerticalAlignment="Top"
-                                         Fill="{StaticResource BevelHighlightBrush}" />
+                                <!-- El reflejo es un cuadrado, no una elipse. Una       -->
+                                <!-- elipse de 2 unidades mide 2.5 píxeles al 125 % y    -->
+                                <!-- WPF la resuelve suavizándola: el destello blanco     -->
+                                <!-- terminaba siendo un solo píxel gris (CF). Un rect    -->
+                                <!-- con la retícula activada cae entero y vuelve a ser   -->
+                                <!-- blanco, que además es como se dibujaba el reflejo    -->
+                                <!-- en el original, a punto de mapa de bits.             -->
+                                <Rectangle x:Name="DotGlint"
+                                           Width="2"
+                                           Height="2"
+                                           Margin="2,2,0,0"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           SnapsToDevicePixels="True"
+                                           UseLayoutRounding="True"
+                                           RenderOptions.EdgeMode="Aliased"
+                                           Fill="{StaticResource BevelHighlightBrush}" />
                             </Grid>
                         </Grid>
 

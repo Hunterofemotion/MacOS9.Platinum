@@ -31,8 +31,6 @@
 
     <!-- Bordes y biseles. En Platinum un control es siempre marco oscuro + realce    -->
     <!-- blanco arriba/izquierda + sombra gris abajo/derecha.                         -->
-    <SolidColorBrush x:Key="FrameBrush" Color="{StaticResource Gray10}" />
-    <SolidColorBrush x:Key="FrameLightBrush" Color="{StaticResource Gray7}" />
     <SolidColorBrush x:Key="BevelHighlightBrush" Color="{StaticResource Gray0}" />
     <SolidColorBrush x:Key="BevelShadowBrush" Color="{StaticResource Gray5}" />
     <SolidColorBrush x:Key="BevelDeepShadowBrush" Color="{StaticResource Gray7}" />
@@ -46,6 +44,12 @@
     <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="SelectionInactiveBrush" Color="{StaticResource Gray3}" />
     <SolidColorBrush x:Key="SelectionStrongBrush" Color="{StaticResource AccentDarkColor}" />
+
+    <!-- La llave de sistema del resalte inactivo vive aquí, junto al token que la    -->
+    <!-- respalda, para que haya una sola fuente de verdad: escondida en el archivo   -->
+    <!-- de un control, ajustar SelectionInactiveBrush no cambiaba el TextBox.        -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                     Color="{StaticResource Gray3}" />
 
     <!-- Degradado de cara de control: sutil, de casi blanco a gris medio. Es lo que  -->
     <!-- distingue Platinum del gris plano de System 7.                               -->
@@ -62,15 +66,6 @@
         <GradientStop Offset="1.0" Color="{StaticResource Gray4}" />
     </LinearGradientBrush>
 
-    <!-- Pozo hundido: es la cara de los controles en los que se "entra" algo         -->
-    <!-- (checkbox, radio, campo de texto). Va casi blanco y con el degradado al      -->
-    <!-- revés que un botón: oscuro arriba, claro abajo.                              -->
-    <LinearGradientBrush x:Key="WellFaceGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0.0" Color="{StaticResource Gray4}" />
-        <GradientStop Offset="0.5" Color="{StaticResource Gray2}" />
-        <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
-    </LinearGradientBrush>
-
     <!-- Sombra del escalón del marco de ventana. Va un paso más oscura que la del   -->
     <!-- bisel porque tiene que leerse como cambio de nivel, no como filo.           -->
     <SolidColorBrush x:Key="FrameShadowBrush" Color="{StaticResource Gray6}" />
@@ -79,14 +74,6 @@
     <!-- ocupa más grosor: a 2 px, un gris medio se leería como un borde y no como   -->
     <!-- profundidad.                                                                -->
     <SolidColorBrush x:Key="WellShadowBrush" Color="{StaticResource Gray4}" />
-
-    <!-- Bisel hundido: sombra arriba/izquierda, realce abajo/derecha. -->
-    <LinearGradientBrush x:Key="WellBevelBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Offset="0.0" Color="{StaticResource Gray6}" />
-        <GradientStop Offset="0.5" Color="{StaticResource Gray5}" />
-        <GradientStop Offset="0.5" Color="{StaticResource Gray1}" />
-        <GradientStop Offset="1.0" Color="{StaticResource Gray0}" />
-    </LinearGradientBrush>
 
     <!-- Divisor entre renglones de una lista. Muy claro a propósito: separa sin      -->
     <!-- competir con el texto ni con el resalte de selección.                        -->
@@ -102,11 +89,23 @@
 
     <!-- Barra de desplazamiento. El thumb es la única pieza del chrome que lleva    -->
     <!-- color: toma el acento del tema, no el gris de los controles.                -->
+    <!-- Los colores van como recursos aparte para que otras piezas (barra de        -->
+    <!-- progreso, deslizador) los reutilicen sin duplicar el literal.               -->
+    <Color x:Key="ThumbBlueColor">#FF8B8BC3</Color>
+    <Color x:Key="ThumbBluePressedColor">#FF6B6BA8</Color>
+    <Color x:Key="ThumbBlueDarkColor">#FF5B5B92</Color>
+    <Color x:Key="ThumbBlueLightColor">#FFB6B6DC</Color>
+
     <SolidColorBrush x:Key="ScrollTrackBrush" Color="#FFBDBDBD" />
-    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#FF8B8BC3" />
-    <SolidColorBrush x:Key="ScrollThumbPressedBrush" Color="#FF6B6BA8" />
-    <SolidColorBrush x:Key="ScrollThumbGripBrush" Color="#FF5B5B92" />
-    <SolidColorBrush x:Key="ScrollThumbHighlightBrush" Color="#FFB6B6DC" />
+    <SolidColorBrush x:Key="ScrollTrackLightBrush" Color="#FFC9C9C9" />
+    <SolidColorBrush x:Key="ScrollTrackDarkBrush" Color="#FFB4B4B4" />
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="{StaticResource ThumbBlueColor}" />
+    <SolidColorBrush x:Key="ScrollThumbPressedBrush" Color="{StaticResource ThumbBluePressedColor}" />
+    <SolidColorBrush x:Key="ScrollThumbGripBrush" Color="{StaticResource ThumbBlueDarkColor}" />
+    <SolidColorBrush x:Key="ScrollThumbHighlightBrush" Color="{StaticResource ThumbBlueLightColor}" />
+
+    <!-- Cara de la etiqueta emergente: la nota amarilla de la ayuda de Mac OS 9. -->
+    <SolidColorBrush x:Key="TipFaceBrush" Color="#FFFFFFC8" />
 
     <!-- Cara presionada plana, para los controles que no usan degradado. -->
     <SolidColorBrush x:Key="ControlFacePressedBrush" Color="{StaticResource Gray7}" />

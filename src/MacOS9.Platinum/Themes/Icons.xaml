@@ -1,0 +1,185 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Juego de íconos del tema, dibujados como vectores sobre una retícula de     -->
+    <!-- 16 por 16. Convenciones: contornos negros de un píxel con coordenadas       -->
+    <!-- alineadas a .5 para que el trazo caiga entero en una fila de píxeles, y     -->
+    <!-- rellenos con bordes en enteros. Los valores que coinciden con tokens del    -->
+    <!-- tema (lavanda del acento, grises de la rampa) los referencian, para que     -->
+    <!-- sigan al tema si cambia; solo son propios el amarillo de alerta y el LED    -->
+    <!-- verde del disco.                                                            -->
+
+    <SolidColorBrush x:Key="IconOutlineBrush" Color="{StaticResource Gray12}" />
+    <SolidColorBrush x:Key="IconLavenderBrush" Color="{StaticResource ThumbBlueColor}" />
+    <SolidColorBrush x:Key="IconLavenderLightBrush" Color="{StaticResource ThumbBlueLightColor}" />
+    <SolidColorBrush x:Key="IconGrayBrush" Color="{StaticResource Gray3}" />
+    <SolidColorBrush x:Key="IconPaperBrush" Color="{StaticResource Gray0}" />
+    <SolidColorBrush x:Key="IconPaperLineBrush" Color="{StaticResource Gray5}" />
+    <Pen x:Key="IconPen" Brush="{StaticResource IconOutlineBrush}" Thickness="1" />
+
+    <!-- Carpeta -->
+    <DrawingImage x:Key="IconFolder">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconLavenderBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 1.5,12.5 L 1.5,2.5 L 6.5,2.5 L 8.5,4.5 L 14.5,4.5 L 14.5,12.5 Z" />
+                <GeometryDrawing Geometry="M 2.5,5.5 L 13.5,5.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource IconLavenderLightBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Documento -->
+    <DrawingImage x:Key="IconDocument">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconPaperBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 3.5,1.5 L 9.5,1.5 L 12.5,4.5 L 12.5,14.5 L 3.5,14.5 Z" />
+                <GeometryDrawing Brush="{StaticResource ControlFaceBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 9.5,1.5 L 12.5,4.5 L 9.5,4.5 Z" />
+                <GeometryDrawing Geometry="M 5.5,7.5 L 10.5,7.5 M 5.5,9.5 L 10.5,9.5 M 5.5,11.5 L 10.5,11.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource IconPaperLineBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Disquete -->
+    <DrawingImage x:Key="IconFloppy">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconLavenderBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 2.5,2.5 L 12.5,2.5 L 13.5,3.5 L 13.5,13.5 L 2.5,13.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconPaperBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 5.5,2.5 L 10.5,2.5 L 10.5,5.5 L 5.5,5.5 Z" />
+                <GeometryDrawing Brush="{StaticResource TextDisabledBrush}" Geometry="M 8,3 L 9,3 L 9,5 L 8,5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconPaperBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 4.5,8.5 L 11.5,8.5 L 11.5,13.5 L 4.5,13.5 Z" />
+                <GeometryDrawing Geometry="M 5.5,10.5 L 10.5,10.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource IconPaperLineBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Disco duro -->
+    <DrawingImage x:Key="IconHardDisk">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 1.5,4.5 L 14.5,4.5 L 14.5,11.5 L 1.5,11.5 Z" />
+                <GeometryDrawing Geometry="M 2.5,5.5 L 13.5,5.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource BevelHighlightBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{StaticResource BevelDeepShadowBrush}" Geometry="M 3,8 L 9,8 L 9,9 L 3,9 Z" />
+                <GeometryDrawing Brush="#FF339933" Geometry="M 12,8 L 13,8 L 13,9 L 12,9 Z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Papelera -->
+    <DrawingImage x:Key="IconTrash">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Pen="{StaticResource IconPen}"
+                                 Geometry="M 6.5,3.5 L 6.5,1.5 L 9.5,1.5 L 9.5,3.5" />
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 3.5,3.5 L 12.5,3.5 L 12.5,5.5 L 3.5,5.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 4.5,5.5 L 11.5,5.5 L 10.5,14.5 L 5.5,14.5 Z" />
+                <GeometryDrawing Geometry="M 6.5,7.5 L 6.5,12.5 M 9.5,7.5 L 9.5,12.5">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource FrameShadowBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Alerta -->
+    <DrawingImage x:Key="IconAlert">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#FFFFCC33" Pen="{StaticResource IconPen}"
+                                 Geometry="M 8,1.5 L 14.5,13.5 L 1.5,13.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconOutlineBrush}" Geometry="M 7,5 L 9,5 L 9,9 L 7,9 Z" />
+                <GeometryDrawing Brush="{StaticResource IconOutlineBrush}" Geometry="M 7,10 L 9,10 L 9,12 L 7,12 Z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Información -->
+    <DrawingImage x:Key="IconInfo">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource SelectionBrush}" Pen="{StaticResource IconPen}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="8,8" RadiusX="6.5" RadiusY="6.5" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{StaticResource IconOutlineBrush}" Geometry="M 7,4 L 9,4 L 9,6 L 7,6 Z" />
+                <GeometryDrawing Brush="{StaticResource IconOutlineBrush}" Geometry="M 7,7 L 9,7 L 9,12 L 7,12 Z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Sobre -->
+    <DrawingImage x:Key="IconEnvelope">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconPaperBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 1.5,3.5 L 14.5,3.5 L 14.5,12.5 L 1.5,12.5 Z" />
+                <GeometryDrawing Pen="{StaticResource IconPen}"
+                                 Geometry="M 1.5,3.5 L 8,9.5 L 14.5,3.5" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Computadora -->
+    <DrawingImage x:Key="IconComputer">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 2.5,1.5 L 13.5,1.5 L 13.5,9.5 L 2.5,9.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconLavenderBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 4.5,3.5 L 11.5,3.5 L 11.5,7.5 L 4.5,7.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 6.5,9.5 L 9.5,9.5 L 9.5,11.5 L 6.5,11.5 Z" />
+                <GeometryDrawing Brush="{StaticResource IconGrayBrush}" Pen="{StaticResource IconPen}"
+                                 Geometry="M 4.5,11.5 L 11.5,11.5 L 11.5,13.5 L 4.5,13.5 Z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <!-- Lupa -->
+    <DrawingImage x:Key="IconMagnifier">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource IconPaperBrush}" Pen="{StaticResource IconPen}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="6.5,6.5" RadiusX="4" RadiusY="4" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Geometry="M 9.5,9.5 L 13,13">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource IconOutlineBrush}" Thickness="2" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+</ResourceDictionary>

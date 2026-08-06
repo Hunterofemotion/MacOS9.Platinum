@@ -8,7 +8,8 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Rayado diagonal del grow box. -->
+    <!-- Rayado diagonal del grow box. El tile de 4 unidades cae en píxel entero a    -->
+    <!-- las escalas comunes (5 px a 125 %, 6 a 150 %), así que no se interpola.      -->
     <DrawingBrush x:Key="GrowBoxHatchBrush"
                   TileMode="Tile"
                   Viewport="0,0,4,4"
@@ -16,15 +17,31 @@
                   Stretch="None">
         <DrawingBrush.Drawing>
             <DrawingGroup>
-                <GeometryDrawing Brush="#FFDDDDDD">
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="{StaticResource Gray2}" />
+                    </GeometryDrawing.Brush>
                     <GeometryDrawing.Geometry>
                         <RectangleGeometry Rect="0,0,4,4" />
                     </GeometryDrawing.Geometry>
                 </GeometryDrawing>
-                <GeometryDrawing Brush="#FF666666" Geometry="M 0,4 L 4,0 L 4,1.5 L 1.5,4 Z" />
+                <GeometryDrawing Geometry="M 0,4 L 4,0 L 4,1.5 L 1.5,4 Z">
+                    <GeometryDrawing.Brush>
+                        <SolidColorBrush Color="{StaticResource Gray9}" />
+                    </GeometryDrawing.Brush>
+                </GeometryDrawing>
             </DrawingGroup>
         </DrawingBrush.Drawing>
     </DrawingBrush>
+
+    <!-- Cara de la barra de título. Termina en el mismo gris del canal para que la   -->
+    <!-- barra y los marcos laterales se lean como una sola pieza; el respaldo del    -->
+    <!-- título usa este mismo pincel para taparle las rayas sin costura.             -->
+    <LinearGradientBrush x:Key="TitleBarFaceBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="{StaticResource Gray0}" />
+        <GradientStop Offset="0.4" Color="{StaticResource Gray2}" />
+        <GradientStop Offset="1.0" Color="{StaticResource Gray2}" />
+    </LinearGradientBrush>
 
     <!-- Cajas de la barra de título (close, zoom, collapse). Cuadrado de 11 px con  -->
     <!-- marco negro, realce blanco interior y cara gris.                             -->
@@ -66,6 +83,15 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
 
+        <!-- Platinum se dibujó para una retícula de píxeles enteros. El modo Ideal    -->
+        <!-- de WPF posiciona las astas en fracciones de píxel, así que a 11 px un     -->
+        <!-- trazo de uno se reparte entre tres columnas y el texto se lee blando.     -->
+        <!-- Display usa métricas compatibles y ajusta el glifo a la retícula, que es  -->
+        <!-- lo que documenta Microsoft para texto chico. Ambas propiedades se heredan,-->
+        <!-- también hacia los popups, que cuelgan de esta ventana en el árbol lógico. -->
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+
         <!-- WindowChrome mantiene el arrastre, el redimensionado y el acople de      -->
         <!-- Windows aunque el chrome nativo esté oculto. CaptionHeight es la franja   -->
         <!-- que el sistema trata como barra de título arrastrable.                    -->
@@ -101,22 +127,15 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <!-- Barra de título -->
-                            <Grid x:Name="TitleBar" Height="{TemplateBinding TitleBarHeight}">
-                                <!-- El degradado termina en el mismo gris del canal    -->
-                                <!-- para que la barra y los marcos laterales se lean   -->
-                                <!-- como una sola pieza. Si cierra más oscuro, aparece -->
-                                <!-- una costura horizontal donde se juntan.            -->
-                                <Grid.Background>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Offset="0.0" Color="{StaticResource Gray0}" />
-                                        <GradientStop Offset="0.4" Color="{StaticResource Gray2}" />
-                                        <GradientStop Offset="1.0" Color="{StaticResource Gray2}" />
-                                    </LinearGradientBrush>
-                                </Grid.Background>
+                            <!-- Barra de título. El rayado corre completo detrás y el   -->
+                            <!-- título lo tapa con un respaldo del mismo degradado de   -->
+                            <!-- la barra; al vivir en la columna estrella, un título    -->
+                            <!-- largo se recorta con elipsis en vez de empujar las      -->
+                            <!-- cajas de zoom y collapse fuera de la ventana.           -->
+                            <Grid x:Name="TitleBar"
+                                  Height="{TemplateBinding TitleBarHeight}"
+                                  Background="{StaticResource TitleBarFaceBrush}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
@@ -130,29 +149,31 @@
                                         VerticalAlignment="Center"
                                         Style="{StaticResource PlatinumTitleBarBox}" />
 
-                                <controls:Pinstripe x:Name="StripesLeft"
-                                                    Grid.Column="1"
-                                                    Margin="4,5"
-                                                    LightBrush="#FFF8F8F8"
-                                                    DarkBrush="#FF8A8A8A" />
+                                <Grid Grid.Column="1">
+                                    <!-- Solo las filas oscuras: las claras dejan ver el -->
+                                    <!-- degradado de la barra, así el bloque de rayas   -->
+                                    <!-- no se lee como un parche más claro.             -->
+                                    <controls:Pinstripe x:Name="Stripes"
+                                                        Margin="4,5"
+                                                        LightBrush="{x:Null}"
+                                                        DarkBrush="#FF8A8A8A" />
 
-                                <TextBlock x:Name="TitleText"
-                                           Grid.Column="2"
-                                           Margin="6,0"
-                                           VerticalAlignment="Center"
-                                           FontFamily="{TemplateBinding FontFamily}"
-                                           FontSize="{TemplateBinding FontSize}"
-                                           FontWeight="Bold"
-                                           Foreground="{StaticResource TextBrush}"
-                                           Text="{TemplateBinding Title}" />
+                                    <Border x:Name="TitleBack"
+                                            HorizontalAlignment="Center"
+                                            Background="{StaticResource TitleBarFaceBrush}"
+                                            Padding="6,0">
+                                        <TextBlock x:Name="TitleText"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{TemplateBinding FontFamily}"
+                                                   FontSize="{TemplateBinding FontSize}"
+                                                   FontWeight="Bold"
+                                                   Foreground="{StaticResource TextBrush}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{TemplateBinding Title}" />
+                                    </Border>
+                                </Grid>
 
-                                <controls:Pinstripe x:Name="StripesRight"
-                                                    Grid.Column="3"
-                                                    Margin="4,5"
-                                                    LightBrush="#FFF8F8F8"
-                                                    DarkBrush="#FF8A8A8A" />
-
-                                <StackPanel Grid.Column="4"
+                                <StackPanel Grid.Column="2"
                                             Orientation="Horizontal"
                                             Margin="2,0,8,0"
                                             VerticalAlignment="Center">
@@ -206,8 +227,10 @@
                                     IsHitTestVisible="False">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <!-- El arranque es Gray11 con alfa 0: el mismo -->
+                                        <!-- tono del cierre, solo transparente.        -->
                                         <GradientStop Offset="0.0" Color="#00444444" />
-                                        <GradientStop Offset="1.0" Color="#FF444444" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource Gray11}" />
                                     </LinearGradientBrush>
                                 </Border.Background>
                             </Border>
@@ -217,8 +240,10 @@
                                     IsHitTestVisible="False">
                                 <Border.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <!-- El arranque es Gray11 con alfa 0: el mismo -->
+                                        <!-- tono del cierre, solo transparente.        -->
                                         <GradientStop Offset="0.0" Color="#00444444" />
-                                        <GradientStop Offset="1.0" Color="#FF444444" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource Gray11}" />
                                     </LinearGradientBrush>
                                 </Border.Background>
                             </Border>
@@ -231,8 +256,7 @@
                         <!-- Ventana inactiva: sin rayas, sin cajas y título en gris. Es la  -->
                         <!-- señal de foco de Platinum, no hay cambio de color de fondo.     -->
                         <Trigger Property="IsActive" Value="False">
-                            <Setter TargetName="StripesLeft" Property="Visibility" Value="Hidden" />
-                            <Setter TargetName="StripesRight" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Stripes" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="TitleText" Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
                             <Setter TargetName="PART_CloseBox" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="PART_ZoomBox" Property="Visibility" Value="Hidden" />

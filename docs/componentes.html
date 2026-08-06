@@ -432,6 +432,107 @@
     </div>
   </div></div>
 
+  <!-- ============ MENÚ ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Menu</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div style="border-bottom:1px solid #000; box-shadow: inset 0 1px 0 #fff; background:var(--gray2); display:flex; font-size:12px">
+        <span style="padding:4px 9px; background:#3A5FA8; color:#fff">File</span>
+        <span style="padding:4px 9px">Edit</span>
+        <span style="padding:4px 9px">View</span>
+      </div>
+      <div style="width:160px; background:#fff; border:1px solid #000; box-shadow:2px 2px 0 var(--gray7); font-size:12px; padding:1px">
+        <div style="padding:3px 8px 3px 20px; display:flex"><span>New</span><span style="margin-left:auto">Ctrl+N</span></div>
+        <div style="padding:3px 8px 3px 20px; background:#3A5FA8; color:#fff; display:flex"><span>Open...</span><span style="margin-left:auto">Ctrl+O</span></div>
+        <div style="height:5px; display:flex; align-items:center"><span style="flex:1; height:1px; background:var(--gray5)"></span></div>
+        <div style="padding:3px 8px 3px 20px; display:flex"><span>Quit</span><span style="margin-left:auto">Ctrl+Q</span></div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumMenu</code></td><td>Barra achatada con realce y filo; los títulos llenan la barra (StackPanel horizontal) y la hoja cuelga de su pie</td></tr>
+        <tr><td><code>PlatinumMenuItem</code></td><td>Cuatro roles; resalte azul fuerte con texto blanco (el único invertido del tema); palomita, gestos, submenús con flecha</td></tr>
+        <tr><td><code>PlatinumContextMenu</code></td><td>Menú del clic derecho; sin él la hoja la ponía Windows alrededor de renglones Platinum</td></tr>
+        <tr><td><code>PopupChrome.xaml</code></td><td>Hoja compartida (filo negro + sombra de 2 px): barra, submenú, menú contextual y tooltip</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ SLIDER Y PROGRESS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Slider · ProgressBar</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div style="position:relative; width:260px; height:26px">
+        <div style="position:absolute; top:9px; left:0; right:0; height:8px; background:#BDBDBD; border:1px solid #000; box-shadow: inset 1px 1px 0 var(--gray6)"></div>
+        <div style="position:absolute; top:2px; left:100px; width:11px; height:14px; background:#8B8BC3; border:1px solid #000; clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%)"></div>
+      </div>
+      <div style="width:260px; height:14px; border:1px solid #000; background:#fff; margin-top:8px">
+        <div style="width:60%; height:100%; background:#8B8BC3; box-shadow: inset 0 1px 0 #B6B6DC"></div>
+      </div>
+      <div style="width:260px; height:14px; border:1px solid #000; margin-top:8px; background:repeating-linear-gradient(45deg,#8B8BC3 0 6px,#5B5B92 6px 12px)"></div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>SliderThumbShape</code></td><td>Pentágono rasterizado a píxel físico (filo simétrico); horizontal y vertical, con marcas y estado deshabilitado</td></tr>
+        <tr><td><code>PlatinumProgressBar</code></td><td>Pozo blanco + relleno lavanda con realce; indeterminada con franjas diagonales; vertical por rotación; deshabilitada gris</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ GROUPBOX Y ÁRBOL ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">GroupBox · TreeView · ToolTip</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <fieldset style="border:1px solid var(--gray6); box-shadow: inset 1px 1px 0 #fff; padding:10px 14px; width:190px; font-size:12px">
+          <legend style="padding:0 4px; font-size:12px">Configure</legend>
+          Manually / DHCP
+        </fieldset>
+        <div style="background:#fff; border:1px solid #000; box-shadow: inset 2px 0 0 var(--gray4); padding:6px 10px; font-size:12px; width:170px">
+          ▾ 🖴 WorkDisk<br>&nbsp;&nbsp;▾ 📁 Documents<br>&nbsp;&nbsp;&nbsp;&nbsp;<span style="background:var(--accent)">📁 Projects</span>
+        </div>
+        <div style="background:#FFFFC8; border:1px solid #000; box-shadow:2px 2px 0 var(--gray7); padding:3px 6px; font-size:10px; align-self:center">Muestra las opciones adicionales.</div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumGroupBox</code></td><td>Línea grabada de dos tonos con el título interrumpiéndola vía máscara de opacidad (funciona sobre cualquier fondo)</td></tr>
+        <tr><td><code>PlatinumSeparator</code></td><td>Grabado horizontal de diálogo; variante vertical con alias para ToolBar y StatusBar</td></tr>
+        <tr><td><code>PlatinumTreeView</code></td><td>Pozo hundido con triángulos de despliegue rasterizados (ArrowGlyph) e indentación de 16; selección de contenido</td></tr>
+        <tr><td><code>PlatinumToolTip</code></td><td>Nota amarilla de la ayuda de Mac OS 9 con la sombra estándar del tema</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ ICONOS ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">Iconos</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <p style="font-size:12px; margin:0 0 10px">
+        Diez íconos vectoriales sobre retícula de 16×16, con contornos de un píxel alineados a .5:
+        carpeta, documento, disquete, disco duro, papelera, alerta, información, sobre, computadora y lupa.
+        Los colores que coinciden con tokens del tema los referencian (siguen al acento si cambia).
+      </p>
+      <table>
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>Themes/Icons.xaml</code></td><td>DrawingImage por ícono, sin archivos externos; en uso en el TreeView y la lista de correo</td></tr>
+      </table>
+    </div>
+  </div></div>
+
   <!-- ============ FUNDAMENTOS ============ -->
   <div class="win"><div class="inner">
     <div class="titlebar">
@@ -491,12 +592,26 @@
         <tr><td><code>Themes/ComboBox.xaml</code></td><td>Popup menu y renglones del desplegable</td></tr>
         <tr><td><code>Themes/ScrollBar.xaml</code></td><td>Barra de desplazamiento, flechas y thumb</td></tr>
         <tr><td><code>Themes/TabControl.xaml</code></td><td>Pestañas y panel</td></tr>
-        <tr><td><code>Themes/ListView.xaml</code></td><td>Lista con columnas: encabezados, renglones y pozo</td></tr>
+        <tr><td><code>Themes/ListView.xaml</code></td><td>Lista con columnas + plantilla propia del ScrollViewer de GridView</td></tr>
+        <tr><td><code>Themes/Menu.xaml</code></td><td>Barra de menús, menú contextual, elementos y separador</td></tr>
+        <tr><td><code>Themes/Slider.xaml</code></td><td>Deslizador horizontal y vertical</td></tr>
+        <tr><td><code>Themes/GroupBox.xaml</code></td><td>Recuadro de agrupación y separadores</td></tr>
+        <tr><td><code>Themes/TreeView.xaml</code></td><td>Árbol con triángulos de despliegue</td></tr>
+        <tr><td><code>Themes/ProgressBar.xaml</code></td><td>Barra de progreso</td></tr>
+        <tr><td><code>Themes/ToolTip.xaml</code></td><td>Etiqueta emergente</td></tr>
+        <tr><td><code>Themes/PopupChrome.xaml</code></td><td>Hoja emergente compartida (menú, popup menu, tooltip)</td></tr>
+        <tr><td><code>Themes/Icons.xaml</code></td><td>Los diez íconos vectoriales</td></tr>
         <tr><td><code>Controls/TabShape.cs</code></td><td>Trapecio de la pestaña</td></tr>
         <tr><td><code>Controls/ArrowGlyph.cs</code></td><td>Triángulos de las flechas</td></tr>
+        <tr><td><code>Controls/CheckerTexture.cs</code></td><td>Tablero del canal a píxel físico</td></tr>
+        <tr><td><code>Controls/SliderThumbShape.cs</code></td><td>Pentágono del deslizador a píxel físico</td></tr>
       </table>
       <p class="pend" style="margin:14px 0 0; font-size:11px">
-        Pendientes: barra de menús, deslizador, group box, árbol de carpetas.
+        Pendientes conocidos: animación del barber pole indeterminado; variante editable
+        del popup menu (no existe en Mac OS 9, falta <code>PART_EditableTextBox</code>);
+        filo inferior de las pestañas cuando WPF las reparte en dos renglones; la primera
+        y la última marca del deslizador salen un píxel más largas porque
+        <code>TickBar</code> las dibuja así por diseño.
         Nota de integración: la app consumidora debe apagar
         <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
       </p>

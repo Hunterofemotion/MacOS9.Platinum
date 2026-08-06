@@ -1,10 +1,18 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <!-- Este archivo no fusiona PopupChrome.xaml: su hoja se arma en línea porque      -->
+    <!-- necesita descontar un píxel del filo derecho (ver el comentario del Popup).    -->
+
+    <!-- Limitación conocida: el template no incluye PART_EditableTextBox, así que    -->
+    <!-- IsEditable=True no muestra campo de captura. Este control modela el popup    -->
+    <!-- menu de Mac OS 9, que no tiene variante editable.                            -->
 
     <!-- Cuerpo del popup: es el mismo botón físico, con una línea separadora a la    -->
     <!-- derecha y el par de flechas. No hereda del estilo de Button para poder       -->
@@ -47,15 +55,18 @@
                                             Margin="0,2"
                                             Background="{StaticResource BevelShadowBrush}" />
 
+                                    <!-- Los triángulos son ArrowGlyph, como en el resto  -->
+                                    <!-- del tema: los Path vectoriales salían suavizados -->
+                                    <!-- mientras las demás flechas salen duras.          -->
                                     <StackPanel HorizontalAlignment="Center"
                                                 VerticalAlignment="Center">
-                                        <Path x:Name="ArrowUp"
-                                              Data="M 0,4 L 4,0 L 8,4 Z"
-                                              Fill="{StaticResource TextBrush}"
-                                              Margin="0,0,0,2" />
-                                        <Path x:Name="ArrowDown"
-                                              Data="M 0,0 L 4,4 L 8,0 Z"
-                                              Fill="{StaticResource TextBrush}" />
+                                        <controls:ArrowGlyph x:Name="ArrowUp"
+                                                             Direction="Up"
+                                                             Fill="{StaticResource TextBrush}"
+                                                             Margin="0,0,0,2" />
+                                        <controls:ArrowGlyph x:Name="ArrowDown"
+                                                             Direction="Down"
+                                                             Fill="{StaticResource TextBrush}" />
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -90,10 +101,11 @@
     </Style>
 
     <!-- Renglón del menú desplegado. El resalte de Platinum es el azul claro con el  -->
-    <!-- texto en negro, no un azul fuerte con texto blanco.                          -->
+    <!-- texto en negro, no un azul fuerte con texto blanco. La tipografía es la del  -->
+    <!-- sistema: la regla del tema clasifica los menús —también este— como chrome.   -->
     <Style x:Key="PlatinumComboBoxItem" TargetType="{x:Type ComboBoxItem}">
-        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
-        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="Padding" Value="8,3" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -117,8 +129,8 @@
     </Style>
 
     <Style x:Key="PlatinumComboBox" TargetType="{x:Type ComboBox}">
-        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
-        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="MinHeight" Value="22" />
@@ -150,13 +162,19 @@
                                VerticalOffset="1"
                                IsOpen="{TemplateBinding IsDropDownOpen}"
                                PopupAnimation="None">
-                            <!-- El menú desplegado no lleva bisel: es una hoja plana  -->
-                            <!-- con filo negro y sombra, como los menús del sistema.  -->
+                            <!-- Misma receta que PlatinumPopupChrome, en línea porque  -->
+                            <!-- aquí el filo derecho debe descontar la columna que el  -->
+                            <!-- botón cede a su sombra (el ActualWidth la incluye):    -->
+                            <!-- sin ese descuento la hoja salía 1 px más ancha que el  -->
+                            <!-- filo del botón.                                        -->
                             <Grid Margin="0,0,2,2"
                                   MinWidth="{TemplateBinding ActualWidth}"
-                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                <Border Margin="2,2,-2,-2" Background="{StaticResource BevelDeepShadowBrush}" />
-                                <Border BorderThickness="1"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                  TextOptions.TextFormattingMode="Display"
+                                  TextOptions.TextHintingMode="Fixed">
+                                <Border Margin="2,2,-1,-2" Background="{StaticResource BevelDeepShadowBrush}" />
+                                <Border Margin="0,0,1,0"
+                                        BorderThickness="1"
                                         BorderBrush="{StaticResource TextBrush}"
                                         Background="{StaticResource ContentFaceBrush}">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">

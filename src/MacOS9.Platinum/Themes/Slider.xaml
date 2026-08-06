@@ -1,0 +1,264 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Zonas de página del riel: transparentes, solo reciben el clic. -->
+    <Style x:Key="PlatinumSliderPage" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Cursor del deslizador: pentágono que apunta al riel, con la cara lavanda del -->
+    <!-- thumb de la barra de desplazamiento. Se rasteriza en píxeles físicos porque  -->
+    <!-- el Path vectorial dejaba el lado inicial nítido y el final lavado a escalas  -->
+    <!-- fraccionarias. Al arrastrar se oscurece igual que el thumb del scrollbar.    -->
+    <Style x:Key="PlatinumSliderThumbHorizontal" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <controls:SliderThumbShape x:Name="Body"
+                                               Orientation="Horizontal"
+                                               Fill="{StaticResource ScrollThumbBrush}"
+                                               Stroke="{StaticResource TextBrush}" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Body" Property="Fill" Value="{StaticResource ScrollThumbPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Body" Property="Fill" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="Body" Property="Stroke" Value="{StaticResource BevelShadowBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumSliderThumbVertical" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <controls:SliderThumbShape x:Name="Body"
+                                               Orientation="Vertical"
+                                               Fill="{StaticResource ScrollThumbBrush}"
+                                               Stroke="{StaticResource TextBrush}" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Body" Property="Fill" Value="{StaticResource ScrollThumbPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Body" Property="Fill" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="Body" Property="Stroke" Value="{StaticResource BevelShadowBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PlatinumSlider" TargetType="{x:Type Slider}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="MinHeight" Value="22" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Slider}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" MinHeight="{TemplateBinding MinHeight}" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Aliased: las marcas se dibujan en coordenadas fraccionarias -->
+                        <!-- y sin él la última de la serie sale lavada.                 -->
+                        <TickBar x:Name="TopTick"
+                                 Grid.Row="0"
+                                 Placement="Top"
+                                 Height="4"
+                                 Margin="0,0,0,2"
+                                 Fill="{StaticResource BevelDeepShadowBrush}"
+                                 RenderOptions.EdgeMode="Aliased"
+                                 Visibility="Collapsed" />
+
+                        <!-- Riel: canal hundido con el gris del carril del scrollbar  -->
+                        <!-- y la misma sombra de dos pasos.                           -->
+                        <Border x:Name="Channel"
+                                Grid.Row="1"
+                                Height="8"
+                                VerticalAlignment="Center"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}"
+                                Background="{StaticResource ScrollTrackBrush}">
+                            <Grid>
+                                <Border x:Name="ChannelShadowDeep"
+                                        BorderThickness="1,1,0,0"
+                                        BorderBrush="{StaticResource FrameShadowBrush}" />
+                                <Border x:Name="ChannelShadowSoft"
+                                        Margin="1,1,0,0"
+                                        BorderThickness="1,1,0,0"
+                                        BorderBrush="{StaticResource BevelShadowBrush}" />
+                            </Grid>
+                        </Border>
+
+                        <Track x:Name="PART_Track" Grid.Row="1">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Style="{StaticResource PlatinumSliderPage}"
+                                              Command="Slider.DecreaseLarge" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource PlatinumSliderThumbHorizontal}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Style="{StaticResource PlatinumSliderPage}"
+                                              Command="Slider.IncreaseLarge" />
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+
+                        <TickBar x:Name="BottomTick"
+                                 Grid.Row="2"
+                                 Placement="Bottom"
+                                 Height="4"
+                                 Margin="0,2,0,0"
+                                 Fill="{StaticResource BevelDeepShadowBrush}"
+                                 RenderOptions.EdgeMode="Aliased"
+                                 Visibility="Collapsed" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TickPlacement" Value="TopLeft">
+                            <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="TickPlacement" Value="BottomRight">
+                            <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="TickPlacement" Value="Both">
+                            <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <!-- El carril también se apaga: antes solo lo hacía el thumb  -->
+                        <!-- y el control quedaba mitad activo.                        -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Channel" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Channel" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="ChannelShadowDeep" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="ChannelShadowSoft" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="MinHeight" Value="0" />
+                <Setter Property="MinWidth" Value="22" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Slider}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" MinWidth="{TemplateBinding MinWidth}" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TickBar x:Name="LeftTick"
+                                         Grid.Column="0"
+                                         Placement="Left"
+                                         Width="4"
+                                         Margin="0,0,2,0"
+                                         Fill="{StaticResource BevelDeepShadowBrush}"
+                                         RenderOptions.EdgeMode="Aliased"
+                                         Visibility="Collapsed" />
+
+                                <Border x:Name="Channel"
+                                        Grid.Column="1"
+                                        Width="8"
+                                        HorizontalAlignment="Center"
+                                        BorderThickness="1"
+                                        BorderBrush="{StaticResource TextBrush}"
+                                        Background="{StaticResource ScrollTrackBrush}">
+                                    <Grid>
+                                        <Border x:Name="ChannelShadowDeep"
+                                                BorderThickness="1,1,0,0"
+                                                BorderBrush="{StaticResource FrameShadowBrush}" />
+                                        <Border x:Name="ChannelShadowSoft"
+                                                Margin="1,1,0,0"
+                                                BorderThickness="1,1,0,0"
+                                                BorderBrush="{StaticResource BevelShadowBrush}" />
+                                    </Grid>
+                                </Border>
+
+                                <Track x:Name="PART_Track" Grid.Column="1">
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource PlatinumSliderPage}"
+                                                      Command="Slider.DecreaseLarge" />
+                                    </Track.DecreaseRepeatButton>
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource PlatinumSliderThumbVertical}" />
+                                    </Track.Thumb>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Style="{StaticResource PlatinumSliderPage}"
+                                                      Command="Slider.IncreaseLarge" />
+                                    </Track.IncreaseRepeatButton>
+                                </Track>
+
+                                <TickBar x:Name="RightTick"
+                                         Grid.Column="2"
+                                         Placement="Right"
+                                         Width="4"
+                                         Margin="2,0,0,0"
+                                         Fill="{StaticResource BevelDeepShadowBrush}"
+                                         RenderOptions.EdgeMode="Aliased"
+                                         Visibility="Collapsed" />
+                            </Grid>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="TickPlacement" Value="TopLeft">
+                                    <Setter TargetName="LeftTick" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                                <Trigger Property="TickPlacement" Value="BottomRight">
+                                    <Setter TargetName="RightTick" Property="Visibility" Value="Visible" />
+                                </Trigger>
+                                <Trigger Property="TickPlacement" Value="Both">
+                                    <Setter TargetName="LeftTick" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="RightTick" Property="Visibility" Value="Visible" />
+                                </Trigger>
+
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Channel" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                                    <Setter TargetName="Channel" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                                    <Setter TargetName="ChannelShadowDeep" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="ChannelShadowSoft" Property="Visibility" Value="Hidden" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource PlatinumSlider}" />
+
+</ResourceDictionary>
