@@ -34,11 +34,23 @@
 
     <!-- El margen inferior deja libre el grow box, que se dibuja encima del         -->
     <!-- contenido: sin él, la flecha de bajar de la barra queda tapada.             -->
-    <!-- El margen derecho negativo hace que el filo de la barra coincida con el     -->
-    <!-- del marco en vez de sumarse a él, que es lo que lo hacía verse doble.       -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Auto"
-                  Margin="0,0,-1,16">
+                  Margin="0,0,0,16">
+        <ScrollViewer.Resources>
+            <!-- El marco del contenido cierra tres lados de cada barra, así que     -->
+            <!-- cada una solo dibuja el que da hacia adentro. Antes se resolvía     -->
+            <!-- tirando de la vertical con un margen negativo, que tapaba el filo   -->
+            <!-- derecho y dejaba arriba y abajo al doble de grueso.                 -->
+            <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource PlatinumScrollBar}">
+                <Setter Property="BorderThickness" Value="1,0,0,0" />
+                <Style.Triggers>
+                    <Trigger Property="Orientation" Value="Horizontal">
+                        <Setter Property="BorderThickness" Value="0,1,0,0" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ScrollViewer.Resources>
     <StackPanel Margin="20,16">
 
         <TabControl Margin="0,0,0,22" Height="150">
