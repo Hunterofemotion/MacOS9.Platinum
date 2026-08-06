@@ -138,3 +138,9 @@ No abre ninguna ventana ni toca el escritorio, así que sirve para revisar estad
 una captura de pantalla no alcanza: deshabilitados, contenido que desborda, ventana
 enrollada, anchos extremos. Cambiar `dpiAware` a `false` en `app.manifest` y recompilar
 produce el caso de 100 %.
+
+## Licencia
+
+MIT. Puedes clonar, modificar, usar y redistribuir la biblioteca, incluso en
+proyectos comerciales; lo único que se pide es conservar el aviso de copyright.
+El texto completo está en [LICENSE](LICENSE).
