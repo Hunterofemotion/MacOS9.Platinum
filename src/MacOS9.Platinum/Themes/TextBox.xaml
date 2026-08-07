@@ -44,8 +44,13 @@
                             <!-- Las barras salen de las propiedades del control, no
                                  fijas aquí: un campo de varias líneas necesita la
                                  suya, y quien la pide es quien lo usa. -->
+                            <!-- El relleno va DENTRO del visor, no como margen del
+                                 visor entero: como margen empujaba también la barra
+                                 de desplazamiento hacia adentro y quedaba separada
+                                 del filo. Así el texto se despega del marco y la
+                                 barra se pega a él. -->
                             <ScrollViewer x:Name="PART_ContentHost"
-                                          Margin="{TemplateBinding Padding}"
+                                          Padding="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Focusable="False"
                                           HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
