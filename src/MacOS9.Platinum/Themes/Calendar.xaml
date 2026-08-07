@@ -1,0 +1,77 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Button.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Flecha de mes anterior y siguiente. Sin marco propio: va embutida en la      -->
+    <!-- cabecera del calendario, que ya cierra por fuera.                            -->
+    <Style x:Key="PlatinumCalendarArrow" TargetType="{x:Type Button}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Border x:Name="Face" Background="Transparent" />
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource SelectionBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Calendario de un mes: hoja blanca con marco negro, cabecera con el nombre    -->
+    <!-- del mes entre las dos flechas, y la rejilla debajo.                          -->
+    <Style TargetType="{x:Type controls:PlatinumCalendar}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumCalendar}">
+                    <Border BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}"
+                            Background="{TemplateBinding Background}">
+                        <StackPanel Margin="6">
+                            <!-- Cabecera sobre la cara del chrome, no sobre la hoja:
+                                 separa el mando de los días sin una línea de más. -->
+                            <DockPanel Margin="0,0,0,6">
+                                <Button x:Name="PART_Prev" DockPanel.Dock="Left"
+                                        Style="{StaticResource PlatinumCalendarArrow}">
+                                    <controls:ArrowGlyph Direction="Left" Fill="{StaticResource TextBrush}" />
+                                </Button>
+                                <Button x:Name="PART_Next" DockPanel.Dock="Right"
+                                        Style="{StaticResource PlatinumCalendarArrow}">
+                                    <controls:ArrowGlyph Direction="Right" Fill="{StaticResource TextBrush}" />
+                                </Button>
+                                <TextBlock x:Name="PART_Title"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           FontWeight="{StaticResource SystemFontWeight}" />
+                            </DockPanel>
+
+                            <Grid x:Name="PART_Grid" />
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

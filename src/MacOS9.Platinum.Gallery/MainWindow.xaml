@@ -152,7 +152,7 @@
 
                 <TabItem Header="Log">
                     <TextBox Margin="8" IsReadOnly="True" AcceptsReturn="True"
-                             VerticalScrollBarVisibility="Visible"
+                             VerticalScrollBarVisibility="Auto"
                              Text="09:41:02  Chamber purge started&#x0a;09:41:38  Vacuum nominal&#x0a;09:42:04  Lamp warm-up complete&#x0a;09:42:11  Grating homed at 1800 g/mm&#x0a;09:42:15  Ready" />
                 </TabItem>
             </TabControl>

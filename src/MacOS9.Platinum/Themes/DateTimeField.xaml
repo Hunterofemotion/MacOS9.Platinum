@@ -7,6 +7,9 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- WPF trae la clase pero no la deja puesta como recurso: hay que declararla. -->
+    <BooleanToVisibilityConverter x:Key="BooleanoAVisible" />
+
     <!-- Tecla de una flechita. Cara plana sin bisel, como las de la barra de        -->
     <!-- desplazamiento: van embutidas en un marco que ya cierra por fuera.          -->
     <Style x:Key="PlatinumStepperArrow" TargetType="{x:Type RepeatButton}">
@@ -119,6 +122,39 @@
                         <controls:PlatinumStepper x:Name="PART_Stepper"
                                                   Margin="4,0,0,0"
                                                   Height="{Binding ActualHeight, ElementName=Frame}" />
+
+                        <!-- Tecla del calendario. Es un interruptor y no una tecla
+                             normal para que quede hundida mientras la hoja está
+                             abierta, como el cuerpo de un menú desplegado. -->
+                        <ToggleButton x:Name="PART_CalendarButton"
+                                      Margin="4,0,0,0"
+                                      Width="22"
+                                      Height="{Binding ActualHeight, ElementName=Frame}"
+                                      Focusable="False"
+                                      Visibility="{Binding ShowCalendar,
+                                                   RelativeSource={RelativeSource TemplatedParent},
+                                                   Converter={StaticResource BooleanoAVisible}}">
+                            <controls:CalendarGlyph />
+                        </ToggleButton>
+
+                        <Popup x:Name="PART_Popup"
+                               AllowsTransparency="True"
+                               Placement="Bottom"
+                               PlacementTarget="{Binding ElementName=Frame}"
+                               StaysOpen="False"
+                               IsOpen="{Binding IsChecked, ElementName=PART_CalendarButton, Mode=TwoWay}">
+                            <Grid Margin="0,2,3,3"
+                                  TextOptions.TextFormattingMode="Display"
+                                  TextOptions.TextRenderingMode="ClearType"
+                                  TextOptions.TextHintingMode="Fixed">
+                                <Border Margin="3,3,-3,-3"
+                                        Background="{StaticResource BevelDeepShadowBrush}" />
+                                <controls:PlatinumCalendar x:Name="PART_Calendar"
+                                                           SelectedDate="{Binding Value,
+                                                               RelativeSource={RelativeSource TemplatedParent},
+                                                               Mode=TwoWay}" />
+                            </Grid>
+                        </Popup>
                     </StackPanel>
 
                     <ControlTemplate.Triggers>

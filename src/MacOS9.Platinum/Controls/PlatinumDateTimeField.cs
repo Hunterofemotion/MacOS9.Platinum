@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace MacOS9.Platinum.Controls;
@@ -25,10 +26,14 @@ public enum DateTimeFieldMode
 /// </summary>
 [TemplatePart(Name = PartSegments, Type = typeof(Panel))]
 [TemplatePart(Name = PartStepper, Type = typeof(PlatinumStepper))]
+[TemplatePart(Name = PartCalendarButton, Type = typeof(System.Windows.Controls.Primitives.ToggleButton))]
+[TemplatePart(Name = PartCalendar, Type = typeof(PlatinumCalendar))]
 public class PlatinumDateTimeField : Control
 {
     public const string PartSegments = "PART_Segments";
     public const string PartStepper = "PART_Stepper";
+    public const string PartCalendarButton = "PART_CalendarButton";
+    public const string PartCalendar = "PART_Calendar";
 
     static PlatinumDateTimeField()
     {
@@ -59,6 +64,20 @@ public class PlatinumDateTimeField : Control
         set => SetValue(ModeProperty, value);
     }
 
+    /// <summary>
+    /// Muestra la tecla que despliega el calendario. Solo tiene sentido en modo
+    /// fecha: un calendario no sirve para elegir una hora.
+    /// </summary>
+    public static readonly DependencyProperty ShowCalendarProperty =
+        DependencyProperty.Register(nameof(ShowCalendar), typeof(bool), typeof(PlatinumDateTimeField),
+            new PropertyMetadata(true));
+
+    public bool ShowCalendar
+    {
+        get => (bool)GetValue(ShowCalendarProperty);
+        set => SetValue(ShowCalendarProperty, value);
+    }
+
     private static void AlCambiarValor(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ((PlatinumDateTimeField)d).Repintar();
@@ -80,6 +99,21 @@ public class PlatinumDateTimeField : Control
         if (GetTemplateChild(PartStepper) is PlatinumStepper flechas)
         {
             flechas.Stepped += (_, paso) => Mover(paso);
+        }
+
+        // El calendario elige el día y cierra: quien lo abrió quería una fecha, no
+        // quedarse hojeando meses.
+        if (GetTemplateChild(PartCalendar) is PlatinumCalendar calendario)
+        {
+            calendario.DateChosen += (_, fecha) =>
+            {
+                Value = fecha;
+                if (GetTemplateChild(PartCalendarButton) is ToggleButton tecla)
+                {
+                    tecla.IsChecked = false;
+                }
+                Focus();
+            };
         }
 
         Repintar();
