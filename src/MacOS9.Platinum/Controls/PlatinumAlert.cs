@@ -131,6 +131,11 @@ public class PlatinumAlert : PlatinumWindow
 
         // El detalle solo ocupa lugar cuando lo hay: un renglón vacío permanente
         // separaría el mensaje de las teclas sin motivo.
+        //
+        // Va del mismo tamaño que el mensaje y se distingue por el peso, no por la
+        // medida. En un aviso la segunda línea no es un pie de página: es la que
+        // dice qué va a pasar si el usuario sigue adelante, y esta es la ventana
+        // que se lee con prisa. Achicarla era esconder justo la consecuencia.
         if (!string.IsNullOrEmpty(Detail))
         {
             var detalle = new TextBlock
@@ -138,8 +143,9 @@ public class PlatinumAlert : PlatinumWindow
                 Text = Detail,
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 8, 0, 0),
-                FontFamily = Recurso("ViewFontFamily") as FontFamily,
-                FontSize = Recurso("SmallFontSize") is double chico ? chico : 10d,
+                FontFamily = Recurso("SystemFontFamily") as FontFamily,
+                FontWeight = FontWeights.Normal,
+                FontSize = Recurso("SystemFontSize") is double medida ? medida : 12d,
                 Foreground = Recurso("TextBrush") as Brush
             };
             Grid.SetRow(detalle, 1);
