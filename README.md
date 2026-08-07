@@ -73,15 +73,26 @@ Windows has a setting, `MenuDropAlignment`, that aligns menus to the right of th
 pointer. It is commonly on for left-handed setups, and WPF honours it inside
 `MenuItem` itself: no combination of `Placement`, `PlacementTarget` or
 `FlowDirection` changes it, because the flip is applied afterwards. The result is
-a menu sheet that opens away from its title and off the window. Call this once
+a menu sheet that opens away from its title and off the window.
+
+`PlatinumWindow` fixes this in its static constructor, so an application that uses
+the theme's window gets it for free and has nothing to call. The fix lives there
+and not in the dictionary because constructing the theme's window is an explicit
+act while merging a `ResourceDictionary` is not.
+
+If you use a plain WPF `Window` and only merge the dictionary, call it yourself
 before showing the first window:
 
 ```csharp
 MacOS9.Platinum.PlatinumTheme.UseLeftMenuDrop();
 ```
 
-It is an explicit call and not a side effect of merging the dictionary, because it
-overrides a user preference.
+It overrides a user preference, so there is a way out. Call this before the first
+`PlatinumWindow` is created and Windows keeps deciding:
+
+```csharp
+MacOS9.Platinum.PlatinumTheme.KeepSystemMenuDropAlignment();
+```
 
 ### One integration requirement
 

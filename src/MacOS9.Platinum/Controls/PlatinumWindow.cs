@@ -97,6 +97,12 @@ public class PlatinumWindow : Window
         DefaultStyleKeyProperty.OverrideMetadata(
             typeof(PlatinumWindow),
             new FrameworkPropertyMetadata(typeof(PlatinumWindow)));
+
+        // Los menús caen bajo su título desde aquí y no desde el diccionario:
+        // construir la ventana del tema es un acto explícito, fusionar un
+        // ResourceDictionary no. Corre una sola vez y antes de la primera
+        // ventana, que es cuando el ajuste todavía surte efecto.
+        PlatinumTheme.UseLeftMenuDrop();
     }
 
     /// <summary>
