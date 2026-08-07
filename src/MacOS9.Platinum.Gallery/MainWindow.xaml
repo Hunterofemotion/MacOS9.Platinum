@@ -223,6 +223,20 @@
                     </StackPanel>
                 </GroupBox>
 
+                <!-- Paneles plegables: el triángulo del Finder con el título subrayado -->
+                <Expander DockPanel.Dock="Top" Header="Sample Info" IsExpanded="True"
+                          Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Batch: PX-4471" />
+                        <TextBlock Text="Matrix: Aqueous" Margin="0,2,0,0" />
+                        <TextBlock Text="Prepared: 12 Nov 2026" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Expander>
+
+                <Expander DockPanel.Dock="Top" Header="Storage" Margin="0,6,0,0">
+                    <TextBlock Text="4.3 MB used on disk" />
+                </Expander>
+
                 <StackPanel VerticalAlignment="Bottom">
                     <Button Content="Calibrate..." Margin="0,0,0,8" Click="OnCalibrate"
                             ToolTip="Runs the standard against the reference lines." />

@@ -101,6 +101,10 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   rather than hand-assembled content, so every label in a bar lines up. The bar
   drops WPF's overflow button on purpose: a Mac OS 9 toolbar never rearranged
   itself, what does not fit is clipped
+- **Expander** — a collapsible section: the Finder disclosure triangle, an
+  underlined title, and the engraved rule carrying on to the right edge. The whole
+  header row toggles it, not just the triangle, and it snaps open with no
+  animation — the original had none, and a slide gives the theme away at once
 - **StatusBar** — the strip along the bottom edge of a window: window face, an
   engraved rule separating it from the content, and cells that dock to either
   side while the last one takes the remaining width
