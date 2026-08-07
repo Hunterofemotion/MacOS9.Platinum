@@ -12,3 +12,6 @@ obj/
 # Son capturas generadas, no fuentes del proyecto.
 *.png
 !docs/**/*.png
+# Las imágenes aprobadas sí son fuente: son el patrón contra el que compara
+# check-render.ps1. Sin ellas la comprobación visual no tiene contra qué medir.
+!tools/aprobadas/**/*.png
