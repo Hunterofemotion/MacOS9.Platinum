@@ -99,17 +99,26 @@
                                  RenderOptions.EdgeMode="Aliased"
                                  Visibility="Collapsed" />
 
-                        <!-- Riel: canal hundido con el gris del carril del scrollbar  -->
-                        <!-- y la misma sombra de dos pasos.                           -->
+                        <!-- Riel: canal grabado. Sombra arriba y luz abajo, que es lo
+                             que lo hace leer hundido; con sombra sola quedaba plano,
+                             como una barra pintada. Las puntas van redondeadas, como
+                             en el modelo. El gris es el del carril de la barra de
+                             desplazamiento, sin cambio. -->
                         <Border x:Name="Channel"
                                 Grid.Row="1"
                                 Height="8"
                                 VerticalAlignment="Center"
+                                CornerRadius="2"
                                 BorderThickness="1"
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource ScrollTrackBrush}">
                             <Grid>
+                                <Border x:Name="ChannelLight"
+                                        CornerRadius="1"
+                                        BorderThickness="0,0,1,1"
+                                        BorderBrush="{StaticResource BevelHighlightBrush}" />
                                 <Border x:Name="ChannelShadowDeep"
+                                        CornerRadius="1"
                                         BorderThickness="1,1,0,0"
                                         BorderBrush="{StaticResource FrameShadowBrush}" />
                                 <Border x:Name="ChannelShadowSoft"

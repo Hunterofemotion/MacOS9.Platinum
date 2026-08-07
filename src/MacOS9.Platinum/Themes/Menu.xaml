@@ -29,13 +29,24 @@
                    AllowsTransparency="True"
                    Focusable="False"
                    PopupAnimation="None">
-                <ContentControl Template="{StaticResource PlatinumPopupChrome}"
-                                Background="{StaticResource ContentFaceBrush}"
-                                Padding="0"
-                                MinWidth="150"
-                                IsTabStop="False">
-                    <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
-                </ContentControl>
+                <!-- La hoja se arma en línea y no envolviendo el ItemsPresenter en
+                     un ContentControl con plantilla. Envuelto, el presentador no
+                     aporta ancho a la medida y la hoja se quedaba en su MinWidth
+                     con el texto saliéndose por fuera. Medido: con MinWidth 150 la
+                     ventana salía de 150, y con 400 salía de 400, sin importar el
+                     contenido. El popup del ComboBox ya se armaba así. -->
+                <Grid Margin="0,0,2,2"
+                      MinWidth="150"
+                      TextOptions.TextFormattingMode="Display"
+                      TextOptions.TextRenderingMode="ClearType"
+                      TextOptions.TextHintingMode="Fixed">
+                    <Border Background="{StaticResource BevelDeepShadowBrush}" Margin="2,2,-2,-2" />
+                    <Border Background="{StaticResource ContentFaceBrush}"
+                            BorderBrush="{StaticResource TextBrush}"
+                            BorderThickness="1">
+                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                    </Border>
+                </Grid>
             </Popup>
         </Grid>
 
@@ -171,7 +182,7 @@
                     <ContentControl Template="{StaticResource PlatinumPopupChrome}"
                                     Background="{StaticResource ContentFaceBrush}"
                                     Padding="0"
-                                    MinWidth="150"
+                                    MinWidth="400"
                                     IsTabStop="False">
                         <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </ContentControl>
