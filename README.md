@@ -129,11 +129,13 @@ Requires .NET 9 or later with the Windows desktop workload.
 
 ## Verification
 
-Two tools live in [tools/](tools/), outside the solution because they are not part
+The checks live in [tools/](tools/), outside the solution because they are not part
 of the library:
 
 ```
 pwsh -File tools/check-resources.ps1
+pwsh -File tools/check-parts.ps1
+pwsh -File tools/check-render.ps1
 dotnet run --project tools/Probe
 ```
 
@@ -143,6 +145,24 @@ that no key is defined twice. None of that fails at compile time: a `StaticResou
 inside a `ControlTemplate` is resolved when the template is instantiated, so a
 misspelled key in the submenu branch brings the application down the first time
 somebody opens that submenu, not at start-up.
+
+`check-parts.ps1` checks that every `PART_` the stock WPF templates declare also
+exists in ours. A custom template replaces the stock one wholesale, and the control
+looks its pieces up by name: a missing `PART_` silently takes with it whatever
+behaviour hung off that piece. Nothing fails to compile and nothing throws. It
+happened here — without `PART_HeaderGripper` the library lost both column resizing
+and double-click-to-fit, and nobody noticed until a user asked for them as if they
+were a new feature. The stock templates under `tools/StockTemplates/stock` are
+regenerated with `dotnet run --project tools/StockTemplates`.
+
+`check-render.ps1` renders every scenario and compares it against an approved
+image, failing on any pixel that changed. The defects in this theme are one pixel
+wide — a rule painted twice, a border that spills, one shadow too many — so the
+only detector used to be a person looking at screenshots. Anti-aliased diagonals
+drift by a fraction of a pixel between runs, so a small soft-difference budget is
+tolerated while any hard jump fails; the thresholds are chosen so a doubled 1px
+rule still fails loudly. Approving (`-Aprobar`) is meant to be deliberate: look at
+the image, then accept it.
 
 `Probe` instantiates every template and style in the theme — which forces WPF to
 resolve them — and renders each control with `RenderTargetBitmap` into

@@ -168,7 +168,11 @@
                                                      LightBrush="{StaticResource ScrollTrackLightBrush}"
                                                      DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
 
-                            <RepeatButton Grid.Row="1"
+                            <!-- Los nombres de fábrica se conservan aunque el mando
+                                 vaya por comando: son los que busca el control y
+                                 los que expone a la automatización de interfaz. -->
+                            <RepeatButton x:Name="PART_LineUpButton"
+                                          Grid.Row="1"
                                           Style="{StaticResource PlatinumScrollArrow}"
                                           Command="ScrollBar.LineUpCommand">
                                 <controls:ArrowGlyph Direction="Up" Fill="{StaticResource TextBrush}" />
@@ -194,7 +198,8 @@
                                 </Track.IncreaseRepeatButton>
                             </Track>
 
-                            <RepeatButton Grid.Row="2"
+                            <RepeatButton x:Name="PART_LineDownButton"
+                                          Grid.Row="2"
                                           Style="{StaticResource PlatinumScrollArrow}"
                                           Command="ScrollBar.LineDownCommand">
                                 <controls:ArrowGlyph Direction="Down" Fill="{StaticResource TextBrush}" />
@@ -258,7 +263,8 @@
                                                              LightBrush="{StaticResource ScrollTrackLightBrush}"
                                                              DarkBrush="{StaticResource ScrollTrackDarkBrush}" />
 
-                                    <RepeatButton Grid.Column="1"
+                                    <RepeatButton x:Name="PART_LineLeftButton"
+                                                  Grid.Column="1"
                                                   Style="{StaticResource PlatinumScrollArrow}"
                                                   Command="ScrollBar.LineLeftCommand">
                                         <controls:ArrowGlyph Direction="Left" Fill="{StaticResource TextBrush}" />
@@ -278,7 +284,8 @@
                                         </Track.IncreaseRepeatButton>
                                     </Track>
 
-                                    <RepeatButton Grid.Column="2"
+                                    <RepeatButton x:Name="PART_LineRightButton"
+                                                  Grid.Column="2"
                                                   Style="{StaticResource PlatinumScrollArrow}"
                                                   Command="ScrollBar.LineRightCommand">
                                         <controls:ArrowGlyph Direction="Right" Fill="{StaticResource TextBrush}" />
