@@ -187,3 +187,332 @@ ofi-r4c2	Idea	foco idea bombilla ocurrencia sugerencia
 ofi-r4c3	Pin	tachuela pin fijar clavar chinche
 ofi-r4c4	ArchiveBox	caja archivo box almacenar guardar cajon
 ofi-r4c5	Survey	encuesta formulario survey cuestionario respuesta
+lab-r1c5	Microscope	microscopio microscope laboratorio aumento muestra
+lab-r2c1	TestTubeRack	tubos ensayo gradilla test tube rack muestras
+lab-r2c2	Beaker	vaso precipitados beaker recipiente líquido química
+lab-r2c3	Flask	matraz erlenmeyer flask frasco química
+lab-r2c5	PetriDish	placa petri dish cultivo caja muestra
+lab-r3c2	Molecule	molécula molecule átomos enlace química estructura
+lab-r4c1	ChartScatter	dispersión scatter nube puntos correlación gráfica
+lab-r4c2	DataTable	tabla datos table hoja cálculo renglones columnas
+lab-r4c4	Oscilloscope	osciloscopio oscilloscope onda señal pantalla
+lab-r5c3	Thermometer	termómetro thermometer temperatura grados calor
+medir-r1c1	DataLogger	registrador datos logger medición portátil
+medir-r1c3	PressureGauge	manómetro presión gauge carátula aguja
+medir-r1c4	FlowMeter	flujómetro caudal flow medidor tubo
+medir-r1c5	Voltmeter	voltímetro voltaje volts tensión medidor
+medir-r2c1	Ammeter	amperímetro corriente amperes medidor
+medir-r2c2	Multimeter	multímetro multimeter tester medidor eléctrico
+medir-r2c3	SignalGenerator	generador señal osciloscopio banco instrumento
+medir-r3c1	PhMeter	phmetro ph acidez medidor sonda
+medir-r3c2	ConductivityMeter	conductímetro conductividad medidor sonda
+medir-r3c4	BarcodeScanner	lector código barras scanner pistola
+medir-r3c5	Stopwatch	cronómetro stopwatch tiempo medir vuelta
+medir-r4c1	Compass	brújula compass norte orientación rumbo
+medir-r4c4	RulerFlat	regla ruler medir centímetros escala
+medir-r5c1	PrecisionScale	báscula balanza precisión peso gramos
+medir-r5c2	ChartDocument	documento gráfica reporte informe datos
+quim-r1c1	PeriodicTable	tabla periódica elementos química periodic
+quim-r1c4	BenzeneRing	anillo bencénico hexágono benceno molécula orgánica
+quim-r2c1	FlaskGreen	matraz erlenmeyer reactivo química
+quim-r2c2	FlaskRound	matraz balón fondo redondo destilación
+quim-r3c1	GraduatedCylinder	probeta cilindro graduado volumen medir
+quim-r3c3	ReagentBottle	frasco reactivo bote tapa químico
+quim-r3c4	Dropper	gotero frasco pipeta dosificar
+quim-r3c5	SafetyGoggles	goggles gafas seguridad protección ojos
+quim-r4c1	BunsenBurner	mechero bunsen flama quemador calor
+quim-r4c2	HotPlate	parrilla plato caliente calentador laboratorio
+quim-r4c3	MagneticStirrer	agitador magnético parrilla mezclar vaso
+quim-r4c4	ReactionArrows	flechas reacción reversible equilibrio química
+quim-r4c5	CrystalLattice	red cristalina cristal estructura sólido
+quim-r5c1	PhStrip	tira ph indicador colores acidez papel
+quim-r5c3	HazardFlammable	peligro inflamable rombo advertencia flama
+quim-r5c4	Chromatography	cromatografía placa corrida manchas separación
+bio-r1c4	Cell	célula cell núcleo organelos biología
+bio-r2c1	MicroscopeSlide	portaobjetos laminilla muestra microscopio
+bio-r2c2	MicroscopeBench	microscopio óptico laboratorio aumento
+bio-r2c5	SampleJar	frasco muestra bote espécimen tapa
+bio-r3c1	Bacterium	bacteria microbio bacilo germen
+bio-r3c2	Virus	virus microbio patógeno germen
+bio-r3c3	Leaf	hoja planta leaf botánica follaje
+bio-r3c4	InsectSpecimen	insecto escarabajo espécimen colección
+bio-r3c5	Fish	pez fish pescado animal acuático
+bio-r4c1	LabMouse	ratón laboratorio animal roedor
+bio-r4c4	Heart	corazón heart órgano anatomía
+fis-r1c3	CircuitBoard	placa circuito tarjeta electrónica pcb componentes
+fis-r1c4	Resistor	resistencia resistor componente electrónica bandas
+fis-r1c5	Capacitor	capacitor condensador componente electrónica
+fis-r2c1	Inductor	inductor bobina componente electrónica
+fis-r2c2	DryCell	pila seca celda batería energía
+fis-r2c3	Magnet	imán magnet herradura polos magnetismo
+fis-r2c4	Laser	láser laser haz rayo luz
+fis-r2c5	Prism	prisma prism refracción luz espectro
+fis-r3c1	Waveform	onda señal waveform gráfica oscilación
+fis-r3c2	Pendulum	péndulo pendulum oscilación gravedad
+fis-r3c3	Spring	resorte muelle spring elasticidad
+fis-r3c4	TuningFork	diapasón tuning fork frecuencia sonido
+fis-r4c2	ParticleDetector	detector partículas colisión acelerador física
+fis-r5c3	SolderingIron	cautín soldador soldar estaño electrónica
+astro-r1c1	Telescope	telescopio telescope observar estrellas astronomía
+astro-r1c3	Planet	planeta saturno anillos planet astronomía
+astro-r1c4	Moon	luna moon satélite cráteres
+astro-r2c1	Galaxy	galaxia galaxy espiral estrellas cosmos
+astro-r2c2	Comet	cometa comet estela meteoro
+astro-r2c3	Asteroid	asteroide roca meteorito espacio
+astro-r2c4	Satellite	satélite satellite órbita paneles espacio
+astro-r2c5	RadioDish	antena parabólica radiotelescopio plato señal
+astro-r3c1	Observatory	observatorio cúpula telescopio edificio
+astro-r3c3	Volcano	volcán volcano erupción lava montaña
+astro-r3c4	RockStrata	estratos capas roca geología corte
+astro-r3c5	RockHammer	martillo geólogo piqueta roca golpear
+astro-r4c1	Fossil	fósil ammonite concha paleontología
+astro-r4c2	Crystals	cristales cuarzo mineral gema roca
+astro-r4c3	Seismograph	sismógrafo sismo temblor registro terremoto
+astro-r5c2	CompassRose	rosa vientos brújula norte mapa orientación
+dato-r1c4	Histogram	histograma histogram distribución frecuencia
+dato-r2c1	Heatmap	mapa calor heatmap matriz colores intensidad
+dato-r2c2	ContourPlot	curvas nivel contorno superficie topográfico
+dato-r2c3	BoxPlot	caja bigotes boxplot cuartiles distribución
+dato-r2c5	Spectrum	espectro spectrum picos frecuencia señal
+dato-r3c4	FunctionCurve	función curva ejes gráfica matemática
+dato-r3c5	Matrix	matriz matrix cuadrícula celdas álgebra
+dato-r4c1	Sigma	sumatoria sigma suma total matemática
+dato-r4c2	Regression	regresión ajuste recta tendencia correlación
+dato-r4c3	Funnel	embudo funnel filtrar depurar
+dato-r4c5	CompareCharts	comparar gráficas series contraste
+dato-r5c4	Analyze	analizar examinar lupa gráfica revisar
+med-r1c2	BloodTube	tubo sangre muestra análisis hematología
+med-r2c1	VitalsMonitor	monitor signos vitales ecg pulso paciente
+med-r2c2	Syringe	jeringa syringe inyección vacuna aguja
+med-r2c3	Stethoscope	estetoscopio stethoscope auscultar médico
+med-r2c5	PillBottle	frasco pastillas medicina píldoras receta
+med-r3c1	PatientChart	expediente paciente historia clínica
+med-r3c2	MedicalFolder	carpeta médica expediente cruz salud
+med-r3c3	Xray	radiografía rayos x tórax placa costillas
+med-r3c4	Bone	hueso bone fémur esqueleto traumatología
+med-r3c5	HeadScan	tomografía cráneo cerebro scan cabeza
+med-r4c2	Tooth	diente muela dental odontología
+med-r4c4	Freezer	congelador ultracongelador frío muestras
+med-r5c1	Lungs	pulmones lungs respiración órgano
+med-r5c4	Hospital	hospital clínica edificio salud urgencias
+campo-r1c1	Leaf	hoja planta leaf follaje botánica
+campo-r1c2	Tree	árbol tree bosque planta
+campo-r1c3	WaterDrop	gota agua water drop líquido
+campo-r1c4	SoilSample	muestra suelo bolsa tierra sedimento
+campo-r1c5	InsectTrap	trampa insectos captura campo cebo
+campo-r2c1	Binoculars	binoculares prismáticos observar avistar
+campo-r2c2	WeatherStation	estación meteorológica sensores clima torre
+campo-r2c3	RainGauge	pluviómetro lluvia precipitación medir
+campo-r2c5	WindVane	veleta anemómetro viento dirección
+campo-r3c1	Cloud	nube cloud nublado clima
+campo-r3c2	Sun	sol sun soleado despejado clima
+campo-r3c3	Mountains	montañas montaña sierra cumbre relieve
+campo-r3c4	TopoMap	mapa topográfico curvas nivel terreno
+campo-r3c5	Gps	gps navegador posición satelital ubicación
+campo-r4c3	TrailCamera	cámara trampa fototrampeo fauna campo
+conta-r1c1	Ledger	libro contable mayor registro contabilidad
+conta-r1c3	Invoice	factura invoice recibo cobro comprobante
+conta-r1c4	Receipt	ticket recibo tira comprobante compra
+conta-r1c5	Coins	monedas coins dinero efectivo cambio
+conta-r1c6	Bank	banco bank institución columnas edificio
+conta-r2c1	CashRegister	caja registradora punto venta cobrar
+conta-r2c2	Wallet	cartera billetera wallet dinero
+conta-r2c3	PiggyBank	alcancía cochinito ahorro piggy
+conta-r3c2	Cheque	cheque check pago firma banco
+conta-r3c3	CreditCard	tarjeta crédito card pago plástico
+conta-r3c4	MoneyBag	bolsa dinero saco efectivo fondos
+conta-r3c5	Scales	balanza equilibrio justicia pesar comparar
+conta-r3c6	Abacus	ábaco abacus cuentas calcular
+admin-r1c2	RecurringInvoice	factura recurrente periódica suscripción ciclo
+admin-r2c1	DocumentFeed	alimentador documentos bandeja salida impresión
+admin-r2c2	PersonnelFolder	expediente personal carpeta empleado ficha
+admin-r2c6	MailDocument	sobre documento correspondencia enviar carta
+admin-r3c1	ScreenInvoice	facturación pantalla monitor sistema cobro
+admin-r3c2	CardTerminal	terminal punto venta datáfono cobrar tarjeta
+admin-r3c4	Cash	billetes efectivo dinero cash pago
+admin-r3c5	DiscountTag	etiqueta descuento porcentaje rebaja precio
+admin-r4c3	BoundReport	reporte empastado informe volumen encuadernado
+banca-r1c3	Chequebook	chequera talonario cheques banco
+banca-r1c4	BankStatement	estado cuenta movimientos banco extracto
+banca-r2c2	CardBank	tarjeta bancaria débito banco plástico
+banca-r2c3	OnlineBanking	banca electrónica en línea portal cuenta
+banca-r2c4	Transfer	transferencia traspaso bancos envío dinero
+banca-r3c4	DepositBox	buzón depósito caja seguridad ranura
+banca-r3c5	MoneyRoll	fajo rollo billetes efectivo dinero
+banca-r3c6	Atm	cajero automático atm retirar banco
+banca-r4c2	CoinDeposit	depositar moneda alcancía ranura ahorro
+banca-r4c3	Reconcile	conciliar comparar cuadrar estados igual
+banca-r4c5	ExchangeArrows	intercambio cambio divisas flechas circular
+banca-r4c6	Audit	auditoría revisar lupa documento examinar
+nomina-r1c2	IdBadge	gafete credencial empleado identificación
+nomina-r1c4	PayEnvelope	sobre nómina pago efectivo raya
+nomina-r1c5	Timesheet	tarjeta tiempo asistencia horas registro
+nomina-r2c4	EmployeeFiles	expedientes empleados personal archivero
+nomina-r2c5	Bonus	bono premio estrella incentivo gratificación
+nomina-r3c4	BenefitsFolder	prestaciones beneficios seguro carpeta salud
+nomina-r3c5	Pension	pensión retiro jubilación ahorro alcancía
+fiscal-r1c5	DeadlineCalendar	vencimiento fecha límite plazo calendario círculo
+fiscal-r1c6	PercentCalculator	calculadora porcentaje tasa impuesto calcular
+fiscal-r2c1	ReceiptBundle	fajo recibos comprobantes atado tickets
+fiscal-r2c3	ShieldCheck	escudo verificado cumplimiento validado protegido
+fiscal-r3c3	AlertDocument	documento alerta aviso advertencia atención
+fiscal-r3c4	FileCabinet	archivero gaveta cajón expedientes mueble
+fiscal-r3c6	SignedDocument	documento firmado firma autógrafo rúbrica
+fiscal-r4c5	LockedDocument	documento bloqueado candado confidencial cerrado
+presu-r1c3	TargetMoney	meta objetivo blanco tiro presupuesto
+presu-r2c3	Forecast	pronóstico previsión proyección bola futuro
+presu-r2c4	GaugeMedal	indicador desempeño medidor meta logro
+presu-r2c5	CoinJar	frasco monedas ahorro fondo reserva
+presu-r2c6	GaugeMoney	medidor gasto presupuesto aguja consumo
+presu-r3c6	GrowthArrow	crecimiento alza flecha subida tendencia
+presu-r4c5	MoneyCycle	ciclo dinero flujo circulante rotación
+alma-r1c1	Box	caja paquete bulto carton embalaje
+alma-r1c2	BoxStack	cajas apiladas lote bultos existencias
+alma-r1c3	PriceTag	etiqueta precio colgante marbete
+alma-r1c4	Barcode	código barras barcode etiqueta lectura
+alma-r1c6	SupplierFolder	proveedor carpeta expediente contacto
+alma-r2c1	DeliveryTruck	camión reparto entrega transporte flete
+alma-r2c2	PackingList	lista empaque surtido verificación bultos
+alma-r2c3	WarehouseRack	anaquel estante rack almacén estibas
+alma-r2c4	StockTable	existencias inventario tabla conteo saldos
+alma-r3c4	HandTruck	diablito carretilla mover carga estibar
+alma-r3c5	BoxChecked	caja verificada recibido conforme entregado
+alma-r3c6	StockAlert	alerta existencias faltante mínimo aviso
+alma-r4c2	Warehouse	almacén bodega nave depósito
+alma-r4c3	BoxInspect	inspección caja revisar rastrear buscar
+audit-r2c3	Shredder	trituradora destructora papel destruir confidencial
+audit-r2c5	CompareDocuments	comparar documentos cotejar versiones diferencias
+audit-r2c6	RevisionCycle	revisión ciclo versiones actualizar documento
+audit-r3c1	ReportAlert	reporte con alerta hallazgo observación anomalía
+audit-r3c3	SearchFolder	buscar carpeta explorar expediente lupa
+audit-r4c3	SealedEnvelope	sobre lacrado sello cera confidencial cerrado
+gasto-r1c2	BoardingPass	pase abordar boleto avión viaje vuelo
+gasto-r1c6	HotelReceipt	hotel hospedaje factura estancia noche
+gasto-r2c1	MealReceipt	comida restaurante consumo alimentos ticket
+gasto-r2c2	TaxiReceipt	taxi transporte traslado ticket viaje
+gasto-r2c3	MileageLog	kilometraje bitácora recorrido auto viáticos
+gasto-r2c4	ExpenseReport	reporte gastos comprobación relación viáticos
+gasto-r3c4	ReceiptFolder	carpeta comprobantes expediente gastos
+gasto-r4c1	Refund	reembolso devolución reintegro dinero
+vigi-r1c1	SecurityCamera	cámara vigilancia cctv seguridad videocámara
+vigi-r1c2	DomeCamera	cámara domo techo vigilancia esfera
+vigi-r1c3	PtzCamera	cámara motorizada ptz giratoria seguimiento
+vigi-r1c4	MonitorWall	monitoreo pantallas mosaico central vigilancia
+vigi-r1c5	PanicButton	botón pánico emergencia alarma pulsador
+vigi-r2c1	Recorder	grabador dvr nvr video almacenamiento
+vigi-r2c2	MotionSensor	sensor movimiento detector presencia infrarrojo
+vigi-r2c3	NightMode	modo nocturno noche visión oscuridad
+vigi-r2c5	Beacon	torreta baliza luz giratoria emergencia
+vigi-r3c1	KeypadPanel	teclado acceso panel código tablero
+vigi-r3c2	Intercom	interfón portero intercomunicador timbre
+vigi-r4c1	BarrierArm	pluma barrera acceso vehicular caseta
+vigi-r4c2	WatchTower	torre vigilancia atalaya observación garita
+vigi-r4c3	Floodlight	reflector luminaria iluminación perimetral
+acceso-r1c1	Door	puerta door acceso entrada cerrada
+acceso-r1c2	DoorOpen	puerta abierta acceso permitido entrada
+acceso-r1c3	DoorLocked	puerta con candado acceso restringido cerrada
+acceso-r2c1	Deadbolt	cerradura chapa cerrojo puerta llave
+acceso-r2c2	Fingerprint	huella dactilar biométrico dedo identidad
+acceso-r2c3	FaceRecognition	reconocimiento facial rostro biométrico cara
+acceso-r2c4	IrisScan	iris ojo biométrico escaneo retina
+acceso-r2c5	Turnstile	torniquete molinete acceso paso control
+acceso-r3c1	AccessCard	credencial acceso tarjeta identificación
+acceso-r3c2	VisitorBadge	gafete visitante pase temporal identificación
+acceso-r3c4	Elevator	elevador ascensor piso subir bajar
+acceso-r4c3	GuardBooth	caseta vigilancia garita control entrada
+acceso-r4c5	MetalDetector	arco detector metales revisión seguridad
+alarma-r1c1	AlarmBell	campana alarma timbre sonar aviso
+alarma-r1c3	EmergencyStop	paro emergencia botón hongo detener
+alarma-r1c5	Armed	armado activado sistema encendido protegido
+alarma-r2c1	Disarmed	desarmado desactivado sistema apagado
+alarma-r2c2	MotionAlarm	detector con ondas movimiento disparo alarma
+alarma-r2c3	Intruder	intruso ladrón allanamiento silueta ventana
+alarma-r2c4	BrokenGlass	vidrio roto rotura cristal sensor
+alarma-r2c5	SmokeDetector	detector humo sensor incendio techo
+alarma-r3c3	AlarmBoard	tablero alarma placa central circuito
+alarma-r3c4	BackupBattery	batería respaldo acumulador energía apoyo
+alarma-r3c5	PowerFailure	falla energía corte apagón sin luz
+alarma-r4c1	LocationAlert	ubicación alerta mapa incidente lugar
+alarma-r4c3	EmergencyPhone	teléfono emergencia auxilio llamada urgencia
+alarma-r4c4	Strobe	estrobo destello luz intermitente aviso
+ciber-r1c1	Firewall	cortafuegos firewall muro fuego barrera
+ciber-r1c2	ServerLocked	servidor protegido bloqueado candado equipo
+ciber-r1c3	GlobalShield	protección global red mundo escudo internet
+ciber-r1c4	ThreatTarget	amenaza objetivo blanco riesgo mira
+ciber-r2c1	CloudLocked	nube protegida cifrada candado respaldo
+ciber-r2c2	VpnTunnel	túnel vpn cifrado conexión privada
+ciber-r2c3	MalwareScan	análisis malware virus lupa detectar
+ciber-r2c4	Malware	virus malware amenaza calavera infección
+ciber-r2c5	Phishing	phishing anzuelo fraude engaño bloqueado
+ciber-r3c2	SecurityToken	token llave dinámica código autenticación
+ciber-r3c3	SecurityKey	llave usb autenticación física seguridad
+ciber-r3c4	VerifiedUser	usuario verificado identidad validado cuenta
+ciber-r3c5	SecureSite	sitio seguro https candado navegador
+ciber-r4c1	SignedMail	correo firmado cifrado seguro certificado
+ciber-r4c2	NetworkLocked	red protegida segmento cifrado nodos
+ciber-r4c3	DataLeak	fuga datos filtración goteo incidente
+mando-r1c1	DispatchConsole	consola despacho mapa central operación
+mando-r1c2	ControlDesk	mesa control tablero operador puesto
+mando-r1c3	Headset	diadema audífonos operador comunicación
+mando-r1c4	PoliceBadge	placa policía insignia corporación agente
+mando-r2c2	RouteMap	ruta recorrido trayecto mapa camino
+mando-r2c3	CommsVan	unidad móvil vehículo antena comunicaciones
+mando-r2c4	Walkie	radio portátil handy comunicación frecuencia
+mando-r3c1	IncidentPhoto	fotografía evidencia incidente escena
+mando-r3c2	IncidentFolder	expediente incidente carpeta reporte caso
+mando-r3c4	Escalation	escalamiento escalar nivel elevar prioridad
+mando-r4c3	RuggedTablet	tableta rugerizada campo terminal portátil
+ident-r1c2	BadgeBarcode	gafete código barras credencial lectura
+ident-r2c2	Signature	firma autógrafo rúbrica firmar consentimiento
+ident-r2c3	Approve	aprobar aceptar validar visto bueno
+ident-r2c4	Reject	rechazar denegar negar cancelar
+ident-r2c5	Passport	pasaporte documento viaje identidad
+ident-r3c3	UserShield	usuario protegido cuenta segura identidad
+ident-r3c4	UserLocked	usuario bloqueado cuenta suspendida acceso
+ident-r4c1	BackgroundCheck	investigación antecedentes verificación persona
+ident-r4c4	CardReader	lector credencial pistola escanear acceso
+perim-r1c1	Fence	reja malla ciclónica cerca perímetro
+perim-r1c2	BarbedWire	alambre púas concertina cerca disuasión
+perim-r1c3	Gate	portón reja entrada vehicular acceso
+perim-r1c4	BeamSensor	sensor haz barrera fotoeléctrica cruce
+perim-r1c5	GuardDogSign	señal perro guardián advertencia canino
+perim-r2c2	PatrolRoute	ronda recorrido patrullaje puntos control
+perim-r2c3	PatrolCar	patrulla vehículo policía rondín
+perim-r3c1	CameraHousing	gabinete cámara carcasa intemperie montaje
+perim-r3c2	LockedShed	caseta bodega asegurada candado resguardo
+perim-r3c3	NoEntrySign	prohibido el paso restringido señal peatón
+perim-r3c4	HazardTape	cinta peligro acordonar delimitar precaución
+perim-r3c5	EmergencyExit	salida emergencia evacuación ruta escape
+perim-r4c5	TrafficCone	cono tránsito señalamiento delimitar vía
+cumpl-r1c2	Policy	política reglamento norma pergamino lineamiento
+cumpl-r1c3	LockedChest	cofre resguardo caja asegurada custodia
+cumpl-r1c5	LockedCase	maletín asegurado portafolios candado traslado
+cumpl-r2c1	ChainedFolder	expediente encadenado retención bloqueo legal
+cumpl-r3c3	Certificate	certificado constancia diploma sello listón
+cumpl-r3c5	ComplianceCheck	cumplimiento verificado lista escudo conforme
+cumpl-r4c5	EmbossingSeal	sello seco relieve troquel notarial
+monit-r1c2	MonitorAlert	monitoreo alerta señal anomalía pantalla
+monit-r1c3	Radar	radar barrido rastreo detección pantalla
+monit-r1c4	LogConsole	bitácora consola registro líneas eventos
+monit-r1c5	WatchEye	vigilancia ojo observación supervisión mira
+monit-r2c1	Crosshair	mira retícula puntería objetivo enfoque
+monit-r2c2	SpikeChart	pico anomalía salto gráfica alerta
+monit-r2c3	BlockedWorld	bloqueo geográfico región restringida mundo
+monit-r2c4	Router	enrutador módem inalámbrico wifi antena
+monit-r2c5	SwitchSecure	conmutador protegido switch red escudo
+monit-r3c1	NetworkNodes	topología nodos red enlaces malla
+monit-r3c4	Heartbeat	latido pulso disponibilidad monitoreo señal
+monit-r3c5	Uptime	tiempo activo disponibilidad reloj escudo
+monit-r4c1	BreachWall	brecha muro roto vulneración grieta
+foren-r1c2	EvidenceBag	bolsa evidencia indicio embalaje cadena custodia
+foren-r1c4	VideoReview	revisión video reproducir persona secuencia
+foren-r1c5	FrameSequence	cuadros secuencia fotogramas comparar video
+foren-r2c1	Lens	lente objetivo óptica cámara acercamiento
+foren-r2c2	PrintFolder	expediente huellas carpeta dactilar
+foren-r2c5	ChainLink	cadena custodia eslabón vínculo enlace
+foren-r3c1	EvidenceBoard	tablero indicios hilos relación investigación
+foren-r3c2	UnknownPerson	persona desconocida silueta anónimo sospechoso
+foren-r3c3	MapPins	marcadores mapa puntos incidencias ubicaciones
+foren-r3c4	Timeline	línea tiempo cronología secuencia hechos
+foren-r4c1	Enhance	realzar mejorar aclarar imagen varita
+foren-r4c4	EvidenceCase	maleta peritaje estuche herramientas campo

@@ -1,12 +1,17 @@
 # Procedencia de los iconos
 
-Estas piezas se generaron con el modelo de imagen de ChatGPT a partir de los
-textos que están en [`tools/prompts-iconos.md`](../../../../tools/prompts-iconos.md),
-y se recortaron de las láminas con
-[`tools/recortar-iconos.ps1`](../../../../tools/recortar-iconos.ps1).
+Estas piezas se generaron con el modelo de imagen de ChatGPT y se recortaron de
+las láminas con [`tools/recortar-iconos.ps1`](../../../../tools/recortar-iconos.ps1).
 
-Los textos se conservan versionados para que la procedencia sea reproducible y no
-una afirmación: cualquiera puede volver a generar el material y comparar.
+Los textos con que se pidieron no se conservan. Hubo un archivo que decía
+guardarlos, pero no eran los que de verdad se usaron, y un registro de
+procedencia que no coincide con lo ocurrido es peor que no tenerlo: da por
+comprobable algo que nadie puede comprobar. Se quitó en vez de corregirlo porque
+los originales no se recuperaron.
+
+De modo que el material no es reproducible a partir de este repositorio. Lo que
+sí queda documentado es lo verificable: de dónde salió, con qué se recortó, qué
+se revisó y qué se descartó.
 
 ## Revisión contra obra de terceros
 
@@ -25,6 +30,36 @@ Lo que se descartó y por qué:
 
 Al añadir una lámina nueva, la revisión se repite. Una pieza con marca ajena se
 descarta aunque el resto de su lámina sirva.
+
+## Segunda entrega: treinta láminas
+
+Se revisaron treinta láminas más —686 piezas— y entraron 329. La revisión pieza
+por pieza está en `Downloads/Iconos/revision/CORTE.md`, con la referencia de cada
+una y el motivo de su salida; aquí queda el resumen de lo descartado.
+
+**Ninguna pieza salió por marca ajena.** Es la primera vez que ocurre, y vale la
+pena anotar por qué: estas treinta láminas son de temas —laboratorio, banca,
+vigilancia, forense— donde el modelo no tiene una interfaz famosa que copiar. Las
+láminas problemáticas de la primera entrega eran justamente las de sistema
+operativo.
+
+Los 357 descartes se reparten en cuatro motivos:
+
+| Motivo | Piezas | Qué significa |
+|---|---|---|
+| Repetida | 242 | El catálogo ya responde a esa búsqueda. No importa que el dibujo nuevo sea mejor: dos piezas para la misma palabra parten los resultados |
+| No aguanta 16 px | 79 | Comprobado ampliando el recorte de 16, no supuesto. Siluetas de trazo fino —ADN, neurona, cromosoma, calibrador, proteína— que a ese tamaño dejan de significar algo |
+| Letrero | 36 | La pieza solo se entiende si se lee la palabra impresa encima (`PAID`, `PAY STUB`, `W-4`). A 16 px el texto es una mancha, a 32 es ruido, y va en inglés cuando el catálogo se busca en dos idiomas |
+
+Dos láminas completas quedaron fuera, las dos por el mismo motivo: eran la lámina
+de carpetas, documentos, impresora, calendario y papelera otra vez, con un átomo
+o una gráfica encima. El emblema no cambia la palabra por la que alguien busca.
+
+Y cinco nombres chocaban con piezas que ya existían. Tres se renombraron porque
+el dibujo sí era distinto —`LabMouse` contra el ratón de computadora, `DryCell`
+contra la batería de aparato, `Walkie` contra el receptor de radio— y dos se
+descartaron porque ahí no chocaba solo el nombre: la caja fuerte y el portafolios
+ya estaban.
 
 ## Cómo se leen los nombres
 
