@@ -121,9 +121,8 @@
 
     <!-- ToolBar y StatusBar buscan el estilo de sus separadores por estas llaves, no -->
     <!-- por el implícito: sin los alias recibirían el tema del sistema.              -->
-    <Style x:Key="{x:Static ToolBar.SeparatorStyleKey}"
-           TargetType="{x:Type Separator}"
-           BasedOn="{StaticResource PlatinumSeparatorVertical}" />
+    <!-- El de ToolBar vive en ToolBar.xaml, junto a la barra: ahí lleva el aire     -->
+    <!-- que necesita para no tocar los filos de la franja.                          -->
     <Style x:Key="{x:Static StatusBar.SeparatorStyleKey}"
            TargetType="{x:Type Separator}"
            BasedOn="{StaticResource PlatinumSeparatorVertical}" />

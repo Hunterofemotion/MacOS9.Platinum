@@ -95,6 +95,12 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   rasterised to physical pixels
 - **GroupBox** and **Separator** — engraved two-tone line with the title breaking
   it; separator aliases for `ToolBar` and `StatusBar`
+- **ToolBar** and **PlatinumToolButton** — the icon strip under the menu bar: a
+  large icon over a label, no frame until the pointer arrives, engraved vertical
+  separators between groups. The button takes `Icon` and `Text` as properties
+  rather than hand-assembled content, so every label in a bar lines up. The bar
+  drops WPF's overflow button on purpose: a Mac OS 9 toolbar never rearranged
+  itself, what does not fit is clipped
 - **StatusBar** — the strip along the bottom edge of a window: window face, an
   engraved rule separating it from the content, and cells that dock to either
   side while the last one takes the remaining width

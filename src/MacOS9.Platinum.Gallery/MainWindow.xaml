@@ -41,6 +41,22 @@
             <MenuItem Header="_Help" />
         </Menu>
 
+        <!-- Barra de herramientas: icono grande y rótulo, con separadores entre
+             grupos. Los iconos son los del propio tema. -->
+        <ToolBar DockPanel.Dock="Top">
+            <platinum:PlatinumToolButton Icon="{StaticResource IconDocument}" Text="New Run"
+                                         ToolTip="Starts a fresh acquisition." />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconFolder}" Text="Open Method" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconMagnifier}" Text="Peak Search" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconFloppy}" Text="Save" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconComputer}" Text="Instrument"
+                                         Click="OnInstrument" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconAlert}" Text="Alarms"
+                                         IsEnabled="False" />
+        </ToolBar>
+
         <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
             <StatusBarItem DockPanel.Dock="Left" MinWidth="150">
                 <TextBlock Text="Ready" />
