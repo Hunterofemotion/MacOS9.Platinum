@@ -1,0 +1,108 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Entrada del riel: icono grande y rótulo debajo, sin marco hasta que se elige.  -->
+    <!-- La elegida se levanta sobre la cara lavanda con su bisel, que es como Platinum -->
+    <!-- marcaba el panel vigente: no con un resalte de texto sino con una tecla        -->
+    <!-- hundida en su sitio.                                                           -->
+    <Style TargetType="{x:Type controls:PlatinumNavItem}">
+        <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Padding" Value="8,7,8,6" />
+        <Setter Property="Margin" Value="0,0,0,4" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumNavItem}">
+                    <Grid>
+                        <Border x:Name="Face" Background="Transparent" />
+                        <Border x:Name="Frame" BorderThickness="1" BorderBrush="{x:Null}" />
+                        <Border x:Name="BevelLight" Margin="1"
+                                BorderThickness="1,1,0,0" BorderBrush="{x:Null}" />
+                        <Border x:Name="BevelDark" Margin="1"
+                                BorderThickness="0,0,1,1" BorderBrush="{x:Null}" />
+
+                        <StackPanel Margin="{TemplateBinding Padding}">
+                            <Image x:Name="Glyph"
+                                   Source="{TemplateBinding Icon}"
+                                   Width="{TemplateBinding IconSize}"
+                                   Height="{TemplateBinding IconSize}"
+                                   HorizontalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Text}"
+                                       HorizontalAlignment="Center"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceBrush}" />
+                        </Trigger>
+
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource SelectionBrush}" />
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource TextBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelHighlightBrush}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                        </Trigger>
+
+                        <!-- La elegida no se apaga al perder el foco, a diferencia de   -->
+                        <!-- cualquier otra lista del tema: aquí la marca dice qué panel -->
+                        <!-- se está viendo, y eso no cambia porque el cursor se vaya al  -->
+                        <!-- otro lado.                                                   -->
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Glyph" Property="Opacity" Value="0.4" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Riel de navegación: la columna de iconos de la izquierda, dentro de su propio  -->
+    <!-- marco. Va como estilo con llave y no como implícito porque una lista normal    -->
+    <!-- del tema no tiene por qué convertirse en riel.                                 -->
+    <Style x:Key="PlatinumNavRail" TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="6" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <!-- El relleno va dentro del visor para que la barra, cuando
+                             haga falta, llegue al marco y no quede flotando. -->
+                        <ScrollViewer Padding="{TemplateBinding Padding}"
+                                      Focusable="False"
+                                      VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

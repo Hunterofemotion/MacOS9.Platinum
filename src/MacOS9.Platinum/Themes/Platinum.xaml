@@ -27,6 +27,8 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ToolTip.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/StatusBar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ToolBar.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/NavRail.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Led.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Icons.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Window.xaml" />
     </ResourceDictionary.MergedDictionaries>

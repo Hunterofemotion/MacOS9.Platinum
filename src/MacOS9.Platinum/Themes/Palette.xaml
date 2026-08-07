@@ -46,6 +46,13 @@
     <SolidColorBrush x:Key="CalendarCellBrush" Color="{StaticResource Gray1}" />
     <SolidColorBrush x:Key="CalendarRuleBrush" Color="{StaticResource Gray3}" />
 
+    <!-- Testigos luminosos. Son los únicos colores saturados del tema: un aviso de    -->
+    <!-- estado tiene que leerse de lejos y no puede salir de la rampa de grises.      -->
+    <SolidColorBrush x:Key="LedGreenBrush" Color="#FF2FA83A" />
+    <SolidColorBrush x:Key="LedAmberBrush" Color="#FFE0A020" />
+    <SolidColorBrush x:Key="LedRedBrush" Color="#FFC42B21" />
+    <SolidColorBrush x:Key="LedOffBrush" Color="{StaticResource Gray4}" />
+
     <!-- Selección -->
     <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="SelectionInactiveBrush" Color="{StaticResource Gray3}" />

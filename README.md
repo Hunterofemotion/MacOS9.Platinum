@@ -111,6 +111,17 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   underlined title, and the engraved rule carrying on to the right edge. The whole
   header row toggles it, not just the triangle, and it snaps open with no
   animation — the original had none, and a slide gives the theme away at once
+- **Navigation rail** (`PlatinumNavRail` + **PlatinumNavItem**) — the left column of
+  large icons that switches panels. It is a `ListBox` style plus a `ListBoxItem`
+  subclass, so selection and keyboard travel come free. Unlike every other list in
+  the theme, the selected entry does *not* dim when focus leaves: the mark says
+  which panel is on show, and that does not change because the cursor went
+  elsewhere
+- **PlatinumLed** — the little status light. Colour and on/off are separate
+  properties because they say different things: the colour is what the light is
+  about, the flag is whether it is lit. Off it goes grey rather than vanishing, so
+  you can still see the light is there and unlit. The gloss is translucent white,
+  not a second colour, so any tint works without declaring a palette per colour
 - **StatusBar** — the strip along the bottom edge of a window: window face, an
   engraved rule separating it from the content, and cells that dock to either
   side while the last one takes the remaining width

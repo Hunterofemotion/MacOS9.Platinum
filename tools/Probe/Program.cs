@@ -207,6 +207,16 @@ internal static class Program
                 SelectedDate = new DateTime(2024, 5, 15),
             })));
 
+        Render("riel", dpi, Stack(
+            Row(Rail())));
+
+        Render("testigos", dpi, Stack(
+            Row(new PlatinumLed(),
+                new PlatinumLed { Fill = (Brush)Application.Current.Resources["LedAmberBrush"] },
+                new PlatinumLed { Fill = (Brush)Application.Current.Resources["LedRedBrush"] },
+                new PlatinumLed { IsOn = false },
+                new PlatinumLed { Width = 20, Height = 20 })));
+
         Render("fecha_hora", dpi, Stack(
             Row(new PlatinumDateTimeField { Mode = DateTimeFieldMode.Date, Value = new DateTime(2024, 5, 15, 9, 30, 45) },
                 new PlatinumDateTimeField { Mode = DateTimeFieldMode.Time, Value = new DateTime(2024, 5, 15, 9, 30, 45) },
@@ -400,6 +410,35 @@ internal static class Program
         var b = new ComboBox { Width = 150, Items = { "Apagado" }, SelectedIndex = 0, IsEnabled = false, Margin = new Thickness(10, 0, 0, 0) };
         var c = new ComboBox { Width = 110, Items = { "Un elemento mucho más ancho que la caja" }, SelectedIndex = 0, Margin = new Thickness(10, 0, 0, 0) };
         return new StackPanel { Orientation = Orientation.Horizontal, Children = { a, b, c } };
+    }
+
+    private static FrameworkElement Rail()
+    {
+        var lista = new ListBox
+        {
+            Style = (Style)Application.Current.Resources["PlatinumNavRail"],
+            Width = 116,
+        };
+
+        (string llave, string texto)[] entradas =
+        [
+            ("IconFolder", "Recovery Items"),
+            ("IconHardDisk", "Recovery Sets"),
+            ("IconDocument", "Summary"),
+            ("IconComputer", "Preferences"),
+        ];
+
+        foreach (var (llave, texto) in entradas)
+        {
+            lista.Items.Add(new PlatinumNavItem
+            {
+                Icon = (ImageSource)Application.Current.Resources[llave],
+                Text = texto,
+            });
+        }
+
+        lista.SelectedIndex = 0;
+        return lista;
     }
 
     private static FrameworkElement Icons()

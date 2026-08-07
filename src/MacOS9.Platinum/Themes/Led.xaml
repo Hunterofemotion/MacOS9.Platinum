@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Testigo luminoso: disco de color con aro oscuro y un reflejo arriba a la       -->
+    <!-- izquierda. El reflejo es blanco translúcido y no un color propio, así que      -->
+    <!-- funciona sobre cualquier tinte sin tener que declarar una paleta por color.    -->
+    <Style TargetType="{x:Type controls:PlatinumLed}">
+        <Setter Property="Fill" Value="{StaticResource LedGreenBrush}" />
+        <Setter Property="Width" Value="11" />
+        <Setter Property="Height" Value="11" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumLed}">
+                    <Grid>
+                        <Ellipse x:Name="Bulb"
+                                 Fill="{TemplateBinding Fill}"
+                                 Stroke="{StaticResource BevelDeepShadowBrush}"
+                                 StrokeThickness="1" />
+
+                        <!-- El reflejo ocupa el cuadrante superior izquierdo, que es de
+                             donde entra la luz en todo el tema. -->
+                        <Ellipse x:Name="Gloss" Margin="1.5,1.5,4,4">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Offset="0" Color="#B0FFFFFF" />
+                                    <GradientStop Offset="1" Color="#00FFFFFF" />
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Apagado no desaparece: se queda del gris de la cara para que
+                             se siga viendo dónde está el testigo. -->
+                        <Trigger Property="IsOn" Value="False">
+                            <Setter TargetName="Bulb" Property="Fill" Value="{StaticResource LedOffBrush}" />
+                            <Setter TargetName="Gloss" Property="Opacity" Value="0.4" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
