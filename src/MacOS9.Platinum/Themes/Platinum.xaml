@@ -11,6 +11,7 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Selection.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TextBox.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/PasswordBox.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/LineGutter.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Calendar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/DateTimeField.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ComboBox.xaml" />

@@ -101,6 +101,12 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   rather than hand-assembled content, so every label in a bar lines up. The bar
   drops WPF's overflow button on purpose: a Mac OS 9 toolbar never rearranged
   itself, what does not fit is clipped
+- **PlatinumLineGutter** — the numbered strip beside a text area. It points at a
+  `TextBox` through `Target` instead of wrapping it, so the box stays the themed
+  one — frame, selection and scrollbar included — and the strip only reads
+  positions. Lines are counted the way the box counts them, one number per drawn
+  row, because the number marks a place on screen. `PlatinumWellChrome` and
+  `PlatinumTextBoxPlain` are there to put both inside a single sunken well
 - **Expander** — a collapsible section: the Finder disclosure triangle, an
   underlined title, and the engraved rule carrying on to the right edge. The whole
   header row toggles it, not just the triangle, and it snaps open with no
