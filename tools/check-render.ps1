@@ -12,6 +12,17 @@
 # Aprobar es un acto deliberado: al hacerlo se revisa la imagen y se acepta. Lo que
 # no se debe hacer es aprobar sin mirar, porque entonces la prueba solo certifica
 # que hoy se ve igual que ayer.
+#
+# Un patrón por escala. El tamaño de lo dibujado depende de la escala de la
+# pantalla: al 200 % todo sale del doble de píxeles que al 100 %, así que un patrón
+# hecho en una máquina no le sirve a otra y la comprobación reportaba las dieciocho
+# imágenes como distintas sin que nada hubiera cambiado. Por eso cada escala tiene
+# su carpeta —`aprobadas/125`, `aprobadas/200`— y se compara contra la que toca.
+#
+# La alternativa era fijar la sonda al 100 % en todas partes, y sale más cara de lo
+# que parece: casi todos los defectos que este tema persigue solo aparecen cuando la
+# escala no es entera, porque son líneas de un píxel que caen entre dos. Comprobar
+# nada más al 100 % es dejar de mirar justo donde está el problema.
 
 param([switch]$Aprobar)
 
@@ -19,7 +30,6 @@ Add-Type -AssemblyName System.Drawing
 
 $raiz = Split-Path -Parent $PSScriptRoot
 $probe = Join-Path $PSScriptRoot "Probe"
-$aprobadas = Join-Path $PSScriptRoot "aprobadas"
 
 Write-Output "Dibujando los escenarios..."
 $salida = & dotnet run --project (Join-Path $probe "Probe.csproj") -c Release 2>&1
@@ -28,11 +38,34 @@ if ($LASTEXITCODE -ne 0) {
     throw "Probe no pudo correr."
 }
 
+# La escala la reporta la propia sonda al arrancar; se lee de ahí y no del sistema
+# para que sea la misma con la que dibujó.
+$m = [regex]::Match(($salida -join "`n"), 'DPI del proceso: x([\d.,]+)')
+if (-not $m.Success) { throw "La sonda no reportó su escala." }
+$escala = [double]::Parse($m.Groups[1].Value.Replace(',', '.'),
+    [System.Globalization.CultureInfo]::InvariantCulture)
+$etiqueta = [string][int][math]::Round($escala * 100)
+Write-Output "Escala de esta corrida: $etiqueta %"
+
+$aprobadas = Join-Path (Join-Path $PSScriptRoot "aprobadas") $etiqueta
+
 $render = Get-ChildItem (Join-Path $probe "bin\Release") -Recurse -Directory -Filter "render" |
     Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if ($null -eq $render) { throw "Probe no dejó carpeta render." }
 
-New-Item -ItemType Directory -Force $aprobadas | Out-Null
+if (-not (Test-Path $aprobadas)) {
+    if (-not $Aprobar) {
+        $otras = (Get-ChildItem (Join-Path $PSScriptRoot "aprobadas") -Directory |
+            ForEach-Object { $_.Name + ' %' }) -join ', '
+        Write-Output ""
+        Write-Output "No hay patrón para $etiqueta %. Los que existen son: $otras."
+        Write-Output "No se compara contra otra escala: saldrían las dieciocho como distintas."
+        Write-Output "Revisa las imágenes de $($render.FullName) y, si están bien,"
+        Write-Output "córrelo con -Aprobar para crear el patrón de $etiqueta %."
+        exit 1
+    }
+    New-Item -ItemType Directory -Force $aprobadas | Out-Null
+}
 
 # Un filo en diagonal se suaviza en varios tonos, y esos tonos se corren una
 # fracción de píxel de una corrida a otra sin que nada haya cambiado: medido, tres
