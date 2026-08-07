@@ -1,0 +1,169 @@
+<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.VideoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        Title="CineCut Pro 2.5"
+        Width="900" Height="620"
+        WindowStartupLocation="CenterScreen">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="New Project" InputGestureText="Cmd-N" />
+                <MenuItem Header="Import Media..." InputGestureText="Cmd-I" />
+                <Separator />
+                <MenuItem Header="Render Movie..." />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Split Clip" InputGestureText="Cmd-K" />
+                <MenuItem Header="Ripple Delete" />
+            </MenuItem>
+            <MenuItem Header="_Clip">
+                <MenuItem Header="Speed">
+                    <MenuItem Header="Half" IsCheckable="True" />
+                    <MenuItem Header="Normal" IsChecked="True" IsCheckable="True" />
+                    <MenuItem Header="Double" IsCheckable="True" />
+                </MenuItem>
+                <MenuItem Header="Reverse" IsCheckable="True" />
+            </MenuItem>
+            <MenuItem Header="_Window" />
+            <MenuItem Header="_Help" />
+        </Menu>
+
+        <ToolBar DockPanel.Dock="Top">
+            <platinum:PlatinumToolButton Icon="{StaticResource IconFolder}" Text="Import" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconFloppy}" Text="Save" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconDocument}" Text="Split" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconTrash}" Text="Ripple" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconComputer}" Text="Render" />
+        </ToolBar>
+
+        <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
+            <StatusBarItem DockPanel.Dock="Left" MinWidth="210">
+                <StackPanel Orientation="Horizontal">
+                    <platinum:PlatinumLed Fill="{StaticResource LedRedBrush}"
+                                          VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Rendering timeline..." />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="720 x 480 · 29.97 fps" />
+            </StatusBarItem>
+            <Separator DockPanel.Dock="Right" />
+            <StatusBarItem>
+                <TextBlock Text="Timecode 00:01:14:07" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid Margin="12,10,12,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="210" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Row="0" Grid.Column="0" Header="Bin" Margin="0,0,10,0">
+                <ListView x:Name="Clips" BorderThickness="0">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Clip" Width="112"
+                                            DisplayMemberBinding="{Binding Clip}" />
+                            <GridViewColumn Header="Length" Width="72"
+                                            DisplayMemberBinding="{Binding Length}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+
+            <DockPanel Grid.Row="0" Grid.Column="1" Margin="0,0,10,0">
+                <!-- Cuadro de vista previa. Es un degradado y unas figuras, no un
+                     video: aquí lo que se muestra es el marco, no el contenido. -->
+                <Border DockPanel.Dock="Top" Height="230" BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Offset="0" Color="#FF2B3D6B" />
+                                <GradientStop Offset="0.55" Color="#FF6E7FA8" />
+                                <GradientStop Offset="0.56" Color="#FF4A5A34" />
+                                <GradientStop Offset="1" Color="#FF23301B" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <Ellipse Width="54" Height="54" Fill="#FFF2E9C8"
+                                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                                 Margin="60,34,0,0" />
+                        <TextBlock Text="TAKE 12 — SUNSET" Foreground="White" FontSize="11"
+                                   HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                                   Margin="10,0,0,8" />
+                    </Grid>
+                </Border>
+
+                <DockPanel DockPanel.Dock="Top" Margin="0,8,0,0">
+                    <Button DockPanel.Dock="Left" Content="Play" Width="64" />
+                    <Button DockPanel.Dock="Left" Content="Stop" Width="64" Margin="6,0,0,0" />
+                    <TextBlock DockPanel.Dock="Right" Text="00:01:14:07"
+                               VerticalAlignment="Center" Margin="8,0,0,0" />
+                    <Slider Minimum="0" Maximum="100" Value="38" Margin="10,0,0,0"
+                            VerticalAlignment="Center" />
+                </DockPanel>
+
+                <TextBlock DockPanel.Dock="Top" Text="Timeline" Margin="0,10,0,4"
+                           FontWeight="Bold" />
+
+                <Border BorderThickness="1" BorderBrush="Black" Background="White">
+                    <Canvas x:Name="Pista" ClipToBounds="True" />
+                </Border>
+            </DockPanel>
+
+            <DockPanel Grid.Row="0" Grid.Column="2">
+                <GroupBox DockPanel.Dock="Top" Header="Export">
+                    <StackPanel>
+                        <TextBlock Text="Codec" Margin="0,0,0,4" />
+                        <ComboBox SelectedIndex="1" Margin="0,0,0,10">
+                            <ComboBoxItem Content="Animation" />
+                            <ComboBoxItem Content="Sorenson 3" />
+                            <ComboBoxItem Content="Cinepak" />
+                        </ComboBox>
+
+                        <TextBlock Text="Quality" Margin="0,0,0,4" />
+                        <Slider Minimum="0" Maximum="100" Value="72" Margin="0,0,0,10" />
+
+                        <CheckBox Content="Deinterlace" IsChecked="True" Margin="0,0,0,4" />
+                        <CheckBox Content="Include audio" IsChecked="True" Margin="0,0,0,4" />
+                        <CheckBox Content="Loop" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Render progress" Margin="0,0,0,4" />
+                        <ProgressBar Value="64" Height="16" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Audio scrub" Margin="0,0,0,4" />
+                        <ProgressBar IsIndeterminate="True" Height="16" />
+                    </StackPanel>
+                </GroupBox>
+
+                <Expander DockPanel.Dock="Bottom" Header="Markers" IsExpanded="True"
+                          Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="00:00:22:10  Cut to wide" />
+                        <TextBlock Text="00:01:04:02  Music in" Margin="0,2,0,0" />
+                        <TextBlock Text="00:02:41:18  Fade out" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Expander>
+
+                <TextBlock />
+            </DockPanel>
+
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,0">
+                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                           Text="5 clips · 00:03:12:00 total" />
+                <Button DockPanel.Dock="Right" Content="Render" Width="104" IsDefault="True" />
+                <Button DockPanel.Dock="Right" Content="Cancel" Width="90" Margin="0,0,10,0" />
+                <TextBlock />
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</platinum:PlatinumWindow>

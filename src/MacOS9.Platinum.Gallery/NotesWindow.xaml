@@ -1,0 +1,175 @@
+<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.NotesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        Title="Scriptorium 1.4"
+        Width="900" Height="620"
+        WindowStartupLocation="CenterScreen">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="New Note" InputGestureText="Cmd-N" />
+                <MenuItem Header="New Notebook" />
+                <Separator />
+                <MenuItem Header="Print..." InputGestureText="Cmd-P" />
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="Undo" InputGestureText="Cmd-Z" />
+                <MenuItem Header="Find..." InputGestureText="Cmd-F" />
+            </MenuItem>
+            <MenuItem Header="_Format">
+                <MenuItem Header="Plain" IsChecked="True" IsCheckable="True" />
+                <MenuItem Header="Monospaced" IsCheckable="True" />
+                <Separator />
+                <MenuItem Header="Show Line Numbers" IsChecked="True" IsCheckable="True" />
+            </MenuItem>
+            <MenuItem Header="_Window" />
+            <MenuItem Header="_Help" />
+        </Menu>
+
+        <ToolBar DockPanel.Dock="Top">
+            <platinum:PlatinumToolButton Icon="{StaticResource IconDocument}" Text="New Note" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconFolder}" Text="Notebook" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconMagnifier}" Text="Find" />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconEnvelope}" Text="Send" />
+            <Separator />
+            <platinum:PlatinumToolButton Icon="{StaticResource IconTrash}" Text="Delete" />
+        </ToolBar>
+
+        <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
+            <StatusBarItem DockPanel.Dock="Left" MinWidth="190">
+                <StackPanel Orientation="Horizontal">
+                    <platinum:PlatinumLed Fill="{StaticResource LedAmberBrush}"
+                                          VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Unsaved changes." />
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="Plain text" />
+            </StatusBarItem>
+            <Separator DockPanel.Dock="Right" />
+            <StatusBarItem>
+                <TextBlock Text="212 words" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <DockPanel Margin="12,10,12,10">
+            <!-- Riel de navegación: la columna que cambia de panel. -->
+            <ListBox DockPanel.Dock="Left" Width="118" SelectedIndex="0"
+                     Style="{StaticResource PlatinumNavRail}">
+                <platinum:PlatinumNavItem Icon="{StaticResource IconDocument}" Text="Notes" />
+                <platinum:PlatinumNavItem Icon="{StaticResource IconFolder}" Text="Notebooks" />
+                <platinum:PlatinumNavItem Icon="{StaticResource IconEnvelope}" Text="Drafts" />
+                <platinum:PlatinumNavItem Icon="{StaticResource IconTrash}" Text="Trash" />
+                <platinum:PlatinumNavItem Icon="{StaticResource IconComputer}" Text="Preferences" />
+            </ListBox>
+
+            <Grid Margin="12,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
+                    <GroupBox DockPanel.Dock="Top" Header="Notebook" Padding="10,6,10,10">
+                        <StackPanel>
+                            <ComboBox SelectedIndex="0" Margin="0,0,0,8">
+                                <ComboBoxItem Content="Field Journal" />
+                                <ComboBoxItem Content="Reading" />
+                                <ComboBoxItem Content="Recipes" />
+                            </ComboBox>
+                            <CheckBox Content="Sort by date" IsChecked="True" Margin="0,0,0,4" />
+                            <CheckBox Content="Show drafts" />
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Notes" Margin="0,10,0,0">
+                        <ListView x:Name="Notas" BorderThickness="0" SelectedIndex="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Title" Width="106"
+                                                    DisplayMemberBinding="{Binding Title}" />
+                                    <GridViewColumn Header="Edited" Width="66"
+                                                    DisplayMemberBinding="{Binding Edited}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+                </DockPanel>
+
+                <TabControl Grid.Row="0" Grid.Column="1">
+                    <TabItem Header="Note">
+                        <DockPanel Margin="8">
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                                <TextBlock DockPanel.Dock="Left" Text="Title:"
+                                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <TextBox Text="Tide pools at Cabo Pulmo" />
+                            </DockPanel>
+
+                            <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+                                <TextBlock DockPanel.Dock="Left" Text="Written:"
+                                           VerticalAlignment="Center" Margin="0,0,8,0" />
+                                <platinum:PlatinumDateTimeField DockPanel.Dock="Left" Mode="Date"
+                                                                Value="2026-03-18T07:40:00" />
+                                <platinum:PlatinumDateTimeField DockPanel.Dock="Left"
+                                                                Mode="TimeWithSeconds"
+                                                                Value="2026-03-18T07:40:12"
+                                                                Margin="10,0,0,0" />
+                                <TextBlock />
+                            </DockPanel>
+
+                            <!-- Cuadro y franja de números dentro de un solo pozo. -->
+                            <ContentControl Template="{StaticResource PlatinumWellChrome}">
+                                <DockPanel>
+                                    <platinum:PlatinumLineGutter DockPanel.Dock="Left"
+                                                                 Target="{Binding ElementName=Cuerpo}" />
+                                    <TextBox x:Name="Cuerpo"
+                                             AcceptsReturn="True"
+                                             TextWrapping="Wrap"
+                                             Style="{StaticResource PlatinumTextBoxPlain}"
+                                             VerticalScrollBarVisibility="Auto"
+                                             Text="Low tide at 06:10. The east pool had held its water overnight and the water was clear enough to count urchins without wading in.&#x0a;&#x0a;Twelve pencil urchins in the east pool, four in the shallow one behind the rock shelf. The small octopus from February was not there, or was not out.&#x0a;&#x0a;Water 21 degrees at the surface, cooler by a couple of degrees in the deep corner. No swell to speak of.&#x0a;&#x0a;Bring the polarising filter next time. Every photo of the east pool came back as a picture of the sky." />
+                                </DockPanel>
+                            </ContentControl>
+                        </DockPanel>
+                    </TabItem>
+
+                    <TabItem Header="Attachments">
+                        <ListView x:Name="Adjuntos" Margin="8">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="File" Width="200"
+                                                    DisplayMemberBinding="{Binding File}" />
+                                    <GridViewColumn Header="Kind" Width="120"
+                                                    DisplayMemberBinding="{Binding Kind}" />
+                                    <GridViewColumn Header="Size" Width="90"
+                                                    DisplayMemberBinding="{Binding Size}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </TabItem>
+
+                    <TabItem Header="History">
+                        <TextBox Margin="8" IsReadOnly="True" AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="18 Mar 2026  07:40  created&#x0a;18 Mar 2026  08:02  edited (body)&#x0a;19 Mar 2026  21:15  edited (title)&#x0a;02 Apr 2026  10:44  attachment added" />
+                    </TabItem>
+                </TabControl>
+
+                <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,0">
+                    <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                               Text="Field Journal · 34 notes" />
+                    <Button DockPanel.Dock="Right" Content="Save" Width="104" IsDefault="True" />
+                    <Button DockPanel.Dock="Right" Content="Revert" Width="90" Margin="0,0,10,0" />
+                    <TextBlock />
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+    </DockPanel>
+</platinum:PlatinumWindow>

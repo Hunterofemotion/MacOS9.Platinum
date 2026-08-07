@@ -4,11 +4,37 @@ A WPF control library with the look of the Mac OS 9 Platinum interface.
 
 ![Control gallery](docs/galeria.png)
 
-*SpectraLab is a made-up spectrometer console built only to exercise the theme.
-Real screenshots of the gallery application, composed on the classic desktop
-colour — not a mock-up. Some controls live in the dialogs on purpose: a modal
-sheet is where radio groups, password fields and indeterminate progress bars
-actually show up.*
+*Every image below is a real screenshot of the gallery application, not a mock-up.
+The four programs are invented — a spectrometer console, a solver, a video editor
+and a notebook — and they exist only to put the controls in situations a strip of
+samples never reaches: a list next to a plot, a toolbar over a rail, a text area
+that has to share its well with a line gutter.*
+
+**SpectraLab** — the spectrometer console. Menus, toolbar, tree, column list, tabs,
+sliders, progress bars, a date field and the status bar. Some controls live in its
+dialogs on purpose: a modal sheet is where radio groups, password fields and
+indeterminate progress bars actually show up.
+
+![SpectraLab](docs/principal.png)
+
+**Numerix** — the solver. The same chrome around a drawn plot, with an expander,
+parameter sliders paired to fields and a green status light.
+
+![Numerix](docs/math.png)
+
+**CineCut** — the video editor. A hand-drawn timeline under the theme's chrome, an
+indeterminate bar for the audio scrub and a red light while it renders.
+
+![CineCut](docs/video.png)
+
+**Scriptorium** — the notebook. The navigation rail on the left, the line-number
+gutter sharing one sunken well with the text, and a date and time field with
+seconds.
+
+![Scriptorium](docs/notes.png)
+
+Run any of them with `dotnet run --project src/MacOS9.Platinum.Gallery -- math`
+(`math`, `video`, `notes`, or nothing for SpectraLab).
 
 There is also a browsable catalogue in [docs/componentes.html](docs/componentes.html),
 with every control broken down by state and the file it lives in. That one *is* a

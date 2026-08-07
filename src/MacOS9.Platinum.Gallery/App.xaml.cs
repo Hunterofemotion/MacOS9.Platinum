@@ -20,4 +20,22 @@ public partial class App : Application
         // ventana. En una barra de Mac OS 9 cae bajo su título.
         PlatinumTheme.UseLeftMenuDrop();
     }
+
+    // Se elige la ventana por argumento y no por menú para poder capturar cada una
+    // sin depender de que alguien la abra a mano.
+    private void AlArrancar(object sender, StartupEventArgs e)
+    {
+        string cual = e.Args.Length > 0 ? e.Args[0].ToLowerInvariant() : "spectra";
+
+        Window ventana = cual switch
+        {
+            "math" => new MathWindow(),
+            "video" => new VideoWindow(),
+            "notes" => new NotesWindow(),
+            _ => new MainWindow(),
+        };
+
+        MainWindow = ventana;
+        ventana.Show();
+    }
 }
