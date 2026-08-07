@@ -73,6 +73,9 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   rasterised to physical pixels
 - **GroupBox** and **Separator** — engraved two-tone line with the title breaking
   it; separator aliases for `ToolBar` and `StatusBar`
+- **StatusBar** — the strip along the bottom edge of a window: window face, an
+  engraved rule separating it from the content, and cells that dock to either
+  side while the last one takes the remaining width
 - **TreeView** — tree with disclosure triangles and Finder indentation
 - **ProgressBar** — determinate, indeterminate (diagonal stripes), vertical and
   disabled

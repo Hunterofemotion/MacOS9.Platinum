@@ -20,6 +20,7 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TreeView.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ProgressBar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ToolTip.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/StatusBar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Icons.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Window.xaml" />
     </ResourceDictionary.MergedDictionaries>
