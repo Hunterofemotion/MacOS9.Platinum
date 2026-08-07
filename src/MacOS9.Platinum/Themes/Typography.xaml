@@ -7,6 +7,12 @@
     <!-- Tahoma queda en el chrome y Franklin Gothic Medium en el contenido.           -->
     <FontFamily x:Key="SystemFontFamily">Tahoma, Segoe UI</FontFamily>
     <FontFamily x:Key="ViewFontFamily">Franklin Gothic Medium, Tahoma, Segoe UI</FontFamily>
+
+    <!-- Charcoal era una fuente densa y Geneva una ligera: en Mac OS 9 el chrome    -->
+    <!-- pesaba MÁS que el contenido. Con Tahoma regular contra Franklin Gothic      -->
+    <!-- Medium esa relación quedaba al revés, y los menús y botones se veían        -->
+    <!-- endebles junto a las listas. El corte grueso de Tahoma la devuelve.         -->
+    <FontWeight x:Key="SystemFontWeight">Bold</FontWeight>
     <FontFamily x:Key="MonoFontFamily">Monaco, Consolas, Courier New</FontFamily>
 
     <!-- Las pantallas clásicas eran de 72 ppp, así que un punto equivalía a un píxel. -->

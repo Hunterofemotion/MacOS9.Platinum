@@ -17,6 +17,7 @@
         <!-- ventana que no sea PlatinumWindow y entonces no hereda el ajuste.        -->
         <Grid Margin="0,0,2,2"
               TextOptions.TextFormattingMode="Display"
+              TextOptions.TextRenderingMode="ClearType"
               TextOptions.TextHintingMode="Fixed">
             <Border Background="{StaticResource BevelDeepShadowBrush}" Margin="2,2,-2,-2" />
             <Border Background="{TemplateBinding Background}"

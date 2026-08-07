@@ -57,10 +57,14 @@
                                     BorderBrush="{StaticResource BevelHighlightBrush}" />
                         </Border>
 
+                        <!-- El título va en negritas y el peso se fija en este
+                             borde, no en el estilo: puesto arriba lo heredaría
+                             también el contenido del grupo. -->
                         <Border x:Name="Header"
                                 Grid.Row="0" Grid.RowSpan="2"
                                 Grid.Column="1"
-                                Padding="4,0">
+                                Padding="4,0"
+                                TextElement.FontWeight="Bold">
                             <ContentPresenter ContentSource="Header"
                                               RecognizesAccessKey="True" />
                         </Border>

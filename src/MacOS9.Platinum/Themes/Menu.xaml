@@ -200,6 +200,7 @@
     <!-- y sin transparencia las dos esquinas que la sombra no cubre saldrían opacas. -->
     <Style x:Key="PlatinumContextMenu" TargetType="{x:Type ContextMenu}">
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontWeight" Value="{StaticResource SystemFontWeight}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -221,6 +222,7 @@
 
     <Style x:Key="PlatinumMenuItem" TargetType="{x:Type MenuItem}">
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontWeight" Value="{StaticResource SystemFontWeight}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -259,6 +261,7 @@
     <!-- misma anatomía achatada del resto del chrome.                                -->
     <Style x:Key="PlatinumMenu" TargetType="{x:Type Menu}">
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
+        <Setter Property="FontWeight" Value="{StaticResource SystemFontWeight}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="Background" Value="{StaticResource ControlFaceBrush}" />
