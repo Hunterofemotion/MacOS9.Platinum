@@ -1,0 +1,189 @@
+archivo	nombre	palabras
+base-r1c1	Folder	carpeta folder directorio expediente archivos
+base-r1c2	FolderOpen	carpeta abierta open folder abrir directorio
+base-r1c3	Document	documento hoja blanca papel document page nuevo
+base-r1c4	DocumentText	documento texto text renglones escrito nota
+base-r1c5	DocumentImage	documento imagen picture foto fotografia grafico
+base-r2c1	Floppy	disquete floppy guardar save diskette
+base-r2c2	HardDisk	disco duro hard drive unidad almacenamiento
+base-r2c3	CompactDisc	disco compacto cd optico disc rueda
+base-r2c4	Trash	basurero papelera trash basura eliminar borrar
+base-r2c5	Magnifier	lupa buscar search magnifier encontrar
+base-r3c1	Globe	globo mundo tierra red internet world web
+base-r3c2	Printer	impresora printer imprimir papel
+base-r3c3	Monitor	monitor pantalla equipo computadora display
+base-r3c4	Keyboard	teclado keyboard teclas escribir
+base-r3c5	Mouse	raton mouse puntero apuntador
+base-r4c1	Tools	herramientas tools llave desarmador reparar
+base-r4c2	Gear	engrane gear rueda dentada ajustes configuracion preferencias
+base-r4c3	Padlock	candado padlock cerradura bloqueo seguro proteger
+base-r4c4	Speaker	bocina altavoz speaker sonido audio volumen
+base-r4c5	Envelope	sobre envelope correo carta mensaje mail
+
+arch-r1c1	PageBlank	hoja blanca nueva blank page nuevo documento
+arch-r1c2	PageStack	hojas apiladas pila stack varias paginas
+arch-r1c3	FolderUp	carpeta subir upload cargar enviar flecha arriba
+arch-r1c4	FolderDown	carpeta bajar download descargar recibir flecha abajo
+arch-r1c5	Shortcut	atajo alias shortcut acceso directo enlace
+arch-r2c1	Archive	comprimido zip archive cremallera empaquetado
+arch-r2c2	Clipboard	portapapeles clipboard tablilla sujetapapeles
+arch-r2c3	Scissors	tijeras cortar cut scissors
+arch-r2c4	Copy	copiar copy duplicar dos hojas
+arch-r2c5	Paste	pegar paste portapapeles insertar
+arch-r3c1	DeleteFile	eliminar archivo borrar delete tache quitar
+arch-r3c2	EditFile	editar archivo edit lapiz modificar cambiar
+arch-r3c3	Bookmark	marcador bookmark cinta señal favorito
+arch-r3c4	Star	estrella star favorito destacado importante
+arch-r3c5	SortAlpha	ordenar sort alfabetico az orden clasificar
+arch-r4c1	ViewList	vista lista list renglones detalle
+arch-r4c2	ViewThumbnails	vista miniaturas thumbnails mosaico fotos
+arch-r4c3	ViewGrid	vista cuadricula grid iconos rejilla
+arch-r4c4	ArrowUp	flecha arriba up subir ascender
+arch-r4c5	ArrowDown	flecha abajo down bajar descender
+
+dibujo-r1c1	Pencil	lapiz pencil dibujar escribir trazo
+dibujo-r1c2	Brush	pincel brush pintar brocha
+dibujo-r1c3	Eraser	borrador eraser goma borrar
+dibujo-r1c4	Eyedropper	cuentagotas eyedropper gotero tomar color pipeta
+dibujo-r1c5	PaintBucket	cubeta pintura bucket rellenar bote
+dibujo-r2c1	Palette	paleta palette colores pintura
+dibujo-r2c2	Ruler	regla ruler medir medida centimetros
+dibujo-r2c3	Line	linea line recta trazo segmento
+dibujo-r2c4	Rectangle	rectangulo cuadro square forma
+dibujo-r2c5	Ellipse	elipse circulo ovalo forma redonda
+dibujo-r3c1	SelectRect	seleccion rectangular marquee seleccionar area
+dibujo-r3c2	Lasso	lazo lasso seleccion libre
+dibujo-r3c3	ZoomIn	acercar zoom mas aumentar lupa
+dibujo-r3c4	ZoomOut	alejar zoom menos reducir lupa
+dibujo-r3c5	Crop	recortar crop encuadre marco
+dibujo-r4c1	Rotate	girar rotar rotate vuelta circular
+dibujo-r4c2	Undo	deshacer undo revertir atras
+dibujo-r4c3	Redo	rehacer redo repetir adelante
+dibujo-r4c4	Layers	capas layers niveles apilado
+dibujo-r4c5	Stamp	sello stamp timbre marcar aprobar
+
+hard-r1c1	Tower	torre gabinete computadora equipo cpu
+hard-r1c2	ExternalDrive	disco externo unidad drive almacenamiento
+hard-r1c3	OpticalDrive	unidad optica lector cd dvd charola
+hard-r1c4	Scanner	escaner scanner digitalizar cama plana
+hard-r1c5	Camera	camara camera fotografia foto
+hard-r2c1	Webcam	camara web webcam video llamada
+hard-r2c2	NetworkSwitch	conmutador switch red hub concentrador
+hard-r2c3	Handset	auricular telefono handset bocina llamada
+hard-r2c4	Fax	fax facsimil telefono impresora oficina
+hard-r2c5	Microphone	microfono microphone grabar voz
+hard-r3c1	Headphones	audifonos headphones auriculares escuchar
+hard-r3c2	Joystick	palanca joystick juego control
+hard-r3c3	Laptop	portatil laptop computadora notebook
+hard-r3c4	Battery	bateria battery pila carga energia
+hard-r3c5	PowerPlug	enchufe clavija plug corriente energia
+hard-r4c1	MemoryModule	memoria ram modulo tarjeta chip
+hard-r4c2	ExpansionCard	tarjeta expansion card circuito placa
+hard-r4c3	NetworkCable	cable red ethernet rj45 conector
+hard-r4c4	Handheld	agenda electronica pda organizador portatil
+hard-r4c5	PowerButton	encendido power apagar prender boton
+
+red-r1c1	Browser	navegador browser ventana web pagina
+red-r1c2	WebGlobe	globo puntero web internet navegar mundo
+red-r1c3	MailOpen	sobre abierto correo leido carta mensaje
+red-r1c4	Inbox	bandeja entrada inbox recibidos charola
+red-r1c5	Outbox	bandeja salida outbox enviados charola
+red-r2c1	Bubble	burbuja dialogo globo mensaje comentario
+red-r2c2	ContactCard	tarjeta contacto card persona datos
+red-r2c3	AddressBook	libreta direcciones agenda contactos arroba
+red-r2c4	Telephone	telefono phone llamada aparato
+red-r2c5	Antenna	antena torre señal transmision radio
+red-r3c1	PaperPlane	avion papel enviar send mandar
+red-r3c2	SharedFolder	carpeta compartida sincronizar transferir intercambio
+red-r3c3	Modem	modem enrutador router caja red
+red-r3c4	Link	enlace cadena link liga vinculo
+red-r3c5	House	casa inicio home hogar principal
+red-r4c1	Bell	campana bell aviso notificacion alerta
+red-r4c2	People	personas grupo people usuarios equipo
+red-r4c3	Calendar	calendario calendar fecha mes dias
+red-r4c4	Chat	conversacion chat platica mensajes burbujas
+red-r4c5	Attachment	adjunto clip attachment sujetapapeles anexo
+
+repro-r1c1	Play	tocar reproducir play iniciar triangulo
+repro-r1c2	Pause	pausa pause detener momentaneo
+repro-r1c3	Stop	detener alto stop cuadro parar
+repro-r1c4	Record	grabar record rojo circulo
+repro-r1c5	Rewind	retroceder rewind atras regresar
+repro-r2c1	FastForward	adelantar avanzar forward rapido
+repro-r2c2	Eject	expulsar eject sacar disco
+repro-r2c3	Film	pelicula film cine tira video
+repro-r2c4	MusicNote	nota musical music cancion audio melodia
+repro-r2c5	Disc	disco compacto cd audio musica
+repro-r3c1	Camcorder	videocamara camcorder grabar video filmar
+repro-r3c2	Picture	cuadro foto marco imagen fotografia
+repro-r3c3	Radio	radio receptor sintonizador aparato
+repro-r3c4	Mixer	mezcladora mixer deslizadores audio consola
+repro-r3c5	Playlist	lista reproduccion playlist canciones cola
+repro-r4c1	Volume	bocina volumen sonido audio altavoz
+repro-r4c2	Mute	silencio mute callar sin sonido apagado
+repro-r4c3	HeadphonesFlat	audifonos headphones escuchar auriculares
+repro-r4c4	MicStand	microfono estudio grabacion voz
+repro-r4c5	Television	television tv pantalla monitor aparato
+
+seg-r1c1	Key	llave key abrir acceso clave
+seg-r1c2	Badge	credencial gafete identificacion badge acceso
+seg-r1c3	Shield	escudo shield proteccion seguridad defensa
+seg-r1c4	Database	base datos database cilindros almacen registros
+seg-r1c5	Safe	caja fuerte safe boveda seguro resguardo
+seg-r2c1	FolderLocked	carpeta bloqueada candado protegida cerrada
+seg-r2c2	FolderUnlocked	carpeta desbloqueada abierta candado abierto
+seg-r2c3	Warning	alerta advertencia warning triangulo cuidado peligro
+seg-r2c4	Info	informacion info aviso nota detalle
+seg-r2c5	Question	pregunta question duda interrogacion ayuda
+seg-r3c1	Bug	error insecto bug falla defecto problema
+seg-r3c2	Terminal	terminal consola comandos linea shell
+seg-r3c3	Checklist	lista verificacion checklist revisar pendientes
+seg-r3c4	ClipboardCheck	portapapeles revisado verificado aprobado lista
+seg-r3c5	StampApproved	sello aprobado aprobacion visto bueno timbre
+seg-r4c1	StopSign	alto stop mano detener prohibido
+seg-r4c2	EyeVisible	ojo visible ver mostrar visible mirar
+seg-r4c3	EyeHidden	ojo oculto esconder ocultar invisible tachado
+seg-r4c4	Backup	respaldo backup copia guardar disco
+seg-r4c5	Restore	restaurar restore recuperar devolver disco
+
+estado-r1c1	Check	verificacion palomita check listo correcto aceptar
+estado-r1c2	Cross	tache cruz cross error cancelar no
+estado-r1c3	Alert	alerta advertencia triangulo cuidado peligro
+estado-r1c4	Information	informacion info aviso azul nota
+estado-r1c5	Help	ayuda pregunta help duda interrogacion
+estado-r2c1	Hourglass	reloj arena hourglass espera esperando tiempo
+estado-r2c2	ProgressBar	barra avance progreso progress termometro
+estado-r2c3	Spinner	cargando loading espera girando actividad
+estado-r2c4	Pointer	puntero flecha cursor mouse apuntador
+estado-r2c5	Move	mover move cuatro flechas desplazar arrastrar
+estado-r3c1	Resize	cambiar tamaño resize estirar diagonal escalar
+estado-r3c2	FolderWindow	carpeta ventana abrir explorador navegador archivos
+estado-r3c3	Add	agregar mas add nuevo sumar añadir
+estado-r3c4	Remove	quitar menos remove restar eliminar
+estado-r3c5	Sync	sincronizar sync actualizar refrescar circular
+estado-r4c1	Refresh	actualizar refresh recargar circular vueltas
+estado-r4c2	Home	inicio casa home principal
+estado-r4c3	Back	atras back regresar izquierda anterior
+estado-r4c4	Forward	adelante forward siguiente derecha
+estado-r4c5	Close	cerrar close tache salir boton
+
+ofi-r1c1	CalendarDay	calendario dia fecha agenda hoy
+ofi-r1c2	Clock	reloj clock hora tiempo
+ofi-r1c3	BellGold	campana aviso notificacion recordatorio
+ofi-r1c4	StickyNote	nota adhesiva post recordatorio papelito
+ofi-r1c5	Notebook	cuaderno libreta notebook apuntes
+ofi-r2c1	TaskList	lista tareas pendientes todo revisadas
+ofi-r2c2	Pen	pluma fuente pen escribir firmar
+ofi-r2c3	Calculator	calculadora calculator cuentas numeros sumar
+ofi-r2c4	Briefcase	portafolios maletin briefcase trabajo negocio
+ofi-r2c5	CalendarMonth	calendario mes month planeacion fechas
+ofi-r3c1	ContactBook	agenda contactos directorio libreta personas
+ofi-r3c2	Person	persona usuario person cuenta perfil
+ofi-r3c3	Group	grupo personas equipo team usuarios
+ofi-r3c4	ChartBar	grafica barras chart bar estadistica comparacion
+ofi-r3c5	ChartPie	grafica pastel pie proporcion porcentaje rebanadas
+ofi-r4c1	ChartLine	grafica lineas line tendencia serie evolucion
+ofi-r4c2	Idea	foco idea bombilla ocurrencia sugerencia
+ofi-r4c3	Pin	tachuela pin fijar clavar chinche
+ofi-r4c4	ArchiveBox	caja archivo box almacenar guardar cajon
+ofi-r4c5	Survey	encuesta formulario survey cuestionario respuesta

@@ -28,6 +28,7 @@ public partial class App : Application
             "math" => new MathWindow(),
             "video" => new VideoWindow(),
             "notes" => new NotesWindow(),
+            "icons" => new IconLab(),
             _ => new MainWindow(),
         };
 

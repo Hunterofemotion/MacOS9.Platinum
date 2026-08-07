@@ -4,6 +4,14 @@
     <ProjectReference Include="..\MacOS9.Platinum\MacOS9.Platinum.csproj" />
   </ItemGroup>
 
+  <!-- Los candidatos de mapa de bits van como archivos sueltos junto al programa,
+       no incrustados: así volver a correr tools/iconos-pixel.ps1 y reabrir el
+       banco basta para ver el cambio, sin recompilar. -->
+  <ItemGroup>
+    <None Include="Recursos\IconosPixel\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Recursos\IconosPixel\catalogo.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>

@@ -1,0 +1,106 @@
+<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.IconLab"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        Title="Catálogo de iconos"
+        Width="1020" Height="720"
+        WindowStartupLocation="CenterScreen"
+        FocusManager.FocusedElement="{Binding ElementName=Consulta}">
+
+  <platinum:PlatinumWindow.Resources>
+
+    <!-- Ficha del catálogo: la pieza arriba y su nombre debajo, con el alto fijo
+         para que la cuadrícula tenga renglones parejos aunque un nombre se parta
+         en dos líneas. -->
+    <DataTemplate x:Key="Ficha">
+      <StackPanel Width="96" Height="86" Margin="2">
+        <Image Source="{Binding Estampa}"
+               Width="{Binding Lado}" Height="{Binding Lado}"
+               Margin="0,4,0,4"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               RenderOptions.BitmapScalingMode="HighQuality" />
+        <TextBlock Text="{Binding Nombre}"
+                   TextAlignment="Center" TextWrapping="Wrap"
+                   TextTrimming="CharacterEllipsis" />
+      </StackPanel>
+    </DataTemplate>
+
+  </platinum:PlatinumWindow.Resources>
+
+  <DockPanel>
+
+    <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
+      <StatusBarItem DockPanel.Dock="Left" MinWidth="200">
+        <StackPanel Orientation="Horizontal">
+          <platinum:PlatinumLed x:Name="Testigo" VerticalAlignment="Center" Margin="0,0,6,0" />
+          <TextBlock x:Name="LineaCuenta" Text="Cargando..." />
+        </StackPanel>
+      </StatusBarItem>
+      <StatusBarItem>
+        <TextBlock x:Name="LineaDetalle" TextTrimming="CharacterEllipsis" />
+      </StatusBarItem>
+    </StatusBar>
+
+    <!-- Barra de búsqueda. Va arriba y de orilla a orilla porque es lo primero
+         que se usa: el catálogo se abre para encontrar algo, no para pasear. -->
+    <Border DockPanel.Dock="Top" Padding="12,10,12,10">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Left" Text="Buscar:" VerticalAlignment="Center"
+                   Margin="0,0,8,0"
+                   FontFamily="{StaticResource SystemFontFamily}"
+                   FontWeight="{StaticResource SystemFontWeight}" />
+
+        <!-- En un DockPanel el primero que se ancla a la derecha queda más a la
+             derecha, así que el menú va antes que su etiqueta para que se lea
+             "Tamaño: [menú]" y no al revés. -->
+        <ComboBox x:Name="MenuTamano" DockPanel.Dock="Right" Width="76" SelectedIndex="1"
+                  SelectionChanged="AlCambiarTamano">
+          <ComboBoxItem Content="16" />
+          <ComboBoxItem Content="32" />
+          <ComboBoxItem Content="48" />
+        </ComboBox>
+        <TextBlock DockPanel.Dock="Right" Text="Tamaño:" VerticalAlignment="Center"
+                   Margin="16,0,8,0"
+                   FontFamily="{StaticResource SystemFontFamily}"
+                   FontWeight="{StaticResource SystemFontWeight}" />
+
+        <Button DockPanel.Dock="Right" Content="Limpiar" Width="80" Margin="8,0,0,0"
+                Click="AlLimpiar" />
+
+        <TextBox x:Name="Consulta" TextChanged="AlEscribir"
+                 ToolTip="Escribe lo que el icono representa. Tolera errores de dedo y no distingue acentos." />
+      </DockPanel>
+    </Border>
+
+    <!-- Ficha de la pieza elegida -->
+    <GroupBox DockPanel.Dock="Bottom" Header="Pieza elegida" Margin="12,0,12,10">
+      <DockPanel x:Name="Detalle" Margin="4">
+        <Image x:Name="DetalleGrande" DockPanel.Dock="Left" Width="48" Height="48"
+               Margin="0,0,12,0" VerticalAlignment="Top" />
+        <Image x:Name="DetalleMedio" DockPanel.Dock="Left" Width="32" Height="32"
+               Margin="0,0,12,0" VerticalAlignment="Top" />
+        <Image x:Name="DetalleChico" DockPanel.Dock="Left" Width="16" Height="16"
+               Margin="0,0,16,0" VerticalAlignment="Top" />
+        <StackPanel>
+          <TextBlock x:Name="DetalleLlave" FontWeight="Bold" />
+          <TextBlock x:Name="DetallePalabras" TextWrapping="Wrap" Margin="0,3,0,0"
+                     Foreground="{StaticResource TextDisabledBrush}" />
+        </StackPanel>
+      </DockPanel>
+    </GroupBox>
+
+    <ListBox x:Name="Cuadricula" Margin="12,0,12,10"
+             ItemTemplate="{StaticResource Ficha}"
+             SelectionChanged="AlElegir"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.VerticalScrollBarVisibility="Auto">
+      <ListBox.ItemsPanel>
+        <ItemsPanelTemplate>
+          <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+      </ListBox.ItemsPanel>
+    </ListBox>
+
+  </DockPanel>
+</platinum:PlatinumWindow>

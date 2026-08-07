@@ -15,3 +15,6 @@ obj/
 # Las imágenes aprobadas sí son fuente: son el patrón contra el que compara
 # check-render.ps1. Sin ellas la comprobación visual no tiene contra qué medir.
 !tools/aprobadas/**/*.png
+# Los recortes del catálogo de iconos también: son el material que se está
+# revisando, y sin ellos el catálogo abre vacío.
+!src/MacOS9.Platinum.Gallery/Recursos/IconosPixel/*.png
