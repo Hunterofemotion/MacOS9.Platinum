@@ -27,6 +27,9 @@
         <!-- deja así a propósito, sin agrandar el campo para compensarla.            -->
         <Setter Property="Padding" Value="3,1" />
         <Setter Property="MinHeight" Value="22" />
+        <!-- Centrado sirve para el campo de una línea, que es alto fijo. En uno de
+             varias líneas el texto tiene que empezar arriba: centrado deja el
+             registro flotando a media caja como si sobrara espacio abajo. -->
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
@@ -85,6 +88,15 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Style.Triggers>
+            <!-- Un campo que acepta renglones ya no es de alto fijo: su texto
+                 arranca arriba. Centrado, un registro corto quedaba flotando a
+                 media caja como si el contenido estuviera perdido. -->
+            <Trigger Property="AcceptsReturn" Value="True">
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PlatinumTextBox}" />

@@ -290,13 +290,20 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderThickness="0,0,0,1"
                             BorderBrush="{StaticResource TextBrush}">
-                        <Border BorderThickness="0,1,0,0"
-                                BorderBrush="{StaticResource BevelHighlightBrush}">
+                        <!-- El realce va DEBAJO de los títulos, no como borde que los  -->
+                        <!-- empuje: si los contiene, cada título arranca un píxel más  -->
+                        <!-- abajo y su resalte deja una franja clara contra el marco.  -->
+                        <!-- Dibujado detrás se ve donde no hay título resaltado y      -->
+                        <!-- desaparece bajo el que sí lo está, que es como se comporta -->
+                        <!-- la barra de Mac OS 9.                                      -->
+                        <Grid>
+                            <Border BorderThickness="0,1,0,0"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}" />
                             <!-- Sin margen: el primer título arranca pegado al marco. -->
                             <!-- Con holgura lateral quedaba una franja de barra a la  -->
                             <!-- izquierda de File y el resalte no llegaba al filo.    -->
                             <ItemsPresenter />
-                        </Border>
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

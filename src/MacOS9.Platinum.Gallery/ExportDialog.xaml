@@ -1,9 +1,9 @@
-<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.ExportDialog"
+﻿<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.ExportDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
         Title="Export Results"
-        Width="452" Height="252"
+        Width="452" SizeToContent="Height"
         ResizeMode="NoResize" ShowGrowBox="False"
         WindowStartupLocation="CenterOwner">
 

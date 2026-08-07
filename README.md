@@ -86,6 +86,11 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 - **ProgressBar** — determinate, indeterminate (diagonal stripes), vertical and
   disabled
 - **ToolTip** — the yellow help note from Mac OS 9
+- **PlatinumAlert** — the modal every application needs: icon on the left, message
+  and optional detail on the right, buttons at the bottom with the ring on the
+  default one. `PlatinumAlert.Show(owner, title, message, detail, kind, buttons)`
+  returns which button closed it. Button captions are properties, so the library
+  imposes no language
 - **Icons** — ten 16×16 vector icons (folder, document, floppy, disk, trash, alert,
   info, envelope, computer, magnifier) in `Themes/Icons.xaml`
 

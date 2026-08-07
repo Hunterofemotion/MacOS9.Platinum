@@ -48,4 +48,14 @@ public partial class MainWindow : PlatinumWindow
 
     private void OnInstrument(object sender, RoutedEventArgs e) =>
         new InstrumentDialog { Owner = this }.ShowDialog();
+
+    // El aviso reutilizable de la biblioteca, con el juego de dos teclas.
+    private void OnAcquire(object sender, RoutedEventArgs e) =>
+        PlatinumAlert.Show(
+            this,
+            "SpectraLab",
+            "The chamber is still at atmospheric pressure.",
+            "Starting now will burn lamp hours without producing a usable spectrum.",
+            AlertKind.Caution,
+            AlertButtons.OkCancel);
 }

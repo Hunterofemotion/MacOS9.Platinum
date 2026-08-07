@@ -1,9 +1,9 @@
-<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.InstrumentDialog"
+﻿<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.InstrumentDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
         Title="Bench Controller"
-        Width="424" Height="238"
+        Width="424" SizeToContent="Height"
         ResizeMode="NoResize" ShowGrowBox="False"
         WindowStartupLocation="CenterOwner">
 

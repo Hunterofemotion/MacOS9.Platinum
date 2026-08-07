@@ -198,6 +198,7 @@
                 <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
                            Text="7 lines matched the reference table." />
                 <Button DockPanel.Dock="Right" Content="Acquire" Width="104" IsDefault="True"
+                        Click="OnAcquire"
                         ToolTip="Starts the run with the settings on this window." />
                 <Button DockPanel.Dock="Right" Content="Stop" Width="90" Margin="0,0,12,0"
                         IsEnabled="False" />
