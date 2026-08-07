@@ -178,7 +178,12 @@
                         <ProgressBar Value="78" Height="16" Margin="0,0,0,10" />
 
                         <TextBlock Text="Lamp hours" Margin="0,0,0,4" />
-                        <ProgressBar Value="34" Height="16" IsEnabled="False" />
+                        <ProgressBar Value="34" Height="16" IsEnabled="False" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Next service" Margin="0,0,0,4" />
+                        <platinum:PlatinumDateTimeField Mode="Date" Value="2026-11-12T09:30:00"
+                                                        HorizontalAlignment="Left"
+                                                        ToolTip="Click a part and use the arrows, or type." />
                     </StackPanel>
                 </GroupBox>
 

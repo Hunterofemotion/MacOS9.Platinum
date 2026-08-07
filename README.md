@@ -85,6 +85,14 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 - **TreeView** — tree with disclosure triangles and Finder indentation
 - **ProgressBar** — determinate, indeterminate (diagonal stripes), vertical and
   disabled
+- **PlatinumStepper** — the little arrows: a stacked pair of repeat buttons that
+  raise `Stepped` with a direction. It holds no value of its own, so it works for
+  anything, which is how the system treated it
+- **PlatinumDateTimeField** — date or time split into parts. Click a part or walk
+  with left/right, then change it with up/down, with the little arrows, or by
+  typing digits; a full part rolls over to the next one. There is no free-text
+  entry on purpose: a half-typed invalid date cannot exist, which is the problem
+  this control solves and a text box does not
 - **ToolTip** — the yellow help note from Mac OS 9
 - **PlatinumAlert** — the modal every application needs: icon on the left, message
   and optional detail on the right, buttons at the bottom with the ring on the

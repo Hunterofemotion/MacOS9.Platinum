@@ -26,7 +26,22 @@
         <StackPanel Grid.Row="1" Margin="0,12,0,0">
             <TextBlock Text="Target signal-to-noise" Margin="0,0,0,4" />
             <Slider Minimum="10" Maximum="200" Value="120" TickFrequency="10"
-                    TickPlacement="BottomRight" />
+                    TickPlacement="BottomRight" Margin="0,0,0,12" />
+
+            <!-- Fecha y hora: cada tramo se elige con el clic o con las flechas
+                 laterales y se cambia con las de arriba y abajo, con las flechitas
+                 o tecleando. -->
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="Run at:" VerticalAlignment="Center"
+                           Margin="0,0,10,0" />
+                <platinum:PlatinumDateTimeField DockPanel.Dock="Left" Mode="Date"
+                                                Value="2026-08-24T17:00:00"
+                                                ToolTip="Click a part and use the arrows." />
+                <platinum:PlatinumDateTimeField DockPanel.Dock="Left" Mode="Time"
+                                                Value="2026-08-24T17:00:00"
+                                                Margin="10,0,0,0" />
+                <TextBlock />
+            </DockPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Margin="0,12,0,0" VerticalAlignment="Bottom">
