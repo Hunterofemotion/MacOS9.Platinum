@@ -42,6 +42,17 @@
                                                 Margin="10,0,0,0" />
                 <TextBlock />
             </DockPanel>
+
+            <!-- Duración: hora, minuto y segundo en veinticuatro horas, sin AM ni PM. -->
+            <DockPanel Margin="0,10,0,0">
+                <TextBlock DockPanel.Dock="Left" Text="Duration:" VerticalAlignment="Center"
+                           Margin="0,0,10,0" />
+                <platinum:PlatinumDateTimeField DockPanel.Dock="Left" Mode="TimeWithSeconds"
+                                                Value="2026-08-24T01:00:00" />
+                <TextBlock DockPanel.Dock="Left" Text="(hh:mm:ss)" VerticalAlignment="Center"
+                           Margin="8,0,0,0" Foreground="{StaticResource TextDisabledBrush}" />
+                <TextBlock />
+            </DockPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="2" Margin="0,12,0,0" VerticalAlignment="Bottom">

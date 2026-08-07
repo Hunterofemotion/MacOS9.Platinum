@@ -6,40 +6,18 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Button.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ComboBox.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Flecha de mes anterior y siguiente. Sin marco propio: va embutida en la      -->
-    <!-- cabecera del calendario, que ya cierra por fuera.                            -->
-    <Style x:Key="PlatinumCalendarArrow" TargetType="{x:Type Button}">
-        <Setter Property="Focusable" Value="False" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="Width" Value="16" />
-        <Setter Property="Height" Value="16" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>
-                        <Border x:Name="Face" Background="Transparent" />
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Face" Property="Background" Value="{StaticResource SelectionBrush}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- Calendario de un mes: hoja blanca con marco negro, cabecera con el nombre    -->
-    <!-- del mes entre las dos flechas, y la rejilla debajo.                          -->
+    <!-- Calendario de un mes: hoja gris con marco negro. El mes se elige por un menú   -->
+    <!-- desplegable y el año por un campo con sus flechitas, que es como se saltaba de -->
+    <!-- año sin tener que pasar mes por mes.                                           -->
     <Style TargetType="{x:Type controls:PlatinumCalendar}">
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
-        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="Background" Value="{StaticResource WindowFaceBrush}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
@@ -48,25 +26,30 @@
                     <Border BorderThickness="1"
                             BorderBrush="{StaticResource TextBrush}"
                             Background="{TemplateBinding Background}">
-                        <StackPanel Margin="6">
-                            <!-- Cabecera sobre la cara del chrome, no sobre la hoja:
-                                 separa el mando de los días sin una línea de más. -->
-                            <DockPanel Margin="0,0,0,6">
-                                <Button x:Name="PART_Prev" DockPanel.Dock="Left"
-                                        Style="{StaticResource PlatinumCalendarArrow}">
-                                    <controls:ArrowGlyph Direction="Left" Fill="{StaticResource TextBrush}" />
-                                </Button>
-                                <Button x:Name="PART_Next" DockPanel.Dock="Right"
-                                        Style="{StaticResource PlatinumCalendarArrow}">
-                                    <controls:ArrowGlyph Direction="Right" Fill="{StaticResource TextBrush}" />
-                                </Button>
-                                <TextBlock x:Name="PART_Title"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           FontWeight="{StaticResource SystemFontWeight}" />
+                        <StackPanel Margin="8">
+                            <DockPanel Margin="0,0,0,8">
+                                <!-- El año va a la derecha con su ancho propio; el mes
+                                     toma lo que sobra, que es lo que mantiene la
+                                     cabecera del mismo ancho que la rejilla. -->
+                                <controls:PlatinumStepper x:Name="PART_YearStepper"
+                                                          DockPanel.Dock="Right"
+                                                          VerticalAlignment="Center"
+                                                          Margin="3,0,0,0" />
+                                <TextBox x:Name="PART_Year"
+                                         DockPanel.Dock="Right"
+                                         Width="52"
+                                         MaxLength="4"
+                                         HorizontalContentAlignment="Center" />
+
+                                <ComboBox x:Name="PART_Month" Margin="0,0,12,0" />
                             </DockPanel>
 
-                            <Grid x:Name="PART_Grid" />
+                            <!-- La rejilla lleva su propio marco: el bloque de días se
+                                 lee como una pieza aparte de los mandos de arriba. -->
+                            <Border BorderThickness="1"
+                                    BorderBrush="{StaticResource FrameShadowBrush}">
+                                <Grid x:Name="PART_Grid" />
+                            </Border>
                         </StackPanel>
                     </Border>
                 </ControlTemplate>

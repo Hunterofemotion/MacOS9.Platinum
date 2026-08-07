@@ -124,7 +124,16 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   with left/right, then change it with up/down, with the little arrows, or by
   typing digits; a full part rolls over to the next one. There is no free-text
   entry on purpose: a half-typed invalid date cannot exist, which is the problem
-  this control solves and a text box does not
+  this control solves and a text box does not. Three modes: `Date`, `Time`
+  (12-hour with AM/PM) and `TimeWithSeconds` (24-hour hh:mm:ss — a field that goes
+  down to the second is measuring a duration or an exact instant, and there the
+  meridiem gets in the way). The calendar button switches itself off in the time
+  modes rather than having to be switched off at every use
+- **PlatinumCalendar** — one month: the month as a drop-down menu and the year as a
+  field with its little arrows, which is how you jumped a year without stepping
+  through twelve months. It draws only the weeks the month actually occupies, and
+  days from the neighbouring months are left blank so the month on show reads at a
+  glance
 - **ToolTip** — the yellow help note from Mac OS 9
 - **PlatinumAlert** — the modal every application needs: icon on the left, message
   and optional detail on the right, buttons at the bottom with the ring on the

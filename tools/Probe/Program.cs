@@ -198,6 +198,20 @@ internal static class Program
                 new TextBox { Text = "Apagado", Width = 120, IsEnabled = false }),
             Row(new TextBox { Width = 200, Text = "Un contenido mucho más largo que el ancho disponible del campo" })));
 
+        // Un mes fijo y no el de hoy: un escenario que cambia con la fecha no sirve
+        // para comparar contra un patrón aprobado.
+        Render("calendario", dpi, Stack(
+            Row(new PlatinumCalendar
+            {
+                DisplayMonth = new DateTime(2024, 5, 1),
+                SelectedDate = new DateTime(2024, 5, 15),
+            })));
+
+        Render("fecha_hora", dpi, Stack(
+            Row(new PlatinumDateTimeField { Mode = DateTimeFieldMode.Date, Value = new DateTime(2024, 5, 15, 9, 30, 45) },
+                new PlatinumDateTimeField { Mode = DateTimeFieldMode.Time, Value = new DateTime(2024, 5, 15, 9, 30, 45) },
+                new PlatinumDateTimeField { Mode = DateTimeFieldMode.TimeWithSeconds, Value = new DateTime(2024, 5, 15, 9, 30, 45) })));
+
         Render("progreso", dpi, Stack(
             Row(Bar(0), Bar(50), Bar(100)),
             Row(new ProgressBar { Width = 160, Height = 14, IsIndeterminate = true },

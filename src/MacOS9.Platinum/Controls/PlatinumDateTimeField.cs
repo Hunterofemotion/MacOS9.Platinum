@@ -12,7 +12,16 @@ namespace MacOS9.Platinum.Controls;
 public enum DateTimeFieldMode
 {
     Date,
-    Time
+
+    /// <summary>Hora y minuto en doce horas, con AM o PM.</summary>
+    Time,
+
+    /// <summary>
+    /// Hora, minuto y segundo en veinticuatro horas. Sin meridiano: un campo que
+    /// llega al segundo se usa para medir una duración o un instante exacto, y ahí
+    /// el AM/PM estorba más de lo que aclara.
+    /// </summary>
+    TimeWithSeconds
 }
 
 /// <summary>
@@ -56,7 +65,7 @@ public class PlatinumDateTimeField : Control
 
     public static readonly DependencyProperty ModeProperty =
         DependencyProperty.Register(nameof(Mode), typeof(DateTimeFieldMode), typeof(PlatinumDateTimeField),
-            new FrameworkPropertyMetadata(DateTimeFieldMode.Date, AlCambiarValor));
+            new FrameworkPropertyMetadata(DateTimeFieldMode.Date, AlCambiarModo));
 
     public DateTimeFieldMode Mode
     {
@@ -65,12 +74,24 @@ public class PlatinumDateTimeField : Control
     }
 
     /// <summary>
-    /// Muestra la tecla que despliega el calendario. Solo tiene sentido en modo
-    /// fecha: un calendario no sirve para elegir una hora.
+    /// Muestra la tecla que despliega el calendario. En los modos de hora se apaga
+    /// sola: un calendario no sirve para elegir una hora, y dejarla encendida por
+    /// omisión obliga a apagarla en cada uso.
     /// </summary>
     public static readonly DependencyProperty ShowCalendarProperty =
         DependencyProperty.Register(nameof(ShowCalendar), typeof(bool), typeof(PlatinumDateTimeField),
-            new PropertyMetadata(true));
+            new FrameworkPropertyMetadata(true, null, AjustarCalendario));
+
+    private static object AjustarCalendario(DependencyObject d, object valor) =>
+        ((PlatinumDateTimeField)d).EsHora ? false : valor;
+
+    // La coacción no se vuelve a evaluar sola: hay que pedirla cuando cambia lo que
+    // la condiciona, que aquí es el modo.
+    private static void AlCambiarModo(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        d.CoerceValue(ShowCalendarProperty);
+        AlCambiarValor(d, e);
+    }
 
     public bool ShowCalendar
     {
@@ -129,8 +150,30 @@ public class PlatinumDateTimeField : Control
         Func<DateTime, int, DateTime?> Poner,
         int Digitos);
 
-    private IReadOnlyList<Tramo> Definicion() => Mode == DateTimeFieldMode.Time
-        ?
+    private IReadOnlyList<Tramo> Definicion() => Mode switch
+    {
+        DateTimeFieldMode.TimeWithSeconds =>
+        [
+            new Tramo("hora", v => v.Hour.ToString("00"),
+                (v, p) => v.AddHours(p),
+                (v, n) => n is >= 0 and <= 23
+                    ? v.Date.AddHours(n).AddMinutes(v.Minute).AddSeconds(v.Second)
+                    : null,
+                2),
+            new Tramo("minuto", v => v.Minute.ToString("00"),
+                (v, p) => v.AddMinutes(p),
+                (v, n) => n is >= 0 and <= 59
+                    ? v.Date.AddHours(v.Hour).AddMinutes(n).AddSeconds(v.Second)
+                    : null,
+                2),
+            new Tramo("segundo", v => v.Second.ToString("00"),
+                (v, p) => v.AddSeconds(p),
+                (v, n) => n is >= 0 and <= 59
+                    ? v.Date.AddHours(v.Hour).AddMinutes(v.Minute).AddSeconds(n)
+                    : null,
+                2)
+        ],
+        DateTimeFieldMode.Time =>
         [
             new Tramo("hora", v => (v.Hour % 12 == 0 ? 12 : v.Hour % 12).ToString("00"),
                 (v, p) => v.AddHours(p),
@@ -146,8 +189,8 @@ public class PlatinumDateTimeField : Control
                 (v, _) => v.AddHours(v.Hour >= 12 ? -12 : 12),
                 (_, _) => null,
                 0)
-        ]
-        :
+        ],
+        _ =>
         [
             new Tramo("día", v => v.Day.ToString("00"),
                 (v, p) => v.AddDays(p),
@@ -167,9 +210,12 @@ public class PlatinumDateTimeField : Control
                     ? new DateTime(n, v.Month, Math.Min(v.Day, DateTime.DaysInMonth(n, v.Month)), v.Hour, v.Minute, 0)
                     : null,
                 4)
-        ];
+        ]
+    };
 
-    private string Separador => Mode == DateTimeFieldMode.Time ? ":" : "/";
+    private bool EsHora => Mode is DateTimeFieldMode.Time or DateTimeFieldMode.TimeWithSeconds;
+
+    private string Separador => EsHora ? ":" : "/";
 
     // ---- Pintado ----------------------------------------------------------
 

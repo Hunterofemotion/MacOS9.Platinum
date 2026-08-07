@@ -40,6 +40,12 @@
     <SolidColorBrush x:Key="TextDisabledBrush" Color="{StaticResource Gray6}" />
     <SolidColorBrush x:Key="TextInvertedBrush" Color="{StaticResource Gray0}" />
 
+    <!-- Calendario: la hoja de días va un paso más clara que la cara de la ventana   -->
+    <!-- para que el bloque se despegue de los mandos, y la retícula un paso más       -->
+    <!-- oscura para que se vea sin competir con los números.                          -->
+    <SolidColorBrush x:Key="CalendarCellBrush" Color="{StaticResource Gray1}" />
+    <SolidColorBrush x:Key="CalendarRuleBrush" Color="{StaticResource Gray3}" />
+
     <!-- Selección -->
     <SolidColorBrush x:Key="SelectionBrush" Color="{StaticResource AccentColor}" />
     <SolidColorBrush x:Key="SelectionInactiveBrush" Color="{StaticResource Gray3}" />
