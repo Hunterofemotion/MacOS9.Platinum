@@ -1,366 +1,208 @@
-<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.MainWindow"
+﻿<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
-        Title="Platinum Gallery"
-        Width="560" Height="660">
+        Title="SpectraLab 3.2"
+        Width="1000" Height="640"
+        WindowStartupLocation="CenterScreen">
 
-    <!-- Cada control nuevo se agrega aquí como una fila de estados, para comparar    -->
-    <!-- contra las capturas de referencia sin tener que armar una app completa.      -->
-    <DockPanel LastChildFill="True">
-
+    <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" InputGestureText="Ctrl+N" />
-                <MenuItem Header="_Open..." InputGestureText="Ctrl+O" />
+                <MenuItem Header="New Run" InputGestureText="Cmd-N" />
+                <MenuItem Header="Open Method..." InputGestureText="Cmd-O" />
                 <Separator />
-                <MenuItem Header="_Quit" InputGestureText="Ctrl+Q" />
+                <MenuItem Header="Export Results..." Click="OnExport" />
+                <MenuItem Header="Print Report" InputGestureText="Cmd-P" />
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="Undo" IsEnabled="False" InputGestureText="Ctrl+Z" />
-                <MenuItem Header="Redo" InputGestureText="Ctrl+Y" />
+                <MenuItem Header="Undo" InputGestureText="Cmd-Z" IsEnabled="False" />
                 <Separator />
-                <MenuItem Header="Mostrar regla" IsCheckable="True" IsChecked="True" />
+                <MenuItem Header="Cut" InputGestureText="Cmd-X" />
+                <MenuItem Header="Copy" InputGestureText="Cmd-C" />
+                <MenuItem Header="Paste" InputGestureText="Cmd-V" />
             </MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Header="Sort by">
-                    <MenuItem Header="Name" IsCheckable="True" IsChecked="True" />
-                    <MenuItem Header="Date" IsCheckable="True" />
-                    <MenuItem Header="Size" IsCheckable="True" />
+            <MenuItem Header="_Instrument">
+                <MenuItem Header="Connect..." Click="OnInstrument" />
+                <MenuItem Header="Calibrate..." Click="OnCalibrate" />
+                <Separator />
+                <MenuItem Header="Purge Chamber" IsCheckable="True" IsChecked="True" />
+                <MenuItem Header="Standby After Run" IsCheckable="True" />
+            </MenuItem>
+            <MenuItem Header="_Analysis">
+                <MenuItem Header="Baseline">
+                    <MenuItem Header="None" IsCheckable="True" />
+                    <MenuItem Header="Linear" IsCheckable="True" IsChecked="True" />
+                    <MenuItem Header="Polynomial" IsCheckable="True" />
                 </MenuItem>
-                <MenuItem Header="Clean Up" />
+                <MenuItem Header="Peak Search" InputGestureText="Cmd-K" />
             </MenuItem>
+            <MenuItem Header="_Window" />
+            <MenuItem Header="_Help" />
         </Menu>
 
-    <!-- El margen inferior deja libre el grow box, que se dibuja encima del         -->
-    <!-- contenido: sin él, la flecha de bajar de la barra queda tapada.             -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Auto"
-                  Margin="0,0,0,16">
-        <ScrollViewer.Resources>
-            <!-- El marco del contenido cierra tres lados de cada barra, así que     -->
-            <!-- cada una solo dibuja el que da hacia adentro. Antes se resolvía     -->
-            <!-- tirando de la vertical con un margen negativo, que tapaba el filo   -->
-            <!-- derecho y dejaba arriba y abajo al doble de grueso.                 -->
-            <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource PlatinumScrollBar}">
-                <Setter Property="BorderThickness" Value="1,0,0,0" />
-                <Style.Triggers>
-                    <Trigger Property="Orientation" Value="Horizontal">
-                        <Setter Property="BorderThickness" Value="0,1,0,0" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </ScrollViewer.Resources>
-    <StackPanel Margin="20,16">
+        <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
+            <StatusBarItem DockPanel.Dock="Left" MinWidth="150">
+                <TextBlock Text="Ready" />
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="Detector 21.4 °C" />
+            </StatusBarItem>
+            <Separator DockPanel.Dock="Right" />
+            <StatusBarItem>
+                <TextBlock Text="Grating 1800 g/mm · Vacuum nominal" />
+            </StatusBarItem>
+        </StatusBar>
 
-        <TabControl Margin="0,0,0,22" Height="150">
-            <TabItem Header="Alerts">
-                <StackPanel>
-                    <CheckBox Content="Play alert sounds" IsChecked="True" Margin="0,0,0,8" />
-                    <CheckBox Content="Play startup sound" />
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Output">
-                <RadioButton Content="Built-in speaker" IsChecked="True" />
-            </TabItem>
-            <TabItem Header="Input">
-                <TextBlock Text="Sin dispositivos de entrada."
-                           FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource ViewFontSize}" />
-            </TabItem>
-        </TabControl>
+        <Grid Margin="12,10,12,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="196" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="220" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Push Button"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,0,0,12" />
-
-        <StackPanel Orientation="Horizontal">
-            <!-- El anillo del botón por omisión se sale del rectángulo del botón,   -->
-            <!-- así que hay que separarlo más de sus vecinos.                       -->
-            <Button Content="Normal" Margin="0,0,20,0" />
-            <Button Content="OK" IsDefault="True" Margin="0,0,20,0" />
-            <Button Content="Disabled" IsEnabled="False" Margin="0,0,20,0" />
-            <Button Content="Options..." ToolTip="Muestra las opciones adicionales." />
-        </StackPanel>
-
-        <TextBlock Text="CheckBox y RadioButton"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Margin="0,0,32,0">
-                <CheckBox Content="Play alert sounds" IsChecked="True" Margin="0,0,0,7" />
-                <CheckBox Content="Play startup sound" Margin="0,0,0,7" />
-                <CheckBox Content="Mixed" IsThreeState="True" IsChecked="{x:Null}" Margin="0,0,0,7" />
-                <CheckBox Content="Disabled" IsEnabled="False" />
-            </StackPanel>
-
-            <StackPanel>
-                <RadioButton Content="Manually" IsChecked="True" Margin="0,0,0,7" />
-                <RadioButton Content="Using DHCP Server" Margin="0,0,0,7" />
-                <RadioButton Content="Disabled" IsEnabled="False" />
-            </StackPanel>
-        </StackPanel>
-
-        <TextBlock Text="Text Field"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="SampleField" Text="192.168.0.45" Width="140" Margin="0,0,12,0" />
-            <TextBox Text="Solo lectura" Width="140" IsReadOnly="True" Margin="0,0,12,0" />
-            <TextBox Text="Deshabilitado" Width="140" IsEnabled="False" />
-        </StackPanel>
-
-        <TextBlock Text="Popup Menu"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <ComboBox Width="150" SelectedIndex="0" Margin="0,0,14,0">
-                <ComboBoxItem Content="Breeze" />
-                <ComboBoxItem Content="Chime" />
-                <ComboBoxItem Content="Droplet" />
-                <ComboBoxItem Content="Indigo" />
-                <ComboBoxItem Content="Quack" />
-                <ComboBoxItem Content="Sosumi" />
-            </ComboBox>
-
-            <ComboBox Width="150" SelectedIndex="0" IsEnabled="False">
-                <ComboBoxItem Content="Deshabilitado" />
-            </ComboBox>
-        </StackPanel>
-
-        <TextBlock Text="Lista con columnas"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <ListView Height="130" SelectedIndex="2" ItemsSource="{Binding Messages}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="" Width="26">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{StaticResource IconEnvelope}"
-                                       Width="16" Height="16"
-                                       HorizontalAlignment="Center" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="From" Width="130" DisplayMemberBinding="{Binding Sender}" />
-                    <GridViewColumn Header="Subject" Width="200" DisplayMemberBinding="{Binding Subject}" />
-                    <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding Size}" />
-                </GridView>
-            </ListView.View>
-        </ListView>
-
-        <TextBlock Text="ScrollBar"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <!-- ViewportSize es lo que define el largo del thumb: sin él queda del  -->
-            <!-- mínimo y no se alcanza a ver la textura.                             -->
-            <ScrollBar Orientation="Vertical" Height="130" Minimum="0" Maximum="100"
-                       ViewportSize="40" Value="30" Margin="0,0,24,0" />
-
-            <StackPanel VerticalAlignment="Top">
-                <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
-                           ViewportSize="40" Value="30" Margin="0,0,0,14" />
-                <!-- Al tope del recorrido: sirve para comprobar que el thumb se pega -->
-                <!-- a la flecha y no deja riel sobrante.                              -->
-                <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
-                           ViewportSize="40" Value="100" Margin="0,0,0,14" />
-                <ScrollBar Orientation="Horizontal" Width="300" Minimum="0" Maximum="100"
-                           ViewportSize="40" Value="30" IsEnabled="False" />
-            </StackPanel>
-        </StackPanel>
-
-        <TextBlock Text="GroupBox y Separator"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <GroupBox Header="Configure" Width="260" HorizontalAlignment="Left">
-            <StackPanel>
-                <RadioButton Content="Manually" IsChecked="True" Margin="0,0,0,7" />
-                <RadioButton Content="Using DHCP Server" />
-            </StackPanel>
-        </GroupBox>
-
-        <Separator Width="300" HorizontalAlignment="Left" Margin="0,14,0,0" />
-
-        <TextBlock Text="Slider"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,14,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Width="220" Margin="0,0,28,0">
-                <Slider Minimum="0" Maximum="100" Value="40" Margin="0,0,0,12" />
-                <Slider Minimum="0" Maximum="100" Value="60"
-                        TickPlacement="BottomRight" TickFrequency="10" Margin="0,0,0,12" />
-                <Slider Minimum="0" Maximum="100" Value="30" IsEnabled="False" />
-            </StackPanel>
-            <Slider Orientation="Vertical" Height="96" Minimum="0" Maximum="100" Value="70" />
-        </StackPanel>
-
-        <TextBlock Text="ProgressBar"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Width="220" Margin="0,0,28,0">
-                <ProgressBar Value="60" Margin="0,0,0,10" />
-                <ProgressBar IsIndeterminate="True" Margin="0,0,0,10" />
-                <ProgressBar Value="60" IsEnabled="False" />
-            </StackPanel>
-            <ProgressBar Orientation="Vertical" Height="62" Value="70" />
-        </StackPanel>
-
-        <TextBlock Text="TreeView"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
-
-        <TreeView Width="240" Height="160" HorizontalAlignment="Left">
-            <TreeViewItem IsExpanded="True">
-                <TreeViewItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource IconHardDisk}" Width="16" Height="16" Margin="0,0,4,0" />
-                        <TextBlock Text="WorkDisk" VerticalAlignment="Center" />
+            <!-- Columna izquierda: árbol de muestras y modo de captura -->
+            <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">
+                <GroupBox DockPanel.Dock="Bottom" Header="Acquisition" Margin="0,10,0,0">
+                    <StackPanel>
+                        <RadioButton Content="Continuous" IsChecked="True" Margin="0,0,0,4"
+                                     ToolTip="Reads until you stop the run." />
+                        <RadioButton Content="Timed burst" Margin="0,0,0,4" />
+                        <RadioButton Content="Triggered" IsEnabled="False" Margin="0,0,0,8"
+                                     ToolTip="Needs the external trigger cable." />
+                        <Separator Margin="0,0,0,8" />
+                        <CheckBox Content="Subtract dark" IsChecked="True" Margin="0,0,0,4" />
+                        <CheckBox Content="Auto-integrate" IsChecked="True" Margin="0,0,0,4" />
+                        <CheckBox Content="Flag outliers" IsChecked="{x:Null}" />
                     </StackPanel>
-                </TreeViewItem.Header>
-                <TreeViewItem IsExpanded="True">
-                    <TreeViewItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource IconFolder}" Width="16" Height="16" Margin="0,0,4,0" />
-                            <TextBlock Text="Documents" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </TreeViewItem.Header>
-                    <TreeViewItem IsSelected="True">
-                        <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{StaticResource IconFolder}" Width="16" Height="16" Margin="0,0,4,0" />
-                                <TextBlock Text="Projects" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                    </TreeViewItem>
-                    <TreeViewItem>
-                        <TreeViewItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{StaticResource IconFolder}" Width="16" Height="16" Margin="0,0,4,0" />
-                                <TextBlock Text="Reference" VerticalAlignment="Center" />
-                            </StackPanel>
-                        </TreeViewItem.Header>
-                    </TreeViewItem>
-                </TreeViewItem>
-                <TreeViewItem>
-                    <TreeViewItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource IconFolder}" Width="16" Height="16" Margin="0,0,4,0" />
-                            <TextBlock Text="Backup" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </TreeViewItem.Header>
-                </TreeViewItem>
-                <TreeViewItem>
-                    <TreeViewItem.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource IconDocument}" Width="16" Height="16" Margin="0,0,4,0" />
-                            <TextBlock Text="Read Me" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </TreeViewItem.Header>
-                </TreeViewItem>
-            </TreeViewItem>
-        </TreeView>
+                </GroupBox>
 
-        <TextBlock Text="Iconos"
-                   FontFamily="{StaticResource SystemFontFamily}"
-                   FontSize="{StaticResource SystemFontSize}"
-                   Margin="0,22,0,10" />
+                <GroupBox Header="Sample Sets">
+                    <TreeView BorderThickness="0">
+                        <TreeViewItem Header="Steel Alloys" IsExpanded="True">
+                            <TreeViewItem Header="AISI 1045" />
+                            <TreeViewItem Header="AISI 4340" />
+                            <TreeViewItem Header="Blank" />
+                        </TreeViewItem>
+                        <TreeViewItem Header="Aluminium" IsExpanded="True">
+                            <TreeViewItem Header="6061-T6" />
+                            <TreeViewItem Header="7075-T651" />
+                        </TreeViewItem>
+                        <TreeViewItem Header="Reference Standards">
+                            <TreeViewItem Header="NIST 1155a" />
+                        </TreeViewItem>
+                    </TreeView>
+                </GroupBox>
+            </DockPanel>
 
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconFolder}" Width="16" Height="16" />
-                <TextBlock Text="Folder" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconDocument}" Width="16" Height="16" />
-                <TextBlock Text="Doc" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconFloppy}" Width="16" Height="16" />
-                <TextBlock Text="Floppy" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconHardDisk}" Width="16" Height="16" />
-                <TextBlock Text="Disk" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconTrash}" Width="16" Height="16" />
-                <TextBlock Text="Trash" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconAlert}" Width="16" Height="16" />
-                <TextBlock Text="Alert" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconInfo}" Width="16" Height="16" />
-                <TextBlock Text="Info" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconEnvelope}" Width="16" Height="16" />
-                <TextBlock Text="Mail" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconComputer}" Width="16" Height="16" />
-                <TextBlock Text="Mac" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-            <StackPanel Width="46">
-                <Image Source="{StaticResource IconMagnifier}" Width="16" Height="16" />
-                <TextBlock Text="Find" FontFamily="{StaticResource ViewFontFamily}"
-                           FontSize="{StaticResource SmallFontSize}"
-                           Foreground="{StaticResource TextDisabledBrush}"
-                           HorizontalAlignment="Center" Margin="0,3,0,0" />
-            </StackPanel>
-        </StackPanel>
+            <!-- Centro: pestañas con la tabla de líneas -->
+            <TabControl Grid.Row="0" Grid.Column="1" Margin="0,0,10,0">
+                <TabItem Header="Peaks">
+                    <DockPanel Margin="8">
+                        <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                            <TextBlock DockPanel.Dock="Left" Text="Element:"
+                                       VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <ComboBox DockPanel.Dock="Left" Width="128" SelectedIndex="0"
+                                      ToolTip="Limits the table to one element.">
+                                <ComboBoxItem Content="All elements" />
+                                <ComboBoxItem Content="Chromium" />
+                                <ComboBoxItem Content="Manganese" />
+                                <ComboBoxItem Content="Nickel" />
+                            </ComboBox>
+                            <TextBox x:Name="SampleField" Margin="10,0,0,0" Text="Run 0412-B" />
+                        </DockPanel>
 
-    </StackPanel>
-    </ScrollViewer>
+                        <ListView ItemsSource="{Binding Lines}"
+                                  VirtualizingPanel.ScrollUnit="Pixel">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Line" Width="88"
+                                                    DisplayMemberBinding="{Binding Line}" />
+                                    <GridViewColumn Header="Element" Width="84"
+                                                    DisplayMemberBinding="{Binding Element}" />
+                                    <GridViewColumn Header="Wavelength" Width="104"
+                                                    DisplayMemberBinding="{Binding Wavelength}" />
+                                    <GridViewColumn Header="Intensity" Width="88"
+                                                    DisplayMemberBinding="{Binding Intensity}" />
+                                    <GridViewColumn Header="Status" Width="96"
+                                                    DisplayMemberBinding="{Binding Status}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                </TabItem>
+
+                <TabItem Header="Spectrum">
+                    <StackPanel Margin="14">
+                        <TextBlock Text="Nothing plotted yet. Start a run to see the trace."
+                                   Margin="0,0,0,12" />
+                        <TextBlock Text="Wavelength window" Margin="0,0,0,4" />
+                        <Slider Minimum="180" Maximum="800" Value="404" TickFrequency="100"
+                                TickPlacement="BottomRight" Margin="0,0,0,12" />
+                        <TextBlock Text="Smoothing" Margin="0,0,0,4" />
+                        <Slider Minimum="0" Maximum="10" Value="3" TickFrequency="1"
+                                TickPlacement="BottomRight" IsEnabled="False" />
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem Header="Log">
+                    <TextBox Margin="8" IsReadOnly="True" AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Visible"
+                             Text="09:41:02  Chamber purge started&#x0a;09:41:38  Vacuum nominal&#x0a;09:42:04  Lamp warm-up complete&#x0a;09:42:11  Grating homed at 1800 g/mm&#x0a;09:42:15  Ready" />
+                </TabItem>
+            </TabControl>
+
+            <!-- Columna derecha: detector y mandos -->
+            <DockPanel Grid.Row="0" Grid.Column="2">
+                <GroupBox DockPanel.Dock="Top" Header="Detector">
+                    <StackPanel>
+                        <TextBlock Text="Grating" Margin="0,0,0,4" />
+                        <ComboBox SelectedIndex="1" Margin="0,0,0,10">
+                            <ComboBoxItem Content="600 g/mm" />
+                            <ComboBoxItem Content="1800 g/mm" />
+                            <ComboBoxItem Content="2400 g/mm" />
+                        </ComboBox>
+
+                        <TextBlock Text="Photomultiplier gain" Margin="0,0,0,4" />
+                        <Slider Minimum="0" Maximum="100" Value="62" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Integration (ms)" Margin="0,0,0,4" />
+                        <TextBox Text="250" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Chamber pressure" Margin="0,0,0,4" />
+                        <ProgressBar Value="78" Height="16" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Lamp hours" Margin="0,0,0,4" />
+                        <ProgressBar Value="34" Height="16" IsEnabled="False" />
+                    </StackPanel>
+                </GroupBox>
+
+                <StackPanel VerticalAlignment="Bottom">
+                    <Button Content="Calibrate..." Margin="0,0,0,8" Click="OnCalibrate"
+                            ToolTip="Runs the standard against the reference lines." />
+                    <Button Content="Export Results..." Margin="0,0,0,8" Click="OnExport" />
+                    <Button Content="Instrument..." Click="OnInstrument"
+                            ToolTip="Connection and credentials for the bench controller." />
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Pie: la tecla por omisión, con su anillo -->
+            <DockPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,0">
+                <Image DockPanel.Dock="Left" Source="{StaticResource IconMagnifier}"
+                       Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center"
+                           Text="7 lines matched the reference table." />
+                <Button DockPanel.Dock="Right" Content="Acquire" Width="104" IsDefault="True"
+                        ToolTip="Starts the run with the settings on this window." />
+                <Button DockPanel.Dock="Right" Content="Stop" Width="90" Margin="0,0,12,0"
+                        IsEnabled="False" />
+                <TextBlock />
+            </DockPanel>
+        </Grid>
     </DockPanel>
 </platinum:PlatinumWindow>

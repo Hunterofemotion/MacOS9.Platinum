@@ -174,8 +174,12 @@
                                 <controls:ArrowGlyph Direction="Up" Fill="{StaticResource TextBrush}" />
                             </RepeatButton>
 
+                            <!-- Recortado a su celda: con la ventana muy baja el
+                                 canal se queda más corto que el cursor, y sin esto
+                                 el cursor se dibuja encima de las flechas. -->
                             <Track x:Name="PART_Track"
                                    Grid.Row="0"
+                                   ClipToBounds="True"
                                    IsDirectionReversed="True">
                                 <Track.DecreaseRepeatButton>
                                     <RepeatButton Style="{StaticResource PlatinumScrollPage}"

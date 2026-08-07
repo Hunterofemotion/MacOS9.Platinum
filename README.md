@@ -4,7 +4,11 @@ A WPF control library with the look of the Mac OS 9 Platinum interface.
 
 ![Control gallery](docs/galeria.png)
 
-*An actual screenshot of the gallery application, not a mock-up.*
+*SpectraLab is a made-up spectrometer console built only to exercise the theme.
+Real screenshots of the gallery application, composed on the classic desktop
+colour — not a mock-up. Some controls live in the dialogs on purpose: a modal
+sheet is where radio groups, password fields and indeterminate progress bars
+actually show up.*
 
 There is also a browsable catalogue in [docs/componentes.html](docs/componentes.html),
 with every control broken down by state and the file it lives in. That one *is* a
@@ -15,7 +19,7 @@ CSS re-creation: treat it as an inventory, not as proof of how things render.
 | Project | What it is |
 |---|---|
 | `src/MacOS9.Platinum` | The library: resource dictionaries and custom controls |
-| `src/MacOS9.Platinum.Gallery` | A visual catalogue for reviewing each control while developing |
+| `src/MacOS9.Platinum.Gallery` | SpectraLab, a fictional spectrometer console that exercises every control, with three dialogs |
 
 ## Usage
 
@@ -58,6 +62,8 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 - **Button** — normal, default (with its ring), pressed, disabled
 - **CheckBox** and **RadioButton** — checked, unchecked, indeterminate, disabled
 - **TextBox** — editable, read-only, disabled, with opaque selection
+- **PasswordBox** — the same sunken well as the text field; separate file because
+  `PasswordBox` does not derive from `TextBoxBase` and shares no template with it
 - **ComboBox** — popup menu with arrows, and drop-down menu
 - **ScrollBar** — vertical and horizontal, arrows grouped at the end of the track,
   channel with a checkerboard texture snapped to physical pixels, disabled state.
