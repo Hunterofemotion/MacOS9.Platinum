@@ -347,17 +347,31 @@ public class PlatinumWindow : Window
         // conserve WS_THICKFRAME, y el windowshade fija Height antes de pasar a
         // NoResize. Sin esta excepción la ventana se quedaba en el mínimo normal
         // con una franja vacía debajo de la barra.
+        // Al atender este mensaje se deja fuera el manejo propio de WPF, que es
+        // quien aplica MinWidth y MinHeight. Sin sumarlos aquí, una ventana con
+        // mínimo declarado se dejaba arrastrar por debajo de él y su contenido
+        // quedaba recortado contra el borde.
         DpiScale dpi = VisualTreeHelper.GetDpi(this);
         double barDips = TitleBarHeightInDips;
-        int minWidth = (int)Math.Ceiling(150d * dpi.DpiScaleX);
-        int minHeight = (int)Math.Ceiling(
-            (barDips + (IsCollapsed ? FrameTopDips + FrameBottomDips : 40d)) * dpi.DpiScaleY);
+        double anchoDips = Math.Max(150d, Sano(MinWidth));
+        double altoDips = IsCollapsed
+            ? barDips + FrameTopDips + FrameBottomDips
+            : Math.Max(barDips + 40d, Sano(MinHeight));
+        int minWidth = (int)Math.Ceiling(anchoDips * dpi.DpiScaleX);
+        int minHeight = (int)Math.Ceiling(altoDips * dpi.DpiScaleY);
         minMax.MinTrackSize.X = Math.Max(minMax.MinTrackSize.X, minWidth);
         minMax.MinTrackSize.Y = Math.Max(minMax.MinTrackSize.Y, minHeight);
 
         Marshal.StructureToPtr(minMax, lParam, false);
         handled = true;
         return 0;
+    }
+
+    // MinWidth y MinHeight admiten infinito y NaN; ninguno sirve como número de
+    // píxeles.
+    private static double Sano(double valor)
+    {
+        return double.IsNaN(valor) || double.IsInfinity(valor) ? 0d : valor;
     }
 
     private void OnGrowBoxPressed(object sender, MouseButtonEventArgs e)
