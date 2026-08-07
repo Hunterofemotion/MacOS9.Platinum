@@ -150,7 +150,10 @@ display the result comes out asymmetric or blurry:
 
 Tabs (`Controls/TabShape.cs`) are the deliberate exception: their diagonals and
 curves need anti-aliasing, so they are drawn as vectors and only the straight runs
-are snapped to the grid, the same way `Border` does for buttons.
+are snapped to the grid, the same way `Border` does for buttons. Their outline is
+one logical unit rounded to whole pixels — one at normal scale, two at 200% —
+because a pen fixed at one physical pixel left the tab with half the stroke of
+every other frame in the theme, all of which come from a `BorderThickness` of one.
 
 The theme also sets `TextOptions.TextFormattingMode="Display"`, because WPF's
 `Ideal` mode positions stems on fractional pixels, and at 11 px a one-pixel stroke

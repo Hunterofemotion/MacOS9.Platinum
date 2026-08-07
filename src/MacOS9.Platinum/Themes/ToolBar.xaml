@@ -16,8 +16,9 @@
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Setter Property="MinWidth" Value="64" />
-        <Setter Property="Padding" Value="10,4,10,3" />
+        <!-- Sin ancho mínimo: la tecla mide lo que mide su rótulo. Un mínimo fijo   -->
+        <!-- metía aire a los lados y separaba la primera tecla del marco.          -->
+        <Setter Property="Padding" Value="6,4,6,3" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
@@ -80,7 +81,9 @@
     <Style TargetType="{x:Type ToolBar}">
         <Setter Property="Background" Value="{StaticResource WindowFaceBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property="Padding" Value="6,0" />
+        <!-- Sin aire a los costados: la primera tecla arranca pegada al marco, como -->
+        <!-- la barra de menús. El aire de cada tecla lo pone la tecla.              -->
+        <Setter Property="Padding" Value="0" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">

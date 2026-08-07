@@ -168,12 +168,19 @@ public class TabShape : FrameworkElement
         double scale = DeviceScale.Of(this).X;
         double pixel = 1d / scale;
 
+        // El contorno mide una unidad lógica, redondeada a píxeles enteros: uno a
+        // escala normal y dos al 200 %. Fijarlo en un píxel físico dejaba la pestaña
+        // con el filo a la mitad del grosor de los demás marcos del tema, que salen
+        // de un BorderThickness de una unidad.
+        double grosor = Math.Max(1d, Math.Round(scale)) * pixel;
+        double medio = grosor / 2d;
+
         // Ajuste a la rejilla de píxeles físicos. El trazo se pinta centrado, de ahí
-        // el medio píxel: así el filo cae entero sobre una columna de píxeles y no
+        // el medio grosor: así el filo cae entero sobre una columna de píxeles y no
         // repartido entre dos.
-        double left = 0.5d * pixel;
-        double top = 0.5d * pixel;
-        double right = (Math.Round(ActualWidth * scale) - 0.5d) * pixel;
+        double left = medio;
+        double top = medio;
+        double right = (Math.Round(ActualWidth * scale) * pixel) - medio;
         double bottom = Math.Round(ActualHeight * scale) * pixel;
 
         double slant = Math.Round(Slant * scale) * pixel;
@@ -186,7 +193,7 @@ public class TabShape : FrameworkElement
             slant = Math.Max(0d, room);
         }
 
-        var pen = new Pen(Stroke, pixel);
+        var pen = new Pen(Stroke, grosor);
 
         dc.DrawGeometry(Fill, null, BuildGeometry(left, top, right, bottom, slant, radius, closed: true));
 
@@ -205,17 +212,17 @@ public class TabShape : FrameworkElement
         if (HighlightBrush is not null)
         {
             dc.DrawLine(
-                new Pen(HighlightBrush, pixel),
-                new Point(left + slant + radius, top + pixel),
-                new Point(right - slant - radius, top + pixel));
+                new Pen(HighlightBrush, grosor),
+                new Point(left + slant + radius, top + grosor),
+                new Point(right - slant - radius, top + grosor));
         }
 
         if (ShadowBrush is not null)
         {
             dc.DrawLine(
-                new Pen(ShadowBrush, pixel),
-                new Point(right - slant + pixel, top + radius),
-                new Point(right + pixel, bottom));
+                new Pen(ShadowBrush, grosor),
+                new Point(right - slant + grosor, top + radius),
+                new Point(right + grosor, bottom));
         }
     }
 
