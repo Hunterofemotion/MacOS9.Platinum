@@ -41,12 +41,15 @@
                             BorderBrush="{StaticResource TextBrush}"
                             Background="{StaticResource ContentFaceBrush}">
                         <Grid>
+                            <!-- Las barras salen de las propiedades del control, no
+                                 fijas aquí: un campo de varias líneas necesita la
+                                 suya, y quien la pide es quien lo usa. -->
                             <ScrollViewer x:Name="PART_ContentHost"
                                           Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Focusable="False"
-                                          HorizontalScrollBarVisibility="Hidden"
-                                          VerticalScrollBarVisibility="Hidden" />
+                                          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" />
 
                             <!-- Una sola línea gris por dentro, arriba y a la           -->
                             <!-- izquierda: es la forma en que Platinum insinúa que la   -->

@@ -14,5 +14,10 @@ public partial class App : Application
         AppContext.SetSwitch(
             "Switch.System.Windows.Controls.Text.UseAdornerForTextboxSelectionRendering",
             false);
+
+        // Windows puede estar configurado para alinear los menús a la derecha del
+        // puntero, y WPF lo obedece por dentro: la hoja se abría hacia afuera de la
+        // ventana. En una barra de Mac OS 9 cae bajo su título.
+        PlatinumTheme.UseLeftMenuDrop();
     }
 }

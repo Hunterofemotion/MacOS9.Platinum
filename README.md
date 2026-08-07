@@ -41,6 +41,22 @@ For the window chrome, use the `PlatinumWindow` control instead of `Window`:
     xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum">
 ```
 
+### Menus that drop to the left
+
+Windows has a setting, `MenuDropAlignment`, that aligns menus to the right of the
+pointer. It is commonly on for left-handed setups, and WPF honours it inside
+`MenuItem` itself: no combination of `Placement`, `PlacementTarget` or
+`FlowDirection` changes it, because the flip is applied afterwards. The result is
+a menu sheet that opens away from its title and off the window. Call this once
+before showing the first window:
+
+```csharp
+MacOS9.Platinum.PlatinumTheme.UseLeftMenuDrop();
+```
+
+It is an explicit call and not a side effect of merging the dictionary, because it
+overrides a user preference.
+
 ### One integration requirement
 
 WPF ships two engines for painting text selection. The older one draws it as an

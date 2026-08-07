@@ -12,10 +12,12 @@ namespace MacOS9.Platinum.Controls;
 /// </summary>
 public class SliderThumbShape : FrameworkElement
 {
-    // Diseño en unidades lógicas; se redondea a físico al dibujar.
-    private const double BodyLogical = 11d;
-    private const double LengthLogical = 14d;
-    private const double RectLogical = 8d;
+    // Diseño en unidades lógicas; se redondea a físico al dibujar. Las tres crecen
+    // juntas: el cono se deriva del cuerpo, así que cambiar una sola deformaría la
+    // punta.
+    private const double BodyLogical = 15d;
+    private const double LengthLogical = 19d;
+    private const double RectLogical = 11d;
 
     public SliderThumbShape()
     {

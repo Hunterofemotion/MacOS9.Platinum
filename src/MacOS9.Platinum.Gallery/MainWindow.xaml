@@ -150,6 +150,19 @@
                     </StackPanel>
                 </TabItem>
 
+                <TabItem Header="Notes">
+                    <DockPanel Margin="8">
+                        <TextBlock DockPanel.Dock="Top" Text="Operator notes for this run"
+                                   Margin="0,0,0,6" />
+                        <!-- Área de texto: varias líneas, el texto arranca arriba y la
+                             barra aparece sola cuando el contenido no cabe. -->
+                        <TextBox AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Text="Chamber purged twice before the run. The 403 nm manganese line came in weak again, same as last week; worth checking the lamp alignment before trusting the manganese numbers.&#x0a;&#x0a;Iron saturated at 372 nm, as expected for this alloy." />
+                    </DockPanel>
+                </TabItem>
+
                 <TabItem Header="Log">
                     <TextBox Margin="8" IsReadOnly="True" AcceptsReturn="True"
                              VerticalScrollBarVisibility="Auto"
