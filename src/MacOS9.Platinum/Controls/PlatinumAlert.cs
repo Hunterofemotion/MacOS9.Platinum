@@ -68,15 +68,20 @@ public class PlatinumAlert : PlatinumWindow
     public AlertKind Kind { get; set; } = AlertKind.Note;
 
     /// <summary>
-    /// Icono propio, en lugar del que corresponde al <see cref="Kind"/>.
+    /// Icono propio dentro del aviso, en lugar del que corresponde al
+    /// <see cref="Kind"/>.
     /// </summary>
     /// <remarks>
     /// Un aviso que habla de un objeto concreto —un disco, una impresora, un
     /// archivo— se entiende antes con el icono de ese objeto que con el triángulo
     /// genérico. Dejándolo sin asignar manda el Kind, que es lo correcto para un
     /// aviso de sistema.
+    ///
+    /// Se llama AlertIcon y no Icon porque Window ya tiene Icon y significa otra
+    /// cosa: el de la barra de título. Ocultarlo dejaba dos propiedades con el
+    /// mismo nombre y distinto sentido sobre el mismo objeto.
     /// </remarks>
-    public ImageSource? Icon { get; set; }
+    public ImageSource? AlertIcon { get; set; }
 
     public AlertButtons Buttons { get; set; } = AlertButtons.Ok;
 
@@ -120,7 +125,7 @@ public class PlatinumAlert : PlatinumWindow
             Height = 32,
             VerticalAlignment = VerticalAlignment.Top,
             Margin = new Thickness(0, 0, 14, 0),
-            Source = Icon ?? Recurso(Kind == AlertKind.Note ? "IconInfo" : "IconAlert") as ImageSource
+            Source = AlertIcon ?? Recurso(Kind == AlertKind.Note ? "IconInfo" : "IconAlert") as ImageSource
         };
         Grid.SetRow(icono, 0);
         Grid.SetColumn(icono, 0);
