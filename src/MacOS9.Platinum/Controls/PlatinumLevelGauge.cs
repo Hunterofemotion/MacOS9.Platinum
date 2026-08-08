@@ -210,13 +210,32 @@ public class PlatinumLevelGauge : FrameworkElement
 
     public static readonly DependencyProperty ReadoutFontSizeProperty =
         DependencyProperty.Register(nameof(ReadoutFontSize), typeof(double), typeof(PlatinumLevelGauge),
-            new FrameworkPropertyMetadata(20d,
+            new FrameworkPropertyMetadata(double.NaN,
                 FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
+    /// <summary>
+    /// Tamaño de la cifra. Sin asignar se calcula, y no es el mismo en los dos
+    /// sentidos.
+    /// </summary>
+    /// <remarks>
+    /// Un número fijo no sirve para los dos: de pie el carril mide ciento y pico de
+    /// alto y admite una cifra grande, acostado mide dieciocho y la misma cifra no
+    /// cabe —la caja crecía por encima y por debajo del carril hasta tocar el
+    /// renglón de la escala—. Acostado el tamaño sale del grosor del carril.
+    /// </remarks>
     public double ReadoutFontSize
     {
         get => (double)GetValue(ReadoutFontSizeProperty);
         set => SetValue(ReadoutFontSizeProperty, value);
+    }
+
+    private double TamanoCifra()
+    {
+        if (!double.IsNaN(ReadoutFontSize)) { return ReadoutFontSize; }
+
+        return Orientation == Orientation.Vertical
+            ? FontSize * 1.7
+            : TrackThickness * 0.62;
     }
 
     public static readonly DependencyProperty ForegroundProperty =
@@ -607,17 +626,23 @@ public class PlatinumLevelGauge : FrameworkElement
         // Sin triángulo indicador, al revés que en vertical: allá la caja flota a
         // la altura del valor y hace falta señalar a cuál. Aquí la caja está fija
         // al final del carril y no apunta a nada.
+        //
+        // La caja tiene exactamente el alto del carril. Dejándola crecer con su
+        // texto sobresalía por arriba y por abajo, y por abajo llegaba a tocar el
+        // renglón de la escala: dos rectángulos vecinos de distinto alto y sin
+        // separación entre ellos.
         FormattedText cifra = Cifra(Value);
-        double cajaAlto = Cuadrar(cifra.Height + Aire, pixel);
         var caja = new Rect(
             Cuadrar(carril.Right + Aire, pixel),
-            Cuadrar(carril.Y + ((carril.Height - cajaAlto) / 2), pixel),
+            carril.Y,
             Cuadrar(cifra.Width + (Aire * 2), pixel),
-            cajaAlto);
+            carril.Height);
 
         dc.DrawRectangle(Background, null, caja);
         Marco(dc, caja, grosor);
-        dc.DrawText(cifra, new Point(caja.X + Aire, caja.Y + (Aire / 2)));
+        dc.DrawText(cifra, new Point(
+            caja.X + Aire,
+            Cuadrar(caja.Y + ((caja.Height - cifra.Height) / 2), pixel)));
     }
 
     private void EscalaHorizontal(DrawingContext dc, Rect carril, double grosor)
@@ -680,7 +705,7 @@ public class PlatinumLevelGauge : FrameworkElement
         }
     }
 
-    private FormattedText Cifra(double valor) => Texto(Numero(valor) + Unit, ReadoutFontSize, negrita: true);
+    private FormattedText Cifra(double valor) => Texto(Numero(valor) + Unit, TamanoCifra(), negrita: true);
 
     private FormattedText Texto(string valor, double tamano, bool negrita = false) =>
         new(valor,
