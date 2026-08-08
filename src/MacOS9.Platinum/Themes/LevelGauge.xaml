@@ -1,0 +1,28 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Medidor de nivel. El estilo solo pone tintas y tipografía: el dibujo va en  -->
+    <!-- el control, porque cada filo y cada marca se calculan sobre el píxel físico. -->
+    <!-- El carril usa el mismo pozo rehundido del campo de texto, así que un medidor -->
+    <!-- y un campo puestos uno al lado del otro se leen como piezas de la misma       -->
+    <!-- ventana y no de dos temas distintos.                                          -->
+    <Style TargetType="{x:Type controls:PlatinumLevelGauge}">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="WellShadowBrush" Value="{StaticResource WellShadowBrush}" />
+        <Setter Property="WellShadowDeepBrush" Value="{StaticResource BevelShadowBrush}" />
+        <Setter Property="WellHighlightBrush" Value="{StaticResource BevelHighlightBrush}" />
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+    </Style>
+
+</ResourceDictionary>

@@ -154,6 +154,17 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   the theme, the selected entry does *not* dim when focus leaves: the mark says
   which panel is on show, and that does not change because the cursor went
   elsewhere
+- **PlatinumLevelGauge** — a level meter: a sunken track that fills, with a
+  graduated scale, a caret and a boxed readout. The colour bands are declared by
+  the application as a collection, not baked in as good/warning/bad, because the
+  control cannot know whether more is better — a full buffer is good, a high
+  occupancy is not — and because not every meter has three states. Two readings:
+  `Fill` puts the level in the filled area and colours it by the band it lands in;
+  `Zones` paints the bands as a fixed scale over the whole track and marks the
+  value, so the thresholds are visible without reading a legend. The legend itself
+  is not part of the control: its words belong to the application's domain. The
+  track reuses the text field's sunken well, down to the two shadow tones, so a
+  meter beside a field reads as the same window
 - **PlatinumLed** — the little status light. Colour and on/off are separate
   properties because they say different things: the colour is what the light is
   about, the flag is whether it is lit. Off it goes grey rather than vanishing, so

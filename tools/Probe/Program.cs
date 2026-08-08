@@ -207,6 +207,14 @@ internal static class Program
                 SelectedDate = new DateTime(2024, 5, 15),
             })));
 
+        // Los dos modos y los dos sentidos, con el mismo valor: así se compara qué
+        // dice cada lectura del mismo dato.
+        Render("medidores", dpi, Stack(
+            Row(Medidor(72, LevelBandMode.Fill),
+                Medidor(38, LevelBandMode.Fill),
+                Medidor(62, LevelBandMode.Zones),
+                Medidor(95, LevelBandMode.Zones))));
+
         Render("riel", dpi, Stack(
             Row(Rail())));
 
@@ -410,6 +418,25 @@ internal static class Program
         var b = new ComboBox { Width = 150, Items = { "Apagado" }, SelectedIndex = 0, IsEnabled = false, Margin = new Thickness(10, 0, 0, 0) };
         var c = new ComboBox { Width = 110, Items = { "Un elemento mucho más ancho que la caja" }, SelectedIndex = 0, Margin = new Thickness(10, 0, 0, 0) };
         return new StackPanel { Orientation = Orientation.Horizontal, Children = { a, b, c } };
+    }
+
+    private static FrameworkElement Medidor(double valor, LevelBandMode modo)
+    {
+        var medidor = new PlatinumLevelGauge
+        {
+            Value = valor,
+            BandMode = modo,
+            Height = 190,
+            Margin = new Thickness(0, 0, 18, 0),
+        };
+
+        // Franjas al revés que el ejemplo del búfer: aquí más es peor, que es el
+        // caso de una ocupación. El control no supone ninguno de los dos sentidos.
+        medidor.Bands.Add(new LevelBand { To = 50, Fill = (Brush)Application.Current.Resources["LedGreenBrush"] });
+        medidor.Bands.Add(new LevelBand { To = 80, Fill = (Brush)Application.Current.Resources["LedAmberBrush"] });
+        medidor.Bands.Add(new LevelBand { To = 100, Fill = (Brush)Application.Current.Resources["LedRedBrush"] });
+
+        return medidor;
     }
 
     private static FrameworkElement Rail()
