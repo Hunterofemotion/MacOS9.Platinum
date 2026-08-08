@@ -46,6 +46,11 @@
     <SolidColorBrush x:Key="CalendarCellBrush" Color="{StaticResource Gray1}" />
     <SolidColorBrush x:Key="CalendarRuleBrush" Color="{StaticResource Gray3}" />
 
+    <!-- Renglón alterno de una tabla. Un solo paso de la rampa, no dos: la cebra     -->
+    <!-- tiene que guiar el ojo a lo largo del renglón sin competir con la selección  -->
+    <!-- ni con el texto. Con más contraste la tabla se lee a rayas y no a renglones. -->
+    <SolidColorBrush x:Key="RowStripeBrush" Color="{StaticResource Gray1}" />
+
     <!-- Visor de tablero. El verde no sale de la rampa de grises porque es fósforo:  -->
     <!-- lo que imita es una pantalla que emite luz, no una superficie que la refleja. -->
     <SolidColorBrush x:Key="DisplayFaceBrush" Color="#FF101410" />

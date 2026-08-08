@@ -135,7 +135,11 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 - **TabControl** — trapezoidal tabs, the active one fused with the panel
 - **ListView** — list with columns: embossed headers, row dividers anchored to the
   bottom of each row so the last one is closed too, full-row selection, and a
-  dedicated template for the GridView `ScrollViewer`
+  dedicated template for the GridView `ScrollViewer`. Alternating rows are on:
+  in a wide table the banding is what stops you reading one row's value in
+  another's column. It rides on WPF's own `AlternationCount`, so setting that to
+  `1` turns it off — no invented property. With banding on the rules between rows
+  go away and the tone does the separating; the last row keeps its closing rule
 - **Menu** and **ContextMenu** — menu bar with submenus, checkable items, keyboard
   gestures and separators; inverted blue highlight, the only one in the theme
 - **Slider** — horizontal and vertical, with tick marks; the thumb pentagon is

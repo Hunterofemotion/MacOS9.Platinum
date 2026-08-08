@@ -161,6 +161,28 @@
                             <Setter TargetName="Columns" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="Plain" Property="Visibility" Value="Visible" />
                         </Trigger>
+
+                        <!-- Cebra. El índice lo lleva WPF a partir de AlternationCount,
+                             así que no hace falta contar renglones ni tocar los datos:
+                             basta leer la propiedad que el control ya publica.
+
+                             Va antes que el disparador de selección para que la banda
+                             azul lo pise. Si fuera al revés, un renglón par elegido se
+                             vería gris.
+
+                             Con la cebra encendida la raya entre renglones deja de
+                             verse, y está bien que así sea: cada renglón monta dos
+                             píxeles sobre el anterior para tapar la costura del
+                             redondeo, y con fondo opaco tapa también su divisor. El
+                             tono ya separa los renglones, así que la raya sobraría.
+                             El último sí conserva la suya, porque no hay renglón
+                             siguiente que la cubra y es la que cierra la tabla.
+
+                             Apagando la cebra el fondo vuelve a ser transparente y
+                             las rayas reaparecen solas. -->
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter TargetName="Row" Property="Background" Value="{StaticResource RowStripeBrush}" />
+                        </Trigger>
                         <!-- El divisor también se tiñe: si no, la banda de selección   -->
                         <!-- termina un píxel antes y queda una raya clara pegada al    -->
                         <!-- renglón siguiente.                                         -->
@@ -340,6 +362,15 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="ItemContainerStyle" Value="{StaticResource PlatinumListViewItem}" />
+
+        <!-- Cebra encendida: los renglones alternan tono. En una tabla ancha es lo    -->
+        <!-- que evita leer el dato de un renglón en la columna de otro.               -->
+        <!--                                                                           -->
+        <!-- Se apaga poniendo AlternationCount en 1, que es el mecanismo de WPF y no  -->
+        <!-- una propiedad inventada. Con 1 todos los renglones quedan en índice cero  -->
+        <!-- y ninguno se tiñe.                                                        -->
+        <Setter Property="AlternationCount" Value="2" />
+
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <!-- Con View de GridView: el filo negro exterior, y el pozo hundido más la    -->
