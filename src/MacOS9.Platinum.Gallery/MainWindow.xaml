@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        xmlns:local="clr-namespace:MacOS9.Platinum.Gallery"
         Title="SpectraLab 3.2"
+        Icon="{local:PiezaIcono dato-r2c5}"
         Width="1000" Height="640"
         WindowStartupLocation="CenterScreen">
 
@@ -44,16 +46,16 @@
         <!-- Barra de herramientas: icono grande y rótulo, con separadores entre
              grupos. Los iconos son los del propio tema. -->
         <ToolBar DockPanel.Dock="Top">
-            <platinum:PlatinumToolButton Icon="{StaticResource IconDocument}" Text="New Run"
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono lab-r2c3}" Text="New Run"
                                          ToolTip="Starts a fresh acquisition." />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconFolder}" Text="Open Method" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono base-r1c1}" Text="Open Method" />
             <Separator />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconMagnifier}" Text="Peak Search" />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconFloppy}" Text="Save" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono dato-r5c4}" Text="Peak Search" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono base-r2c1}" Text="Save" />
             <Separator />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconComputer}" Text="Instrument"
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono lab-r4c4}" Text="Instrument"
                                          Click="OnInstrument" />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconAlert}" Text="Alarms"
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono monit-r1c2}" Text="Alarms"
                                          IsEnabled="False" />
         </ToolBar>
 

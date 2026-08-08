@@ -1,8 +1,10 @@
-<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.MathWindow"
+﻿<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.MathWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        xmlns:local="clr-namespace:MacOS9.Platinum.Gallery"
         Title="Numerix 4.0"
+        Icon="{local:PiezaIcono dato-r4c1}"
         Width="880" Height="600"
         WindowStartupLocation="CenterScreen">
 
@@ -34,13 +36,13 @@
         </Menu>
 
         <ToolBar DockPanel.Dock="Top">
-            <platinum:PlatinumToolButton Icon="{StaticResource IconDocument}" Text="New" />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconFolder}" Text="Open" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono base-r1c3}" Text="New" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono base-r1c1}" Text="Open" />
             <Separator />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconMagnifier}" Text="Evaluate" />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconFloppy}" Text="Save" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono dato-r3c4}" Text="Evaluate" />
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono base-r2c1}" Text="Save" />
             <Separator />
-            <platinum:PlatinumToolButton Icon="{StaticResource IconAlert}" Text="Residuals"
+            <platinum:PlatinumToolButton Icon="{local:PiezaIcono dato-r4c2}" Text="Residuals"
                                          IsEnabled="False" />
         </ToolBar>
 

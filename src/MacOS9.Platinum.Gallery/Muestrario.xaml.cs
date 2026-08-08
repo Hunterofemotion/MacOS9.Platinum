@@ -63,7 +63,7 @@ public partial class Muestrario : PlatinumWindow
         //
         // Es la vista de cuadrícula: el muestrario enseña las piezas dispuestas
         // para compararlas, no una pieza puesta a trabajar.
-        Icon = Pieza("arch-r4c3", 32);
+        Icon = Gallery.Pieza.Cargar("arch-r4c3", 32);
 
         Riel.SelectedIndex = 0;
     }
