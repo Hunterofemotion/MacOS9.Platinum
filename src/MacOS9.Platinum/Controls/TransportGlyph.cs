@@ -211,11 +211,27 @@ public class TransportGlyph : FrameworkElement
                 break;
 
             case TransportKind.Eject:
+            {
                 // Triángulo arriba y su base debajo, separados por un renglón: es
                 // como se leía el signo de expulsar en la unidad de disco.
-                TrianguloArriba(dc, pixel, x0, y0, alto - hueco - 1);
-                Caja(dc, pixel, x0, y0 + alto - hueco, alto, hueco);
+                //
+                // La altura sale de la base y no al revés. Un triángulo por
+                // escalones mide 2·altura−1 de ancho, así que fijar la altura desde
+                // el alto del signo le daba una base más ancha que el propio glifo,
+                // y encima arrancaba pegada a la izquierda en vez de centrada.
+                int altoTriangulo = (alto + 1) / 2;
+                int baseTriangulo = (altoTriangulo * 2) - 1;
+                const int separacion = 2;
+
+                int altoTotal = altoTriangulo + separacion + hueco;
+                int arriba = y0 + ((alto - altoTotal) / 2);
+                int izquierda = x0 + ((ancho - baseTriangulo) / 2);
+
+                TrianguloArriba(dc, pixel, izquierda, arriba, altoTriangulo);
+                Caja(dc, pixel, izquierda, arriba + altoTriangulo + separacion,
+                    baseTriangulo, hueco);
                 break;
+            }
         }
     }
 
