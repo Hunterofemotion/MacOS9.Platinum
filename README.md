@@ -23,7 +23,10 @@ parameter sliders paired to fields and a green status light.
 ![Numerix](docs/math.png)
 
 **CineCut** — the video editor. A hand-drawn timeline under the theme's chrome, an
-indeterminate bar for the audio scrub and a red light while it renders.
+indeterminate bar for the audio scrub and a red light while it renders. The two
+deck buffers are live: a timer walks the real values, so the level meters move and
+change colour as they cross a threshold. Nothing animates the control — the value
+changes, as it would in a real application, and the meter redraws.
 
 ![CineCut](docs/video.png)
 

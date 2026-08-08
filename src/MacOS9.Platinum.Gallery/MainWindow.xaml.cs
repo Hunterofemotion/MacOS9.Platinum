@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media;
 using MacOS9.Platinum.Controls;
 
 namespace MacOS9.Platinum.Gallery;
@@ -30,6 +31,13 @@ public partial class MainWindow : PlatinumWindow
     {
         InitializeComponent();
         DataContext = this;
+
+        // En la presión de cámara más es peor, al revés que en el búfer de las
+        // platinas del editor de video. El medidor no supone ninguno de los dos
+        // sentidos: lo dice el orden de las franjas.
+        Presion.Bands.Add(new LevelBand { To = 60, Fill = (Brush)FindResource("LedGreenBrush") });
+        Presion.Bands.Add(new LevelBand { To = 85, Fill = (Brush)FindResource("LedAmberBrush") });
+        Presion.Bands.Add(new LevelBand { To = 100, Fill = (Brush)FindResource("LedRedBrush") });
 
         // Deja el campo con el texto seleccionado para poder revisar el resalte sin
         // reproducirlo a mano en cada arranque.

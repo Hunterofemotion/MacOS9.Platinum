@@ -1,6 +1,8 @@
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using System.Windows.Shapes;
 using MacOS9.Platinum.Controls;
 
@@ -26,7 +28,44 @@ public partial class VideoWindow : PlatinumWindow
             new { Clip = "credits", Length = "00:36:02" },
         };
 
+        // Las franjas se declaran aquí y no en el marcado porque son las mismas dos
+        // veces: el búfer de las dos platinas se juzga con el mismo criterio.
+        foreach (PlatinumLevelGauge medidor in new[] { BuferA, BuferB })
+        {
+            medidor.Bands.Add(new LevelBand { To = 25, Fill = (Brush)FindResource("LedRedBrush") });
+            medidor.Bands.Add(new LevelBand { To = 50, Fill = (Brush)FindResource("LedAmberBrush") });
+            medidor.Bands.Add(new LevelBand { To = 100, Fill = (Brush)FindResource("LedGreenBrush") });
+        }
+
         Pista.SizeChanged += (_, _) => Dibujar();
+
+        // Los búferes se mueven. Un medidor quieto no enseña lo que hace: lo que
+        // hay que ver es el nivel subiendo y bajando, y el relleno cambiando de
+        // color al cruzar un umbral.
+        //
+        // No se anima la propiedad con una animación de WPF: aquí el valor cambia
+        // de verdad, que es como llega en una aplicación real. El control no tiene
+        // que animar nada, solo redibujarse cuando le cambian el valor.
+        var reloj = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(120) };
+        reloj.Tick += (_, _) =>
+        {
+            BuferA.Value = Deriva(BuferA.Value, 74);
+            BuferB.Value = Deriva(BuferB.Value, 34);
+        };
+        reloj.Start();
+    }
+
+    private readonly Random azar = new();
+
+    /// <summary>
+    /// Paseo aleatorio que tiende a volver a su centro. Sin ese regreso el nivel
+    /// se va a un extremo y se queda ahí, que es justo lo que no se quiere ver.
+    /// </summary>
+    private double Deriva(double actual, double centro)
+    {
+        double paso = (azar.NextDouble() - 0.5) * 7;
+        double regreso = (centro - actual) * 0.06;
+        return Math.Clamp(actual + paso + regreso, 4, 99);
     }
 
     private void Dibujar()

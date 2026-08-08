@@ -235,8 +235,16 @@
                         <TextBlock Text="Integration (ms)" Margin="0,0,0,4" />
                         <TextBox Text="250" Margin="0,0,0,10" />
 
+                        <!-- Modo Zones: en una presión de cámara lo que importa es
+                             en qué franja está, y verlas todas evita tener que
+                             recordar dónde queda el límite. -->
                         <TextBlock Text="Chamber pressure" Margin="0,0,0,4" />
-                        <ProgressBar Value="78" Height="16" Margin="0,0,0,10" />
+                        <platinum:PlatinumLevelGauge x:Name="Presion" Value="78"
+                                                     Orientation="Horizontal"
+                                                     BandMode="Zones"
+                                                     TrackThickness="18"
+                                                     ShowScale="False"
+                                                     Margin="0,0,0,10" />
 
                         <TextBlock Text="Lamp hours" Margin="0,0,0,4" />
                         <ProgressBar Value="34" Height="16" IsEnabled="False" Margin="0,0,0,10" />
