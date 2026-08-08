@@ -66,7 +66,13 @@
                                     Background="Transparent"
                                     Padding="2,1"
                                     HorizontalAlignment="Left">
-                                <ContentPresenter ContentSource="Header"
+                                <!-- El nombre importa: TreeViewItem busca esta pieza
+                                     para saber dónde termina su propio rótulo. De ahí
+                                     salen que un clic en el renglón del padre no
+                                     seleccione a un hijo, y la navegación con las
+                                     flechas del teclado. -->
+                                <ContentPresenter x:Name="PART_Header"
+                                                  ContentSource="Header"
                                                   VerticalAlignment="Center" />
                             </Border>
                         </Grid>

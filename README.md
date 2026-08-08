@@ -139,7 +139,17 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
 - **Menu** and **ContextMenu** — menu bar with submenus, checkable items, keyboard
   gestures and separators; inverted blue highlight, the only one in the theme
 - **Slider** — horizontal and vertical, with tick marks; the thumb pentagon is
-  rasterised to physical pixels
+  rasterised to physical pixels. `IsSelectionRangeEnabled` paints the marked
+  portion of the track, which is what turns a slider into a scrub bar with the
+  played part in another colour
+- **PlatinumDisplay** — the instrument readout: a dark well with phosphor digits,
+  for a value you watch while it changes. A different family from the level
+  meter's readout box, which is a light field for a number that accompanies
+  something else. Fixed-width type, because the content changes constantly and
+  variable widths make the digits shuffle on every update
+- **TransportGlyph** — play, pause, stop, record, rewind, fast forward, skip and
+  eject, drawn to whole pixels. Flat and frameless: they are signs, not objects,
+  and the frame belongs to the button that holds them
 - **GroupBox** and **Separator** — engraved two-tone line with the title breaking
   it; separator aliases for `ToolBar` and `StatusBar`
 - **ToolBar** and **PlatinumToolButton** — the icon strip under the menu bar: a
@@ -276,7 +286,12 @@ misspelled key in the submenu branch brings the application down the first time
 somebody opens that submenu, not at start-up.
 
 `check-parts.ps1` checks that every `PART_` the stock WPF templates declare also
-exists in ours. A custom template replaces the stock one wholesale, and the control
+exists in ours. It covers 23 parts across every control the theme replaces. It
+used to cover 7, from six controls, and said so as if that were all of them —
+which is how `Slider`'s `PART_SelectionRange` went missing for as long as it did.
+Parts left out on purpose are listed in the script with the reason and printed on
+every run, so the omission stays visible instead of being silenced by an empty
+placeholder. A custom template replaces the stock one wholesale, and the control
 looks its pieces up by name: a missing `PART_` silently takes with it whatever
 behaviour hung off that piece. Nothing fails to compile and nothing throws. It
 happened here — without `PART_HeaderGripper` the library lost both column resizing

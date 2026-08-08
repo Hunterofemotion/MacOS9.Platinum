@@ -70,8 +70,77 @@ namespace Volcador
             ventana.UpdateLayout();
             Guardar("ListViewItem.plantilla.xaml", renglon.Template);
 
+            // El resto de los controles que el tema reemplaza. Antes solo se
+            // volcaban los de lista y desplazamiento, así que las piezas de fábrica
+            // de todos los demás nunca se compararon: el comprobador decía que
+            // estaban las siete y eran siete de seis controles, no de todos.
+            VolcarResto(caja, ventana);
+
             ventana.Close();
             Application.Current.Shutdown();
+        }
+
+        // Cada control se mete en la ventana antes de pedirle su plantilla: sin
+        // estar en un árbol vivo, Template viene en nulo.
+        private static void VolcarResto(Panel caja, Window ventana)
+        {
+            Control[] controles =
+            {
+                new Button(),
+                new CheckBox(),
+                new RadioButton(),
+                new TextBox(),
+                new PasswordBox(),
+                new ComboBox(),
+                new Slider { Orientation = Orientation.Horizontal, Width = 120 },
+                new Slider { Orientation = Orientation.Vertical, Height = 120 },
+                new ProgressBar { Width = 120 },
+                new TabControl(),
+                new TabItem(),
+                new TreeView(),
+                new TreeViewItem(),
+                new GroupBox(),
+                new Expander(),
+                new Menu(),
+                new MenuItem(),
+                new ContextMenu(),
+                new ToolBar(),
+                new StatusBar(),
+                new ListBox(),
+                new ListBoxItem(),
+                new RepeatButton(),
+                new ToggleButton(),
+                new Thumb(),
+                new ScrollBar { Orientation = Orientation.Horizontal, Width = 120 },
+            };
+
+            foreach (Control control in controles)
+            {
+                // El menú contextual y el de la barra no van dentro del panel:
+                // viven en su propia ventana emergente.
+                if (control is ContextMenu) { continue; }
+                caja.Children.Add(control);
+            }
+
+            ventana.UpdateLayout();
+
+            int i = 0;
+            foreach (Control control in controles)
+            {
+                string nombre = control.GetType().Name;
+
+                // Los dos deslizadores y las dos barras se distinguen por sentido.
+                if (control is Slider desliza) { nombre += "." + desliza.Orientation; }
+                if (control is ScrollBar barra2 && barra2.Orientation == Orientation.Horizontal)
+                {
+                    nombre += ".Horizontal";
+                }
+
+                Guardar(nombre + ".plantilla.xaml", control.Template);
+                i++;
+            }
+
+            Console.WriteLine(i + " plantillas más volcadas.");
         }
 
         private static void Guardar(string nombre, object valor)

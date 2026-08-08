@@ -46,6 +46,16 @@
     <SolidColorBrush x:Key="CalendarCellBrush" Color="{StaticResource Gray1}" />
     <SolidColorBrush x:Key="CalendarRuleBrush" Color="{StaticResource Gray3}" />
 
+    <!-- Visor de tablero. El verde no sale de la rampa de grises porque es fósforo:  -->
+    <!-- lo que imita es una pantalla que emite luz, no una superficie que la refleja. -->
+    <SolidColorBrush x:Key="DisplayFaceBrush" Color="#FF101410" />
+    <SolidColorBrush x:Key="DisplayInkBrush" Color="#FF3CE04B" />
+    <SolidColorBrush x:Key="DisplayInkDimBrush" Color="#FF1E6E27" />
+    <!-- Sobre negro el rehundido se invierte: la sombra aclara y el realce oscurece, -->
+    <!-- porque la luz sigue entrando de arriba pero la superficie ya no es gris.     -->
+    <SolidColorBrush x:Key="DisplayShadowBrush" Color="#FF000000" />
+    <SolidColorBrush x:Key="DisplayHighlightBrush" Color="#FF2E362E" />
+
     <!-- Testigos luminosos. Son los únicos colores saturados del tema: un aviso de    -->
     <!-- estado tiene que leerse de lejos y no puede salir de la rampa de grises.      -->
     <SolidColorBrush x:Key="LedGreenBrush" Color="#FF2FA83A" />

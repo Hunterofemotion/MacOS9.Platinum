@@ -28,11 +28,46 @@ if (-not (Test-Path $temas)) { throw "No está la carpeta de temas en $temas." }
 # cualquiera de los archivos listados.
 $mapa = @{
     "ScrollBar.vertical.plantilla.xaml"    = @("ScrollBar.xaml")
-    "ScrollViewer.plantilla.xaml"          = @("ListView.xaml", "TextBox.xaml", "TreeView.xaml")
+    "ScrollBar.Horizontal.plantilla.xaml"  = @("ScrollBar.xaml")
+    "ScrollViewer.plantilla.xaml"          = @("ListView.xaml", "TextBox.xaml", "TreeView.xaml", "NavRail.xaml")
     "GridViewScrollViewer.estilo.xaml"     = @("ListView.xaml")
     "GridViewColumnHeader.plantilla.xaml"  = @("ListView.xaml")
     "ListView.plantilla.xaml"              = @("ListView.xaml")
     "ListViewItem.plantilla.xaml"          = @("ListView.xaml")
+
+    "Button.plantilla.xaml"                = @("Button.xaml")
+    "RepeatButton.plantilla.xaml"          = @("Button.xaml", "ScrollBar.xaml", "DateTimeField.xaml")
+    "ToggleButton.plantilla.xaml"          = @("Button.xaml", "ComboBox.xaml", "TreeView.xaml", "Expander.xaml")
+    "CheckBox.plantilla.xaml"              = @("Selection.xaml")
+    "RadioButton.plantilla.xaml"           = @("Selection.xaml")
+    "TextBox.plantilla.xaml"               = @("TextBox.xaml")
+    "PasswordBox.plantilla.xaml"           = @("PasswordBox.xaml")
+    "ComboBox.plantilla.xaml"              = @("ComboBox.xaml")
+    "Slider.Horizontal.plantilla.xaml"     = @("Slider.xaml")
+    "Slider.Vertical.plantilla.xaml"       = @("Slider.xaml")
+    "Thumb.plantilla.xaml"                 = @("Slider.xaml", "ScrollBar.xaml", "ListView.xaml")
+    "ProgressBar.plantilla.xaml"           = @("ProgressBar.xaml")
+    "TabControl.plantilla.xaml"            = @("TabControl.xaml")
+    "TabItem.plantilla.xaml"               = @("TabControl.xaml")
+    "TreeView.plantilla.xaml"              = @("TreeView.xaml")
+    "TreeViewItem.plantilla.xaml"          = @("TreeView.xaml")
+    "ListBox.plantilla.xaml"               = @("ListView.xaml", "NavRail.xaml")
+    "ListBoxItem.plantilla.xaml"           = @("ListView.xaml", "NavRail.xaml")
+    "GroupBox.plantilla.xaml"              = @("GroupBox.xaml")
+    "Expander.plantilla.xaml"              = @("Expander.xaml")
+    "Menu.plantilla.xaml"                  = @("Menu.xaml")
+    "MenuItem.plantilla.xaml"              = @("Menu.xaml")
+    "ToolBar.plantilla.xaml"               = @("ToolBar.xaml")
+    "StatusBar.plantilla.xaml"             = @("StatusBar.xaml")
+}
+
+# Piezas que se dejan fuera a propósito, con el motivo. Van aquí y no se resuelven
+# poniendo una pieza vacía en la plantilla: una pieza falsa callaría al comprobador
+# y escondería la decisión. Se imprimen en cada corrida para que la omisión siga a
+# la vista de quien lea la salida.
+$excepciones = @{
+    "PART_ToolBarPanel"         = "La barra de Mac OS 9 no se reacomoda: lo que no cabe se recorta, como en la barra de menús. El panel de fábrica existe para repartir entre banda y desbordamiento."
+    "PART_ToolBarOverflowPanel" = "Sin tecla de desbordamiento por diseño. Una barra que esconde teclas detrás de una flecha no es de este tema."
 }
 
 function PartesDe($ruta) {
@@ -43,6 +78,7 @@ function PartesDe($ruta) {
 
 $faltantes = 0
 $revisadas = 0
+$omitidas = @()
 
 foreach ($archivo in (Get-ChildItem $stock -Filter "*.xaml")) {
     if (-not $mapa.ContainsKey($archivo.Name)) {
@@ -61,17 +97,31 @@ foreach ($archivo in (Get-ChildItem $stock -Filter "*.xaml")) {
 
     foreach ($parte in $esperadas) {
         $revisadas++
-        if ($nuestras -notcontains $parte) {
-            $donde = $mapa[$archivo.Name] -join ", "
-            Write-Output "FALTA  $parte  (la declara $($archivo.Name); debería estar en $donde)"
-            $faltantes++
+        if ($nuestras -contains $parte) { continue }
+
+        if ($excepciones.ContainsKey($parte)) {
+            $omitidas += $parte
+            continue
         }
+
+        $donde = $mapa[$archivo.Name] -join ", "
+        Write-Output "FALTA  $parte  (la declara $($archivo.Name); debería estar en $donde)"
+        $faltantes++
+    }
+}
+
+if ($omitidas.Count -gt 0) {
+    Write-Output ""
+    Write-Output "Omitidas a propósito:"
+    foreach ($parte in ($omitidas | Sort-Object -Unique)) {
+        Write-Output "  $parte"
+        Write-Output "    $($excepciones[$parte])"
     }
 }
 
 Write-Output ""
 if ($faltantes -eq 0) {
-    Write-Output "Conformidad correcta: las $revisadas piezas de fábrica están presentes."
+    Write-Output "Conformidad correcta: las $revisadas piezas de fábrica están presentes o justificadas."
     exit 0
 }
 

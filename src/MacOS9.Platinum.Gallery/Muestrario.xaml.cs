@@ -44,6 +44,7 @@ public partial class Muestrario : PlatinumWindow
             ("Estado", "estado-r2c3", "Avance, testigos y avisos.", PanelEstado),
             ("Tiempo", "ofi-r1c2", "Flechitas, campo de fecha y hora, calendario.", PanelTiempo),
             ("Cajas", "base-r1c1", "Recuadros, plegables, pestañas y separadores.", PanelCajas),
+            ("Transporte", "repro-r2c4", "Visor de tablero, signos de reproducción y barra de posición.", PanelTransporte),
         ];
 
         foreach (var (nombre, icono, _, _) in familias)

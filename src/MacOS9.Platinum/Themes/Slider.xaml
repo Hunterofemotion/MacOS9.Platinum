@@ -125,6 +125,26 @@
                                         Margin="1,1,0,0"
                                         BorderThickness="1,1,0,0"
                                         BorderBrush="{StaticResource BevelShadowBrush}" />
+
+                                <!-- Tramo marcado del carril: lo ya reproducido, de
+                                     otro color. Es lo que hace de un deslizador una
+                                     barra de posición, y WPF lo dibuja solo a partir
+                                     de IsSelectionRangeEnabled, SelectionStart y
+                                     SelectionEnd.
+
+                                     Va dentro de un Canvas y como Rectangle, igual
+                                     que en la plantilla de fábrica: el control lo
+                                     coloca con Canvas.Left, que dentro de un Grid no
+                                     hace nada. Con un Border en el Grid la pieza
+                                     existía, el comprobador quedaba conforme y aun
+                                     así no se pintaba. -->
+                                <Canvas ClipToBounds="True" Margin="1">
+                                    <Rectangle x:Name="PART_SelectionRange"
+                                               Height="{Binding ActualHeight,
+                                                        RelativeSource={RelativeSource AncestorType=Canvas}}"
+                                               Fill="{StaticResource ScrollThumbBrush}"
+                                               Visibility="Hidden" />
+                                </Canvas>
                             </Grid>
                         </Border>
 
@@ -153,6 +173,13 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
+                        <!-- La visibilidad del tramo marcado la enciende un
+                             disparador y no el código del control, igual que en la
+                             plantilla de fábrica. -->
+                        <Trigger Property="IsSelectionRangeEnabled" Value="True">
+                            <Setter TargetName="PART_SelectionRange" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
                         <Trigger Property="TickPlacement" Value="TopLeft">
                             <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
                         </Trigger>
@@ -215,6 +242,16 @@
                                                 Margin="1,1,0,0"
                                                 BorderThickness="1,1,0,0"
                                                 BorderBrush="{StaticResource BevelShadowBrush}" />
+
+                                        <!-- El tramo marcado, en su Canvas: el
+                                             control lo coloca por coordenadas. -->
+                                        <Canvas ClipToBounds="True" Margin="1">
+                                            <Rectangle x:Name="PART_SelectionRange"
+                                                       Width="{Binding ActualWidth,
+                                                               RelativeSource={RelativeSource AncestorType=Canvas}}"
+                                                       Fill="{StaticResource ScrollThumbBrush}"
+                                                       Visibility="Hidden" />
+                                        </Canvas>
                                     </Grid>
                                 </Border>
 

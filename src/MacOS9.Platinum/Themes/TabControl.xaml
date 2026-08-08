@@ -104,7 +104,13 @@
                                 BorderBrush="{StaticResource TextBrush}"
                                 Background="{StaticResource PanelFaceBrush}">
                             <Grid>
-                                <ContentPresenter ContentSource="SelectedContent"
+                                <!-- El nombre importa: TabControl busca esta pieza
+                                     para saber dónde vive el contenido de la pestaña
+                                     elegida, y de ahí salen el recorrido con el
+                                     teclado hacia adentro del panel y el enfoque al
+                                     cambiar de pestaña. -->
+                                <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                  ContentSource="SelectedContent"
                                                   Margin="{TemplateBinding Padding}" />
 
                                 <!-- Bisel levantado: luz arriba-izquierda y sombra     -->

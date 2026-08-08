@@ -420,6 +420,111 @@ public partial class Muestrario
         return todo;
     }
 
+    // ---- Transporte --------------------------------------------------------
+
+    private static Button Tecla(TransportKind clase, double lado = 34)
+    {
+        return new Button
+        {
+            Width = lado,
+            Height = 28,
+            Padding = new Thickness(0),
+            Margin = new Thickness(0, 0, 4, 0),
+            Content = new TransportGlyph { Kind = clase },
+        };
+    }
+
+    private static UIElement PanelTransporte()
+    {
+        var todo = Columna();
+
+        todo.Children.Add(Nota(
+            "Los signos van sueltos y planos: el marco lo pone la tecla que los aloja. "
+            + "Con relieve propio quedaría tecla dentro de tecla, que es lo que pasaba "
+            + "con los que salieron del generador de imágenes."));
+
+        var botonera = new StackPanel { Orientation = Orientation.Horizontal };
+        foreach (TransportKind clase in new[]
+        {
+            TransportKind.SkipBack, TransportKind.Rewind, TransportKind.Play,
+            TransportKind.Pause, TransportKind.Stop, TransportKind.FastForward,
+            TransportKind.SkipForward, TransportKind.Record, TransportKind.Eject,
+        })
+        {
+            botonera.Children.Add(Tecla(clase));
+        }
+
+        todo.Children.Add(Bloque("Botonera", botonera));
+
+        var sueltos = new StackPanel { Orientation = Orientation.Horizontal };
+        foreach (int lado in new[] { 9, 11, 15, 21, 31 })
+        {
+            sueltos.Children.Add(Rotulo($"{lado} px",
+                new TransportGlyph { Kind = TransportKind.Play, Steps = lado }));
+        }
+
+        todo.Children.Add(Bloque("El mismo signo a varios tamaños", sueltos));
+
+        todo.Children.Add(Bloque("Visor de tablero", Fila(
+            Rotulo("Transcurrido", new PlatinumDisplay { Text = "00:01:24", Width = 120 }),
+            Rotulo("Restante", new PlatinumDisplay { Text = "-00:03:36", Width = 120 }),
+            Rotulo("Apagado", new PlatinumDisplay { Text = "--:--:--", Width = 120, IsEnabled = false }),
+            Rotulo("Con unidad", new PlatinumDisplay { Text = "18.4 mA", Width = 120 }))));
+
+        // Barra de posición: es el Slider del tema con el tramo marcado que WPF ya
+        // sabe pintar. Le faltaba la pieza PART_SelectionRange en la plantilla, así
+        // que aceptaba las tres propiedades y no dibujaba nada.
+        var posicion = new Slider
+        {
+            Width = 380,
+            Minimum = 0,
+            Maximum = 300,
+            Value = 84,
+            IsSelectionRangeEnabled = true,
+            SelectionStart = 0,
+            SelectionEnd = 84,
+            TickPlacement = TickPlacement.BottomRight,
+            TickFrequency = 30,
+        };
+        posicion.ValueChanged += (_, e) => posicion.SelectionEnd = e.NewValue;
+
+        // El tramo se vuelve a fijar al cargar. WPF coloca esa pieza midiendo el
+        // carril, y al construir el deslizador el carril todavía mide cero: si no se
+        // le vuelve a asignar el valor, el tramo no aparece hasta que alguien lo
+        // arrastra.
+        posicion.Loaded += (_, _) =>
+        {
+            posicion.SelectionStart = 0;
+            posicion.SelectionEnd = posicion.Value;
+        };
+
+        todo.Children.Add(Bloque("Barra de posición", Columna(
+            Nota("Arrástrala: el tramo ya reproducido se pinta solo."),
+            posicion)));
+
+        var volumen = new StackPanel { Orientation = Orientation.Horizontal };
+        volumen.Children.Add(new Image
+        {
+            Source = Pieza("base-r4c4", 16),
+            Width = 16,
+            Height = 16,
+            Margin = new Thickness(0, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+        volumen.Children.Add(new Slider
+        {
+            Width = 140,
+            Value = 62,
+            TickPlacement = TickPlacement.BottomRight,
+            TickFrequency = 10,
+            VerticalAlignment = VerticalAlignment.Center,
+        });
+
+        todo.Children.Add(Bloque("Volumen", volumen));
+
+        return todo;
+    }
+
     // ---- Cajas -------------------------------------------------------------
 
     private static UIElement PanelCajas()
