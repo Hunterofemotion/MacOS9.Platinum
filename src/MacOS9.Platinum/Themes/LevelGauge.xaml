@@ -19,6 +19,11 @@
         <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
 
+        <!-- La barra de medida de la gráfica de bala va en el gris más oscuro y no  -->
+        <!-- en un color: tiene que despegarse de las franjas atenuadas del fondo, y  -->
+        <!-- un color propio competiría con ellas en vez de recargarse encima.        -->
+        <Setter Property="MeasureBrush" Value="{StaticResource TextBrush}" />
+
         <!-- La caja de la cifra sí va rehundida: es un registro y se lee mejor    -->
         <!-- como campo. De un tono, no de dos: mide lo que el carril de alto y    -->
         <!-- dos se comerían la mitad.                                             -->

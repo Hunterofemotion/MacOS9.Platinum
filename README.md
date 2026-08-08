@@ -161,10 +161,13 @@ This cannot be handled from a `ResourceDictionary`: it is a process-wide switch.
   graduated scale, a caret and a boxed readout. The colour bands are declared by
   the application as a collection, not baked in as good/warning/bad, because the
   control cannot know whether more is better — a full buffer is good, a high
-  occupancy is not — and because not every meter has three states. Two readings:
+  occupancy is not — and because not every meter has three states. Three readings:
   `Fill` puts the level in the filled area and colours it by the band it lands in;
   `Zones` paints the bands as a fixed scale over the whole track and marks the
-  value, so the thresholds are visible without reading a legend. The legend itself
+  value, so the thresholds are visible without reading a legend; `Bullet` is
+  Stephen Few's bullet graph — the bands dimmed into the background with a narrower
+  measure bar over them, which gives both at once, plus an optional `Target` mark
+  for a goal as opposed to a threshold. The legend itself
   is not part of the control: its words belong to the application's domain. The
   track reuses the text field's sunken well, down to the two shadow tones, so a
   meter beside a field reads as the same window

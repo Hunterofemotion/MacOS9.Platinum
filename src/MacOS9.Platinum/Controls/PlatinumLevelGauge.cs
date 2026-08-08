@@ -23,7 +23,19 @@ public enum LevelBandMode
     /// dónde está el valor. Se ve dónde están los umbrales sin leer la leyenda, a
     /// costa de que el nivel se lea del indicador y no del área llena.
     /// </summary>
-    Zones
+    Zones,
+
+    /// <summary>
+    /// Gráfica de bala: las franjas al fondo, atenuadas, y encima una barra de
+    /// medida más angosta que llega hasta el valor. Da las dos cosas a la vez —el
+    /// nivel y los umbrales— que es lo que <see cref="Fill"/> y <see cref="Zones"/>
+    /// dan por separado.
+    /// </summary>
+    /// <remarks>
+    /// El diseño es de Stephen Few. Admite además una marca de objetivo, que es lo
+    /// que lo vuelve útil para comparar contra una meta y no solo contra umbrales.
+    /// </remarks>
+    Bullet
 }
 
 /// <summary>
@@ -105,6 +117,35 @@ public class PlatinumLevelGauge : FrameworkElement
     {
         get => (LevelBandMode)GetValue(BandModeProperty);
         set => SetValue(BandModeProperty, value);
+    }
+
+    public static readonly DependencyProperty TargetProperty =
+        DependencyProperty.Register(nameof(Target), typeof(double), typeof(PlatinumLevelGauge),
+            new FrameworkPropertyMetadata(double.NaN, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    /// <summary>
+    /// Meta contra la que se compara, dibujada como una marca cruzada en el modo
+    /// <see cref="LevelBandMode.Bullet"/>. Sin asignar no se dibuja.
+    /// </summary>
+    /// <remarks>
+    /// Es distinto de un umbral: el umbral parte el rango en franjas y la meta es
+    /// un punto al que se quiere llegar. Un mismo medidor puede tener los dos.
+    /// </remarks>
+    public double Target
+    {
+        get => (double)GetValue(TargetProperty);
+        set => SetValue(TargetProperty, value);
+    }
+
+    public static readonly DependencyProperty MeasureBrushProperty =
+        DependencyProperty.Register(nameof(MeasureBrush), typeof(Brush), typeof(PlatinumLevelGauge),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    /// <summary>Color de la barra de medida de la gráfica de bala.</summary>
+    public Brush? MeasureBrush
+    {
+        get => (Brush?)GetValue(MeasureBrushProperty);
+        set => SetValue(MeasureBrushProperty, value);
     }
 
     // ---- Escala e indicador ------------------------------------------------
@@ -429,7 +470,11 @@ public class PlatinumLevelGauge : FrameworkElement
 
         double fraccion = Fraccion(Value);
 
-        if (BandMode == LevelBandMode.Zones)
+        if (BandMode == LevelBandMode.Bullet)
+        {
+            BalaVertical(dc, dentro, fraccion, grosor, pixel);
+        }
+        else if (BandMode == LevelBandMode.Zones)
         {
             ZonasVertical(dc, dentro, pixel);
             MarcaVertical(dc, dentro, fraccion, grosor, pixel);
@@ -495,6 +540,62 @@ public class PlatinumLevelGauge : FrameworkElement
                 new Rect(dentro.X, y1, dentro.Width, y2 - y1));
 
             desde = hasta;
+        }
+    }
+
+    /// <summary>
+    /// Cuánto del grosor del carril ocupa la barra de medida. Angosta a propósito:
+    /// si midiera lo mismo que el carril taparía las franjas y la gráfica volvería
+    /// a ser un relleno normal.
+    /// </summary>
+    private const double RazonMedida = 0.42;
+
+    /// <summary>Qué tanto se apagan las franjas para que la medida se despegue.</summary>
+    private const double AtenuacionFranjas = 0.42;
+
+    private void BalaVertical(DrawingContext dc, Rect dentro, double fraccion, double grosor, double pixel)
+    {
+        // Las franjas se atenúan aquí y no en la paleta que declara la aplicación:
+        // son las mismas de los otros modos, y pedirle un segundo juego de colores
+        // solo para este sería trabajo suyo por una decisión del control.
+        dc.PushOpacity(AtenuacionFranjas);
+        ZonasVertical(dc, dentro, pixel);
+        dc.Pop();
+
+        double ancho = Cuadrar(dentro.Width * RazonMedida, pixel);
+        double x = Cuadrar(dentro.X + ((dentro.Width - ancho) / 2), pixel);
+        double alto = Cuadrar(dentro.Height * fraccion, pixel);
+
+        if (alto > 0)
+        {
+            dc.DrawRectangle(MeasureBrush ?? Foreground, null,
+                new Rect(x, dentro.Bottom - alto, ancho, alto));
+        }
+
+        Objetivo(dc, dentro, grosor, pixel, vertical: true);
+    }
+
+    /// <summary>
+    /// La marca de la meta: cruza el carril entero para que se lea por encima de la
+    /// barra de medida, la alcance o no.
+    /// </summary>
+    private void Objetivo(DrawingContext dc, Rect dentro, double grosor, double pixel, bool vertical)
+    {
+        if (double.IsNaN(Target)) { return; }
+
+        double f = Fraccion(Target);
+
+        if (vertical)
+        {
+            double y = Cuadrar(dentro.Bottom - (dentro.Height * f), pixel);
+            dc.DrawRectangle(BorderBrush, null,
+                new Rect(dentro.X, y - grosor, dentro.Width, grosor * 2));
+        }
+        else
+        {
+            double x = Cuadrar(dentro.X + (dentro.Width * f), pixel);
+            dc.DrawRectangle(BorderBrush, null,
+                new Rect(x - grosor, dentro.Y, grosor * 2, dentro.Height));
         }
     }
 
@@ -656,8 +757,11 @@ public class PlatinumLevelGauge : FrameworkElement
 
         double fraccion = Fraccion(Value);
 
-        if (BandMode == LevelBandMode.Zones)
+        if (BandMode is LevelBandMode.Zones or LevelBandMode.Bullet)
         {
+            bool bala = BandMode == LevelBandMode.Bullet;
+            if (bala) { dc.PushOpacity(AtenuacionFranjas); }
+
             double desde = Minimum;
             foreach (LevelBand franja in franjas)
             {
@@ -670,9 +774,28 @@ public class PlatinumLevelGauge : FrameworkElement
                 desde = hasta;
             }
 
-            double marca = dentro.X + Cuadrar(dentro.Width * fraccion, pixel);
-            dc.DrawRectangle(BorderBrush, null,
-                new Rect(marca - grosor, dentro.Y, grosor * 2, dentro.Height));
+            if (bala)
+            {
+                dc.Pop();
+
+                double alto = Cuadrar(dentro.Height * RazonMedida, pixel);
+                double y = Cuadrar(dentro.Y + ((dentro.Height - alto) / 2), pixel);
+                double largo = Cuadrar(dentro.Width * fraccion, pixel);
+
+                if (largo > 0)
+                {
+                    dc.DrawRectangle(MeasureBrush ?? Foreground, null,
+                        new Rect(dentro.X, y, largo, alto));
+                }
+
+                Objetivo(dc, dentro, grosor, pixel, vertical: false);
+            }
+            else
+            {
+                double marca = dentro.X + Cuadrar(dentro.Width * fraccion, pixel);
+                dc.DrawRectangle(BorderBrush, null,
+                    new Rect(marca - grosor, dentro.Y, grosor * 2, dentro.Height));
+            }
         }
         else
         {

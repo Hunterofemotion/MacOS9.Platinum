@@ -218,7 +218,13 @@ internal static class Program
             // gasta alto y la cifra ancho. Sin este escenario, que la cifra se
             // dibujara fuera del control no lo detectaba nadie.
             Row(Medidor(78, LevelBandMode.Zones, Orientation.Horizontal),
-                Medidor(45, LevelBandMode.Fill, Orientation.Horizontal))));
+                Medidor(45, LevelBandMode.Fill, Orientation.Horizontal)),
+            // La gráfica de bala, con y sin meta: las franjas atenuadas al fondo y
+            // la barra de medida encima.
+            Row(Medidor(68, LevelBandMode.Bullet, Orientation.Horizontal, meta: 85),
+                Medidor(92, LevelBandMode.Bullet, Orientation.Horizontal)),
+            Row(Medidor(68, LevelBandMode.Bullet, meta: 85),
+                Medidor(30, LevelBandMode.Bullet))));
 
         Render("riel", dpi, Stack(
             Row(Rail())));
@@ -426,13 +432,14 @@ internal static class Program
     }
 
     private static FrameworkElement Medidor(double valor, LevelBandMode modo,
-        Orientation sentido = Orientation.Vertical)
+        Orientation sentido = Orientation.Vertical, double meta = double.NaN)
     {
         var medidor = new PlatinumLevelGauge
         {
             Value = valor,
             BandMode = modo,
             Orientation = sentido,
+            Target = meta,
             Margin = new Thickness(0, 0, 18, 0),
         };
 
