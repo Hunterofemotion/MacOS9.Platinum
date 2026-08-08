@@ -1,5 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
@@ -7,6 +9,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <BorderGapMaskConverter x:Key="BorderGapMask" />
+    <controls:SubtractConverter x:Key="RestarAncho" />
 
     <!-- Recuadro de agrupación: línea grabada —gris con su realce blanco al interior,-->
     <!-- el surco de dos tonos del Platinum original— con el título interrumpiéndola. -->
@@ -27,7 +30,13 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="8" />
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
+                            <!-- El mínimo de la columna elástica es lo que le deja
+                                 sitio al marco a la derecha del título. Sin él, un
+                                 título más ancho que su caja abre un hueco tan largo
+                                 como el marco entero, el tramo derecho de la máscara
+                                 queda con ancho negativo y desaparecen dos lados: el
+                                 superior y el derecho. -->
+                            <ColumnDefinition Width="*" MinWidth="28" />
                             <ColumnDefinition Width="8" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -59,12 +68,37 @@
 
                         <!-- El título va en negritas y el peso se fija en este
                              borde, no en el estilo: puesto arriba lo heredaría
-                             también el contenido del grupo. -->
+                             también el contenido del grupo.
+
+                             El ancho se limita al del recuadro y el texto se corta
+                             con puntos suspensivos. Sin el tope, un título más
+                             ancho que su caja deja el hueco de la máscara más largo
+                             que el marco, el tramo derecho queda con ancho negativo
+                             y desaparecen dos lados: el superior y el derecho. Un
+                             título recortado dice que la caja se quedó corta; un
+                             recuadro sin dos filos no dice nada. -->
                         <Border x:Name="Header"
                                 Grid.Row="0" Grid.RowSpan="2"
                                 Grid.Column="1"
                                 Padding="4,0"
-                                TextElement.FontWeight="Bold">
+                                TextElement.FontWeight="Bold"
+                                MaxWidth="{Binding ActualWidth,
+                                           RelativeSource={RelativeSource TemplatedParent},
+                                           Converter={StaticResource RestarAncho},
+                                           ConverterParameter=44}">
+                            <!-- El recorte va como plantilla de datos para cadenas y
+                                 no como estilo implícito: un estilo declarado aquí
+                                 no alcanza al TextBlock que arma el presentador, y
+                                 el título terminaba cortado a media letra. La
+                                 plantilla sí, que es el mecanismo que el presentador
+                                 consulta. Con un título que no sea texto no aplica y
+                                 se dibuja como antes. -->
+                            <Border.Resources>
+                                <DataTemplate DataType="{x:Type sys:String}">
+                                    <TextBlock Text="{Binding}"
+                                               TextTrimming="CharacterEllipsis" />
+                                </DataTemplate>
+                            </Border.Resources>
                             <ContentPresenter ContentSource="Header"
                                               RecognizesAccessKey="True" />
                         </Border>

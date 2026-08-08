@@ -39,7 +39,16 @@ public class PlatinumNavItem : ListBoxItem
             nameof(Text),
             typeof(string),
             typeof(PlatinumNavItem),
-            new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure));
+            new FrameworkPropertyMetadata(string.Empty,
+                FrameworkPropertyMetadataOptions.AffectsMeasure, AlCambiarTexto));
+
+    // El rótulo vive en Text y no en Content, así que la automatización veía la
+    // entrada sin nombre: ni un lector de pantalla ni una prueba automática podían
+    // referirse a ella. El nombre se copia aquí para que las dos cosas coincidan.
+    private static void AlCambiarTexto(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        System.Windows.Automation.AutomationProperties.SetName(d, (string)e.NewValue ?? string.Empty);
+    }
 
     public string Text
     {

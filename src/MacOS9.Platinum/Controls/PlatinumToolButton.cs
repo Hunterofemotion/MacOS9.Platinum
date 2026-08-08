@@ -33,7 +33,15 @@ public class PlatinumToolButton : Button
 
     public static readonly DependencyProperty TextProperty =
         DependencyProperty.Register(nameof(Text), typeof(string), typeof(PlatinumToolButton),
-            new PropertyMetadata(""));
+            new PropertyMetadata("", AlCambiarTexto));
+
+    // El rótulo vive en Text y no en Content, así que la automatización veía la
+    // tecla sin nombre: ni un lector de pantalla ni una prueba automática podían
+    // referirse a ella. El nombre se copia aquí para que las dos cosas coincidan.
+    private static void AlCambiarTexto(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        System.Windows.Automation.AutomationProperties.SetName(d, (string)e.NewValue ?? string.Empty);
+    }
 
     /// <summary>Rótulo bajo el icono.</summary>
     public string Text

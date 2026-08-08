@@ -605,10 +605,13 @@ public class PlatinumLevelGauge : FrameworkElement
 
         // Línea de lado a lado y no un punto: sobre una zona de color, un punto se
         // pierde y una línea negra siempre se ve.
+        //
+        // Sin realce debajo. Lo llevaba, en blanco fijo, para despegar la marca del
+        // color; sobre una franja clara no se veía y sobre una oscura se leía como
+        // una raya suelta. Además era el único blanco del control que no salía de
+        // la paleta.
         dc.DrawRectangle(BorderBrush, null,
             new Rect(dentro.X, y - grosor, dentro.Width, grosor * 2));
-        dc.DrawRectangle(Brushes.White, null,
-            new Rect(dentro.X, y + grosor, dentro.Width, grosor));
     }
 
     private void CifraVertical(DrawingContext dc, Rect carril, Rect dentro, double fraccion,
