@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 using MacOS9.Platinum.Controls;
 
 namespace MacOS9.Platinum.Gallery;
@@ -39,6 +41,18 @@ public partial class MainWindow : PlatinumWindow
         Presion.Bands.Add(new LevelBand { To = 85, Fill = (Brush)FindResource("LedAmberBrush") });
         Presion.Bands.Add(new LevelBand { To = 100, Fill = (Brush)FindResource("LedRedBrush") });
 
+        // La presión se mueve. Va más lenta que los búferes del editor de video
+        // porque una cámara no cambia de presión doce veces por segundo, y un
+        // medidor que tiembla se lee como ruido y no como una lectura.
+        var reloj = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(400) };
+        reloj.Tick += (_, _) =>
+        {
+            double paso = (azar.NextDouble() - 0.5) * 4;
+            double regreso = (76 - Presion.Value) * 0.08;
+            Presion.Value = Math.Clamp(Presion.Value + paso + regreso, 40, 99);
+        };
+        reloj.Start();
+
         // Deja el campo con el texto seleccionado para poder revisar el resalte sin
         // reproducirlo a mano en cada arranque.
         Loaded += (_, _) =>
@@ -47,6 +61,8 @@ public partial class MainWindow : PlatinumWindow
             SampleField.SelectAll();
         };
     }
+
+    private readonly Random azar = new();
 
     private void OnCalibrate(object sender, RoutedEventArgs e) =>
         new CalibrationDialog { Owner = this }.ShowDialog();
