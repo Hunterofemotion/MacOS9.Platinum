@@ -312,12 +312,29 @@ public class PlatinumLevelGauge : FrameworkElement
 
     protected override Size MeasureOverride(Size disponible)
     {
-        double etiquetas = ShowScale ? Etiquetas().Max(e => e.Width) + LargoMarca + Aire : 0;
-        double cifra = ShowReadout ? Cifra(Maximum).Width + (Aire * 2) + AnchoIndicador + Aire : 0;
+        if (Orientation == Orientation.Vertical)
+        {
+            double etiquetas = ShowScale ? Etiquetas().Max(e => e.Width) + LargoMarca + Aire : 0;
+            return new Size(etiquetas + TrackThickness + AnchoCifra(), 120);
+        }
 
-        return Orientation == Orientation.Vertical
-            ? new Size(etiquetas + TrackThickness + cifra, 120)
-            : new Size(160, etiquetas + TrackThickness + cifra);
+        // En horizontal la escala va debajo del carril y la cifra a la derecha, así
+        // que cada una gasta un eje distinto. La primera versión usaba la misma
+        // cuenta para las dos orientaciones y el número terminaba pintado fuera del
+        // control.
+        double alto = TrackThickness + 4;
+        if (ShowScale) { alto += LargoMarca + Etiquetas().Max(e => e.Height); }
+
+        return new Size(120 + AnchoCifra(), alto);
+    }
+
+    /// <summary>Lo que gasta la cifra a un lado del carril, indicador incluido.</summary>
+    private double AnchoCifra()
+    {
+        if (!ShowReadout) { return 0; }
+
+        double indicador = Orientation == Orientation.Vertical ? AnchoIndicador + Aire : 0;
+        return Aire + indicador + Cifra(Maximum).Width + (Aire * 2);
     }
 
     // ---- Pintado -----------------------------------------------------------
@@ -539,13 +556,17 @@ public class PlatinumLevelGauge : FrameworkElement
 
     private void Horizontal(DrawingContext dc, double pixel, double grosor)
     {
+        // El ancho de la cifra se descuenta del carril: si no, el carril se lleva
+        // todo el control y el número sale dibujado fuera de sus propios límites.
         var carril = new Rect(
             Cuadrar(2, pixel),
             Cuadrar(2, pixel),
-            Cuadrar(ActualWidth - 4, pixel),
+            Cuadrar(ActualWidth - 4 - AnchoCifra(), pixel),
             Cuadrar(TrackThickness, pixel));
 
         if (carril.Width <= 4 || carril.Height <= 4) { return; }
+
+        if (ShowScale) { EscalaHorizontal(dc, carril, grosor); }
 
         Pozo(dc, carril, grosor);
 
@@ -583,10 +604,54 @@ public class PlatinumLevelGauge : FrameworkElement
 
         if (!ShowReadout) { return; }
 
+        // Sin triángulo indicador, al revés que en vertical: allá la caja flota a
+        // la altura del valor y hace falta señalar a cuál. Aquí la caja está fija
+        // al final del carril y no apunta a nada.
         FormattedText cifra = Cifra(Value);
-        dc.DrawText(cifra, new Point(
-            carril.Right + Aire,
-            carril.Y + ((carril.Height - cifra.Height) / 2)));
+        double cajaAlto = Cuadrar(cifra.Height + Aire, pixel);
+        var caja = new Rect(
+            Cuadrar(carril.Right + Aire, pixel),
+            Cuadrar(carril.Y + ((carril.Height - cajaAlto) / 2), pixel),
+            Cuadrar(cifra.Width + (Aire * 2), pixel),
+            cajaAlto);
+
+        dc.DrawRectangle(Background, null, caja);
+        Marco(dc, caja, grosor);
+        dc.DrawText(cifra, new Point(caja.X + Aire, caja.Y + (Aire / 2)));
+    }
+
+    private void EscalaHorizontal(DrawingContext dc, Rect carril, double grosor)
+    {
+        int pasos = (int)Math.Round((Maximum - Minimum) / ScaleStep);
+        if (pasos <= 0) { return; }
+
+        double arriba = carril.Bottom + LargoMarca;
+
+        for (int i = 0; i <= pasos; i++)
+        {
+            double valor = Minimum + (i * ScaleStep);
+            double x = carril.X + (carril.Width * Fraccion(valor));
+
+            dc.DrawRectangle(Foreground, null,
+                new Rect(x - (grosor / 2), carril.Bottom, grosor, LargoMarca));
+
+            // La primera y la última se recargan contra su extremo para que no se
+            // salgan del carril.
+            FormattedText texto = Texto(Numero(valor) + Unit, FontSize);
+            double tx = i == 0 ? x
+                : i == pasos ? x - texto.Width
+                : x - (texto.Width / 2);
+            dc.DrawText(texto, new Point(tx, arriba));
+
+            if (i == pasos || MinorTicks <= 0) { continue; }
+            for (int m = 1; m <= MinorTicks; m++)
+            {
+                double sub = valor + (ScaleStep * m / (MinorTicks + 1));
+                double xs = carril.X + (carril.Width * Fraccion(sub));
+                dc.DrawRectangle(Foreground, null,
+                    new Rect(xs - (grosor / 2), carril.Bottom, grosor, LargoMarca / 2));
+            }
+        }
     }
 
     private double Fraccion(double valor) =>

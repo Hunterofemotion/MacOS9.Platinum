@@ -243,7 +243,7 @@
                                                      Orientation="Horizontal"
                                                      BandMode="Zones"
                                                      TrackThickness="18"
-                                                     ShowScale="False"
+                                                     ScaleStep="50"
                                                      Margin="0,0,0,10" />
 
                         <TextBlock Text="Lamp hours" Margin="0,0,0,4" />

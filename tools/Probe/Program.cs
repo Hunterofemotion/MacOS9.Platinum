@@ -213,7 +213,12 @@ internal static class Program
             Row(Medidor(72, LevelBandMode.Fill),
                 Medidor(38, LevelBandMode.Fill),
                 Medidor(62, LevelBandMode.Zones),
-                Medidor(95, LevelBandMode.Zones))));
+                Medidor(95, LevelBandMode.Zones)),
+            // El caso horizontal va aquí porque su medida es distinta: la escala
+            // gasta alto y la cifra ancho. Sin este escenario, que la cifra se
+            // dibujara fuera del control no lo detectaba nadie.
+            Row(Medidor(78, LevelBandMode.Zones, Orientation.Horizontal),
+                Medidor(45, LevelBandMode.Fill, Orientation.Horizontal))));
 
         Render("riel", dpi, Stack(
             Row(Rail())));
@@ -420,15 +425,19 @@ internal static class Program
         return new StackPanel { Orientation = Orientation.Horizontal, Children = { a, b, c } };
     }
 
-    private static FrameworkElement Medidor(double valor, LevelBandMode modo)
+    private static FrameworkElement Medidor(double valor, LevelBandMode modo,
+        Orientation sentido = Orientation.Vertical)
     {
         var medidor = new PlatinumLevelGauge
         {
             Value = valor,
             BandMode = modo,
-            Height = 190,
+            Orientation = sentido,
             Margin = new Thickness(0, 0, 18, 0),
         };
+
+        if (sentido == Orientation.Vertical) { medidor.Height = 190; }
+        else { medidor.Width = 300; medidor.TrackThickness = 18; medidor.ScaleStep = 50; }
 
         // Franjas al revés que el ejemplo del búfer: aquí más es peor, que es el
         // caso de una ocupación. El control no supone ninguno de los dos sentidos.
