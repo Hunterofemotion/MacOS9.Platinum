@@ -56,6 +56,15 @@ public partial class Muestrario : PlatinumWindow
             });
         }
 
+        // Icono de la ventana. PlatinumWindow dibuja su propio chrome y no muestra
+        // el icono del sistema en la barra de título, así que este solo sale en la
+        // barra de tareas y al alternar ventanas —que es justo donde hace falta,
+        // porque hay seis programas de muestra corriendo a la vez.
+        //
+        // Es la vista de cuadrícula: el muestrario enseña las piezas dispuestas
+        // para compararlas, no una pieza puesta a trabajar.
+        Icon = Pieza("arch-r4c3", 32);
+
         Riel.SelectedIndex = 0;
     }
 
