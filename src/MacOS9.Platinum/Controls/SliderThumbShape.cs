@@ -50,6 +50,27 @@ public class SliderThumbShape : FrameworkElement
         set => SetValue(StrokeProperty, value);
     }
 
+    public static readonly DependencyProperty GripBrushProperty =
+        DependencyProperty.Register(
+            nameof(GripBrush),
+            typeof(Brush),
+            typeof(SliderThumbShape),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    /// <summary>
+    /// Tinta de las rayas del agarre. Sin asignar no se dibujan.
+    /// </summary>
+    /// <remarks>
+    /// Son las mismas del cursor del scrollbar y por el mismo motivo: dicen que la
+    /// pieza se toma con el dedo y se arrastra, a diferencia de una tecla, que se
+    /// oprime. En Platinum es la única señal que distingue a las dos.
+    /// </remarks>
+    public Brush? GripBrush
+    {
+        get => (Brush?)GetValue(GripBrushProperty);
+        set => SetValue(GripBrushProperty, value);
+    }
+
     /// <summary>Horizontal apunta hacia abajo; Vertical apunta a la derecha.</summary>
     public static readonly DependencyProperty OrientationProperty =
         DependencyProperty.Register(
@@ -171,6 +192,47 @@ public class SliderThumbShape : FrameworkElement
                     dc.DrawRectangle(stroke, null, new Rect(i * pixel, (to - 1) * pixel, pixel, pixel));
                 }
             }
+        }
+
+        Agarre(dc, scale, pixel, body, rect, horizontal);
+    }
+
+    // Las rayas del agarre, en unidades lógicas como las del scrollbar: tres de
+    // nueve de largo, de una de grueso, separadas dos. Se redondean a píxeles
+    // enteros para que las tres pesen igual; con medidas fraccionarias una sale
+    // gris y la de al lado negra.
+    private const double GripLengthLogical = 9d;
+    private const double GripGapLogical = 2d;
+    private const int GripLines = 3;
+
+    private void Agarre(DrawingContext dc, double scale, double pixel,
+        int body, int rect, bool horizontal)
+    {
+        Brush? tinta = GripBrush;
+        if (tinta is null) { return; }
+
+        int grosor = Math.Max(1, (int)Math.Round(scale));
+        int hueco = Math.Max(1, (int)Math.Round(GripGapLogical * scale));
+        int largo = Math.Min(body - (grosor * 4), (int)Math.Round(GripLengthLogical * scale));
+        if (largo <= 0) { return; }
+
+        int bloque = (GripLines * grosor) + ((GripLines - 1) * hueco);
+
+        // Solo en el tramo recto: sobre el cono las rayas se saldrían de la figura.
+        if (bloque > rect - (grosor * 2)) { return; }
+
+        int desdeLargo = (body - largo) / 2;
+        int desdeBloque = (rect - bloque) / 2;
+
+        for (int n = 0; n < GripLines; n++)
+        {
+            int posicion = desdeBloque + (n * (grosor + hueco));
+
+            Rect raya = horizontal
+                ? new Rect(desdeLargo * pixel, posicion * pixel, largo * pixel, grosor * pixel)
+                : new Rect(posicion * pixel, desdeLargo * pixel, grosor * pixel, largo * pixel);
+
+            dc.DrawRectangle(tinta, null, raya);
         }
     }
 }
