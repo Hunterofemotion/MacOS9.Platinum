@@ -305,6 +305,37 @@ public class PlatinumLevelGauge : FrameworkElement
         set => SetValue(WellHighlightBrushProperty, value);
     }
 
+    public static readonly DependencyProperty ReadoutShadowBrushProperty =
+        DependencyProperty.Register(nameof(ReadoutShadowBrush), typeof(Brush), typeof(PlatinumLevelGauge),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    /// <summary>
+    /// Sombra interior de la caja de la cifra, arriba y a la izquierda.
+    /// </summary>
+    /// <remarks>
+    /// Va aparte de la del carril porque las dos piezas no piden lo mismo: la caja
+    /// es un registro y se lee mejor rehundida como un campo, y el carril es una
+    /// superficie de color a la que la sombra solo le quita área.
+    ///
+    /// De un solo tono y no de dos como el campo de texto: la caja mide lo que el
+    /// carril de alto, y dos tonos se comerían la mitad.
+    /// </remarks>
+    public Brush? ReadoutShadowBrush
+    {
+        get => (Brush?)GetValue(ReadoutShadowBrushProperty);
+        set => SetValue(ReadoutShadowBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty ReadoutHighlightBrushProperty =
+        DependencyProperty.Register(nameof(ReadoutHighlightBrush), typeof(Brush), typeof(PlatinumLevelGauge),
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public Brush? ReadoutHighlightBrush
+    {
+        get => (Brush?)GetValue(ReadoutHighlightBrushProperty);
+        set => SetValue(ReadoutHighlightBrushProperty, value);
+    }
+
     public static readonly DependencyProperty FontFamilyProperty =
         TextElement.FontFamilyProperty.AddOwner(typeof(PlatinumLevelGauge));
 
@@ -504,8 +535,7 @@ public class PlatinumLevelGauge : FrameworkElement
             Math.Min(carril.Bottom - cajaAlto, y - (cajaAlto / 2))), pixel);
 
         var caja = new Rect(cajaX, cajaY, cajaAncho, cajaAlto);
-        dc.DrawRectangle(Background, null, caja);
-        Marco(dc, caja, grosor);
+        CajaCifra(dc, caja, grosor);
         dc.DrawText(cifra, new Point(cajaX + Aire, cajaY + (Aire / 2)));
     }
 
@@ -555,15 +585,48 @@ public class PlatinumLevelGauge : FrameworkElement
     }
 
     /// <summary>
-    /// El área que queda para pintar el nivel. No es simétrica: arriba y a la
-    /// izquierda hay marco más dos de sombra, y abajo y a la derecha marco más uno
-    /// de realce. Es la misma asimetría del campo de texto.
+    /// El área que queda para pintar el nivel. El hueco sale de lo que de verdad se
+    /// dibuja: si no hay sombra interior, el relleno arranca pegado al marco en vez
+    /// de dejar una franja del color de fondo donde estaba la sombra.
     /// </summary>
-    private static Rect Interior(Rect carril, double grosor) => new(
-        carril.X + (grosor * 3),
-        carril.Y + (grosor * 3),
-        carril.Width - (grosor * 5),
-        carril.Height - (grosor * 5));
+    private Rect Interior(Rect carril, double grosor)
+    {
+        double arriba = grosor + (WellShadowBrush is null && WellShadowDeepBrush is null ? 0 : grosor * 2);
+        double abajo = grosor + (WellHighlightBrush is null ? 0 : grosor);
+
+        return new Rect(
+            carril.X + arriba,
+            carril.Y + arriba,
+            carril.Width - arriba - abajo,
+            carril.Height - arriba - abajo);
+    }
+
+    /// <summary>
+    /// La caja de la cifra: fondo, marco y su propio rehundido de un tono.
+    /// </summary>
+    private void CajaCifra(DrawingContext dc, Rect caja, double grosor)
+    {
+        dc.DrawRectangle(Background, null, caja);
+        Marco(dc, caja, grosor);
+
+        if (ReadoutHighlightBrush is not null)
+        {
+            dc.DrawRectangle(ReadoutHighlightBrush, null,
+                new Rect(caja.X + grosor, caja.Bottom - (grosor * 2),
+                    caja.Width - (grosor * 2), grosor));
+            dc.DrawRectangle(ReadoutHighlightBrush, null,
+                new Rect(caja.Right - (grosor * 2), caja.Y + grosor,
+                    grosor, caja.Height - (grosor * 2)));
+        }
+
+        if (ReadoutShadowBrush is not null)
+        {
+            dc.DrawRectangle(ReadoutShadowBrush, null,
+                new Rect(caja.X + grosor, caja.Y + grosor, caja.Width - (grosor * 2), grosor));
+            dc.DrawRectangle(ReadoutShadowBrush, null,
+                new Rect(caja.X + grosor, caja.Y + grosor, grosor, caja.Height - (grosor * 2)));
+        }
+    }
 
     private void Marco(DrawingContext dc, Rect caja, double grosor)
     {
@@ -638,8 +701,7 @@ public class PlatinumLevelGauge : FrameworkElement
             Cuadrar(cifra.Width + (Aire * 2), pixel),
             carril.Height);
 
-        dc.DrawRectangle(Background, null, caja);
-        Marco(dc, caja, grosor);
+        CajaCifra(dc, caja, grosor);
         dc.DrawText(cifra, new Point(
             caja.X + Aire,
             Cuadrar(caja.Y + ((caja.Height - cifra.Height) / 2), pixel)));

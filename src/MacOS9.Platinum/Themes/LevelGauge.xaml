@@ -9,16 +9,21 @@
 
     <!-- Medidor de nivel. El estilo solo pone tintas y tipografía: el dibujo va en  -->
     <!-- el control, porque cada filo y cada marca se calculan sobre el píxel físico. -->
-    <!-- El carril usa el mismo pozo rehundido del campo de texto, así que un medidor -->
-    <!-- y un campo puestos uno al lado del otro se leen como piezas de la misma       -->
-    <!-- ventana y no de dos temas distintos.                                          -->
+    <!--                                                                              -->
+    <!-- El carril va sin sombra interior, a diferencia del campo de texto. En un      -->
+    <!-- campo el rehundido invita a escribir dentro; en un medidor nadie escribe, y   -->
+    <!-- los dos tonos le comían cuatro píxeles al área de color sin aportar nada.     -->
+    <!-- Las propiedades siguen ahí para quien quiera el pozo completo.                -->
     <Style TargetType="{x:Type controls:PlatinumLevelGauge}">
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
         <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
-        <Setter Property="WellShadowBrush" Value="{StaticResource WellShadowBrush}" />
-        <Setter Property="WellShadowDeepBrush" Value="{StaticResource BevelShadowBrush}" />
-        <Setter Property="WellHighlightBrush" Value="{StaticResource BevelHighlightBrush}" />
+
+        <!-- La caja de la cifra sí va rehundida: es un registro y se lee mejor    -->
+        <!-- como campo. De un tono, no de dos: mide lo que el carril de alto y    -->
+        <!-- dos se comerían la mitad.                                             -->
+        <Setter Property="ReadoutShadowBrush" Value="{StaticResource BevelShadowBrush}" />
+        <Setter Property="ReadoutHighlightBrush" Value="{StaticResource BevelHighlightBrush}" />
         <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
         <Setter Property="FontSize" Value="{StaticResource SmallFontSize}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
