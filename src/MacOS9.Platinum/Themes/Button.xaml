@@ -48,8 +48,8 @@
                                               Margin="0,0,1,1"
                                               Stroke="{StaticResource TextBrush}"
                                               Thickness="1"
-                                              Gap="3"
-                                              CornerRadius="4"
+                                              Gap="2"
+                                              CornerRadius="2"
                                               Visibility="Collapsed" />
 
                         <!-- Sombra proyectada, la misma construcción que el popup menu: -->

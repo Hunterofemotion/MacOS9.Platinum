@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace MacOS9.Platinum.Controls;
@@ -30,7 +31,14 @@ public class DefaultRing : FrameworkElement
         set => SetValue(StrokeProperty, value);
     }
 
-    /// <summary>Grosor del contorno, en píxeles físicos.</summary>
+    /// <summary>Grosor del contorno, en unidades lógicas.</summary>
+    /// <remarks>
+    /// En unidades lógicas y no en píxeles físicos, redondeado a píxeles enteros al
+    /// dibujar. Medido en físicos, el anillo salía de un píxel en una pantalla al
+    /// 200 % mientras todos los demás marcos del tema median dos: la mitad del peso
+    /// del resto de la ventana. Es el mismo arreglo que llevó el contorno de las
+    /// pestañas.
+    /// </remarks>
     public static readonly DependencyProperty ThicknessProperty =
         DependencyProperty.Register(
             nameof(Thickness),
@@ -44,7 +52,7 @@ public class DefaultRing : FrameworkElement
         set => SetValue(ThicknessProperty, value);
     }
 
-    /// <summary>Canal libre entre el botón y el contorno, en píxeles físicos.</summary>
+    /// <summary>Canal libre entre el botón y el contorno, en unidades lógicas.</summary>
     public static readonly DependencyProperty GapProperty =
         DependencyProperty.Register(
             nameof(Gap),
@@ -58,7 +66,7 @@ public class DefaultRing : FrameworkElement
         set => SetValue(GapProperty, value);
     }
 
-    /// <summary>Radio de esquina del botón al que sigue el contorno, en píxeles físicos.</summary>
+    /// <summary>Radio de esquina del botón al que sigue el contorno, en unidades lógicas.</summary>
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(
             nameof(CornerRadius),
@@ -85,13 +93,21 @@ public class DefaultRing : FrameworkElement
             return;
         }
 
-        // Un píxel físico expresado en unidades de WPF.
-        double pixel = 1d / DeviceScale.Of(this).X;
+        double scale = DeviceScale.Of(this).X;
+        if (scale <= 0) { scale = 1; }
 
-        double stroke = Thickness * pixel;
+        // Un píxel físico expresado en unidades de WPF.
+        double pixel = 1d / scale;
+
+        // Las medidas vienen en unidades lógicas y se redondean a píxeles enteros:
+        // así el anillo pesa lo mismo que el resto de los marcos a cualquier escala,
+        // y sus dos costados salen del mismo grosor.
+        double stroke = Math.Max(1d, Math.Round(Thickness * scale)) * pixel;
+        double gap = Math.Max(0d, Math.Round(Gap * scale)) * pixel;
+
         // El trazo se pinta centrado, así que el desplazamiento hacia afuera es el
         // canal más media pluma.
-        double offset = (Gap * pixel) + (stroke / 2d);
+        double offset = gap + (stroke / 2d);
 
         var rect = new Rect(
             -offset,
@@ -101,7 +117,7 @@ public class DefaultRing : FrameworkElement
 
         // El radio crece con la separación para que el contorno quede paralelo a la
         // figura del botón también en las esquinas.
-        double radius = (CornerRadius * pixel) + offset;
+        double radius = (Math.Round(CornerRadius * scale) * pixel) + offset;
 
         dc.DrawRoundedRectangle(null, new Pen(Stroke, stroke), rect, radius, radius);
     }

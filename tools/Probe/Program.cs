@@ -183,6 +183,14 @@ internal static class Program
             Row(Btn("Aceptar", def: true), Btn("Cancelar"), Btn("Apagado", on: false)),
             Row(Btn("Un texto de botón desmedidamente largo para el ancho"))));
 
+        // El anillo del botón por omisión se dibuja aparte porque en el botón solo
+        // aparece con IsDefaulted o IsKeyboardFocused, y en un render fuera de
+        // pantalla no hay foco: nunca había entrado a un patrón aprobado, así que
+        // sus medidas no las vigilaba nadie.
+        Render("anillo", dpi, Stack(
+            Row(ConAnillo(96), ConAnillo(150)),
+            Row(ConAnillo(60, 40))));
+
         Render("marcas", dpi, Stack(
             Row(new CheckBox { Content = "Marcado", IsChecked = true },
                 new CheckBox { Content = "Vacío" },
@@ -283,6 +291,37 @@ internal static class Program
         RenderWindow("ventana_angosta", dpi, 480);
         RenderWindow("ventana_ancha", dpi, 980);
         RenderWindow("ventana_enrollada", dpi, 480, collapsed: true);
+    }
+
+    private static FrameworkElement ConAnillo(double ancho, double alto = 26)
+    {
+        // Las medidas son las mismas que el estilo del botón le pasa al anillo. Si
+        // alguna cambia allá y no aquí, el escenario deja de comprobar lo que se usa.
+        var caja = new Grid
+        {
+            Width = ancho,
+            Height = alto,
+            Margin = new Thickness(12, 8, 24, 12),
+        };
+
+        caja.Children.Add(new Border
+        {
+            Background = (Brush)Application.Current.Resources["ControlFaceBrush"],
+            BorderBrush = (Brush)Application.Current.Resources["TextBrush"],
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(2),
+        });
+
+        caja.Children.Add(new DefaultRing
+        {
+            Stroke = (Brush)Application.Current.Resources["TextBrush"],
+            Thickness = 1,
+            Gap = 2,
+            CornerRadius = 2,
+            Margin = new Thickness(0, 0, 1, 1),
+        });
+
+        return caja;
     }
 
     private static Button Btn(string text, bool def = false, bool on = true) =>
