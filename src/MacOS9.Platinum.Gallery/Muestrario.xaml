@@ -1,0 +1,41 @@
+<platinum:PlatinumWindow x:Class="MacOS9.Platinum.Gallery.Muestrario"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:platinum="clr-namespace:MacOS9.Platinum.Controls;assembly=MacOS9.Platinum"
+        Title="Muestrario de componentes"
+        Width="1040" Height="740"
+        WindowStartupLocation="CenterScreen">
+
+  <DockPanel>
+
+    <StatusBar DockPanel.Dock="Bottom" Padding="8,0,26,0">
+      <StatusBarItem DockPanel.Dock="Left" MinWidth="260">
+        <StackPanel Orientation="Horizontal">
+          <platinum:PlatinumLed VerticalAlignment="Center" Margin="0,0,6,0" />
+          <TextBlock x:Name="LineaFamilia" Text="Medidores" />
+        </StackPanel>
+      </StatusBarItem>
+      <StatusBarItem>
+        <TextBlock x:Name="LineaNota" TextTrimming="CharacterEllipsis" />
+      </StatusBarItem>
+    </StatusBar>
+
+    <DockPanel Margin="12,10,12,10">
+
+      <!-- El riel es a la vez el índice y una pieza en exhibición: cada familia
+           es una tecla que abre su panel. -->
+      <ListBox x:Name="Riel" DockPanel.Dock="Left" Width="130" SelectedIndex="0"
+               Style="{StaticResource PlatinumNavRail}"
+               SelectionChanged="AlElegirFamilia" />
+
+      <GroupBox x:Name="Recuadro" Header="Medidores" Margin="12,0,0,0">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      Padding="10,6,10,10">
+          <StackPanel x:Name="Panel" />
+        </ScrollViewer>
+      </GroupBox>
+
+    </DockPanel>
+  </DockPanel>
+</platinum:PlatinumWindow>

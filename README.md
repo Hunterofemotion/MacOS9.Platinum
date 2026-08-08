@@ -36,8 +36,15 @@ seconds.
 
 ![Scriptorium](docs/notes.png)
 
-Run any of them with `dotnet run --project src/MacOS9.Platinum.Gallery -- math`
-(`math`, `video`, `notes`, or nothing for SpectraLab).
+**Muestrario** — the component browser. A navigation rail of families on the left,
+and on the right every variation the library can draw of the selected one:
+every state of a button, every mode of the level meter, every kind of list. It
+answers a different question from the four programs above — they show whether a
+control works in place, this shows which variants exist, which is what you need
+when picking one.
+
+Run any of them with `dotnet run --project src/MacOS9.Platinum.Gallery -- math`:
+`math`, `video`, `notes`, `showcase`, `icons`, or nothing for SpectraLab.
 
 There is also a browsable catalogue in [docs/componentes.html](docs/componentes.html),
 with every control broken down by state and the file it lives in. That one *is* a

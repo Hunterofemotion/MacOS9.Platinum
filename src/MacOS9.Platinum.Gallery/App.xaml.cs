@@ -29,6 +29,7 @@ public partial class App : Application
             "video" => new VideoWindow(),
             "notes" => new NotesWindow(),
             "icons" => new IconLab(),
+            "showcase" => new Muestrario(),
             _ => new MainWindow(),
         };
 

@@ -235,13 +235,14 @@
                         <TextBlock Text="Integration (ms)" Margin="0,0,0,4" />
                         <TextBox Text="250" Margin="0,0,0,10" />
 
-                        <!-- Modo Zones: en una presión de cámara lo que importa es
-                             en qué franja está, y verlas todas evita tener que
-                             recordar dónde queda el límite. -->
+                        <!-- Modo Bullet: la presión se mueve, y en Zones lo único
+                             que se movía era una línea de dos píxeles mientras la
+                             barra entera se quedaba quieta. Aquí las franjas siguen
+                             al fondo y la medida sí crece con la lectura. -->
                         <TextBlock Text="Chamber pressure" Margin="0,0,0,4" />
                         <platinum:PlatinumLevelGauge x:Name="Presion" Value="78"
                                                      Orientation="Horizontal"
-                                                     BandMode="Zones"
+                                                     BandMode="Bullet"
                                                      TrackThickness="18"
                                                      ScaleStep="50"
                                                      Margin="0,0,0,10" />
