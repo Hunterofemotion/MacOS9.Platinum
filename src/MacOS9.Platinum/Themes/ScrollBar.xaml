@@ -93,6 +93,14 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Visibility" Value="Collapsed" />
                         </Trigger>
+
+                        <!-- Ventana de fondo: mismo remedio y por la misma razón. El  -->
+                        <!-- trigger de la barra esconde flechas y textura, pero al    -->
+                        <!-- Track no lo alcanza y el thumb se quedaba pintado sobre   -->
+                        <!-- el canal vacío.                                           -->
+                        <DataTrigger Binding="{Binding Path=(controls:PlatinumWindow.ShowsActive), RelativeSource={RelativeSource Self}}" Value="False">
+                            <Setter TargetName="Root" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -126,6 +134,11 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Visibility" Value="Collapsed" />
                         </Trigger>
+
+                        <!-- Ventana de fondo: como en el vertical. -->
+                        <DataTrigger Binding="{Binding Path=(controls:PlatinumWindow.ShowsActive), RelativeSource={RelativeSource Self}}" Value="False">
+                            <Setter TargetName="Root" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -234,6 +247,24 @@
                             <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
                             <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                         </Trigger>
+
+                        <!-- Ventana de fondo: Platinum vacía la barra por completo    -->
+                        <!-- —sin flechas, sin filos, sin thumb, canal plano— pero el  -->
+                        <!-- marco negro se queda, a diferencia de deshabilitada.      -->
+                        <!-- La condición es ShowsActive y no el IsActive del          -->
+                        <!-- ancestro: cada ventana del tema publica su propia regla   -->
+                        <!-- (la paleta sigue encendida mientras su aplicación mande)  -->
+                        <!-- y fuera de una ventana del tema —sonda, popups— la        -->
+                        <!-- propiedad hereda su valor por omisión, verdadero.         -->
+                        <DataTrigger Binding="{Binding Path=(controls:PlatinumWindow.ShowsActive), RelativeSource={RelativeSource Self}}" Value="False">
+                            <Setter TargetName="PART_Track" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Sep1" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Sep2" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_LineUpButton" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_LineDownButton" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -313,6 +344,18 @@
                                     <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
                                     <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
                                 </Trigger>
+
+                                <!-- Ventana de fondo: barra vacía con marco negro,   -->
+                                <!-- como la vertical.                                 -->
+                                <DataTrigger Binding="{Binding Path=(controls:PlatinumWindow.ShowsActive), RelativeSource={RelativeSource Self}}" Value="False">
+                                    <Setter TargetName="PART_Track" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Texture" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Sep1" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Sep2" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="PART_LineLeftButton" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="PART_LineRightButton" Property="Visibility" Value="Hidden" />
+                                    <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                                </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>

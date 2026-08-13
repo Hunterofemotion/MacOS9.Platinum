@@ -5,6 +5,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <!-- Por el estilo de la barra embutida en el marco del riel. -->
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ScrollBar.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Entrada del riel: icono grande y rótulo debajo, sin marco hasta que se elige.  -->
@@ -97,6 +99,17 @@
                         <ScrollViewer Padding="{TemplateBinding Padding}"
                                       Focusable="False"
                                       VerticalScrollBarVisibility="Auto">
+                            <ScrollViewer.Resources>
+                                <!-- Solo el filo izquierdo es de la barra: arriba,     -->
+                                <!-- derecha y abajo ya los cierra el marco del riel.   -->
+                                <!-- Sin esto, el día que el riel se desborda la barra  -->
+                                <!-- aparece con su marco completo encimado al del      -->
+                                <!-- riel, y el tope del cursor se lee con un filo del  -->
+                                <!-- doble de grueso que su descanso de abajo.          -->
+                                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource PlatinumScrollBar}">
+                                    <Setter Property="BorderThickness" Value="1,0,0,0" />
+                                </Style>
+                            </ScrollViewer.Resources>
                             <ItemsPresenter />
                         </ScrollViewer>
                     </Border>

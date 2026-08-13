@@ -5,14 +5,17 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <!-- Por el campo sin marco de la variante editable. -->
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TextBox.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!-- Este archivo no fusiona PopupChrome.xaml: su hoja se arma en línea porque      -->
     <!-- necesita descontar un píxel del filo derecho (ver el comentario del Popup).    -->
 
-    <!-- Limitación conocida: el template no incluye PART_EditableTextBox, así que    -->
-    <!-- IsEditable=True no muestra campo de captura. Este control modela el popup    -->
-    <!-- menu de Mac OS 9, que no tiene variante editable.                            -->
+    <!-- Con IsEditable=False el control es el popup menu de Mac OS 9: un botón que   -->
+    <!-- despliega la lista. Con IsEditable=True cambia de anatomía y pasa a ser el   -->
+    <!-- combo del original: un campo de texto con la tecla de la lista pegada a su   -->
+    <!-- derecha, como el campo de direcciones de los navegadores de la época.        -->
 
     <!-- Cuerpo del popup: es el mismo botón físico, con una línea separadora a la    -->
     <!-- derecha y el par de flechas. No hereda del estilo de Button para poder       -->
@@ -100,6 +103,61 @@
         </Setter>
     </Style>
 
+    <!-- Tecla de la lista del combo editable: cuadrada, con marco negro propio y un  -->
+    <!-- solo triángulo hacia abajo. Se queda hundida mientras la hoja está abierta,  -->
+    <!-- igual que el cuerpo del popup menu.                                          -->
+    <Style x:Key="PlatinumComboBoxDropButton" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClickMode" Value="Press" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid>
+                        <Border x:Name="Face" Background="{StaticResource ControlFaceBrush}" />
+                        <Border x:Name="BevelLight"
+                                Margin="1"
+                                BorderThickness="1,1,0,0"
+                                BorderBrush="{StaticResource BevelHighlightBrush}" />
+                        <Border x:Name="BevelDark"
+                                Margin="1"
+                                BorderThickness="0,0,1,1"
+                                BorderBrush="{StaticResource BevelShadowBrush}" />
+
+                        <controls:ArrowGlyph x:Name="Arrow"
+                                             Direction="Down"
+                                             Fill="{StaticResource TextBrush}"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center" />
+
+                        <!-- El marco encima, como en las flechitas: los hijos no lo   -->
+                        <!-- alcanzan a sobrepintar.                                   -->
+                        <Border x:Name="Frame"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource TextBrush}"
+                                IsHitTestVisible="False" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFacePressedBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource TextInvertedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Frame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Renglón del menú desplegado. El resalte de Platinum es el azul claro con el  -->
     <!-- texto en negro, no un azul fuerte con texto blanco. La tipografía es la del  -->
     <!-- sistema: la regla del tema clasifica los menús —también este— como chrome.   -->
@@ -147,7 +205,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
                     <Grid>
-                        <ToggleButton Style="{StaticResource PlatinumComboBoxToggle}"
+                        <ToggleButton x:Name="Toggle"
+                                      Style="{StaticResource PlatinumComboBoxToggle}"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
 
                         <ContentPresenter x:Name="Selected"
@@ -157,6 +216,52 @@
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           IsHitTestVisible="False" />
+
+                        <!-- Cuerpo editable: campo con pozo y la tecla de la lista    -->
+                        <!-- pegada, marcos encimados para compartir la línea. Oculto  -->
+                        <!-- hasta que IsEditable lo pida.                             -->
+                        <Grid x:Name="EditableBody" Visibility="Collapsed">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border x:Name="EditFrame"
+                                    BorderThickness="1"
+                                    BorderBrush="{StaticResource TextBrush}"
+                                    Background="{StaticResource ContentFaceBrush}">
+                                <Grid>
+                                    <!-- Tipografía de vistas y no la del sistema: lo  -->
+                                    <!-- tecleado es contenido del usuario, como en el -->
+                                    <!-- campo de texto; la hoja de abajo sigue siendo -->
+                                    <!-- chrome y conserva la del sistema.             -->
+                                    <TextBox x:Name="PART_EditableTextBox"
+                                             Style="{StaticResource PlatinumTextBoxPlain}"
+                                             MinHeight="0"
+                                             IsReadOnly="{TemplateBinding IsReadOnly}" />
+
+                                    <Border x:Name="EditWellLight"
+                                            BorderThickness="0,0,1,1"
+                                            BorderBrush="{StaticResource BevelHighlightBrush}"
+                                            IsHitTestVisible="False" />
+                                    <Border x:Name="EditWellShadow"
+                                            BorderThickness="2,2,0,0"
+                                            BorderBrush="{StaticResource WellShadowBrush}"
+                                            IsHitTestVisible="False" />
+                                    <Border x:Name="EditWellShadowDeep"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource BevelShadowBrush}"
+                                            IsHitTestVisible="False" />
+                                </Grid>
+                            </Border>
+
+                            <ToggleButton x:Name="EditToggle"
+                                          Grid.Column="1"
+                                          Width="19"
+                                          Margin="-1,0,0,0"
+                                          Style="{StaticResource PlatinumComboBoxDropButton}"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Grid>
 
                         <Popup x:Name="PART_Popup"
                                AllowsTransparency="True"
@@ -181,8 +286,9 @@
                                   TextOptions.TextFormattingMode="Display"
                                   TextOptions.TextRenderingMode="ClearType"
                                   TextOptions.TextHintingMode="Fixed">
-                                <Border Margin="2,2,-1,-2" Background="{StaticResource BevelDeepShadowBrush}" />
-                                <Border Margin="0,0,1,0"
+                                <Border x:Name="SheetShadow" Margin="2,2,-1,-2" Background="{StaticResource BevelDeepShadowBrush}" />
+                                <Border x:Name="Sheet"
+                                        Margin="0,0,1,0"
                                         BorderThickness="1"
                                         BorderBrush="{StaticResource TextBrush}"
                                         Background="{StaticResource ContentFaceBrush}">
@@ -195,8 +301,26 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsEditable" Value="True">
+                            <Setter TargetName="Toggle" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="Selected" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="EditableBody" Property="Visibility" Value="Visible" />
+                            <!-- El cuerpo editable no cede columna a ninguna sombra:  -->
+                            <!-- la hoja corre hasta el filo real y su sombra pasa a   -->
+                            <!-- los dos píxeles de las hojas de menú.                 -->
+                            <Setter TargetName="Sheet" Property="Margin" Value="0" />
+                            <Setter TargetName="SheetShadow" Property="Margin" Value="2,2,-2,-2" />
+                        </Trigger>
+
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                            <!-- El pozo editable se aplana igual que el campo de      -->
+                            <!-- texto deshabilitado.                                  -->
+                            <Setter TargetName="EditFrame" Property="BorderBrush" Value="{StaticResource BevelShadowBrush}" />
+                            <Setter TargetName="EditFrame" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="EditWellLight" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="EditWellShadow" Property="BorderBrush" Value="{x:Null}" />
+                            <Setter TargetName="EditWellShadowDeep" Property="BorderBrush" Value="{x:Null}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -29,10 +29,15 @@
                SelectionChanged="AlElegirFamilia" />
 
       <GroupBox x:Name="Recuadro" Header="Medidores" Margin="12,0,0,0">
+        <!-- La holgura va como margen del contenido y no como Padding del visor: el
+             visor recorta a su área útil, que empieza DESPUÉS del relleno, y el
+             anillo del botón por omisión se dibuja fuera del botón. Con relleno,
+             un botón pegado a la izquierda perdía el costado del anillo contra el
+             recorte; como margen, esa franja pertenece al contenido y el anillo
+             cabe. -->
         <ScrollViewer VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto"
-                      Padding="10,6,10,10">
-          <StackPanel x:Name="Panel" />
+                      HorizontalScrollBarVisibility="Auto">
+          <StackPanel x:Name="Panel" Margin="10,6,10,10" />
         </ScrollViewer>
       </GroupBox>
 

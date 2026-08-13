@@ -246,6 +246,55 @@ public class PlatinumWindow : Window
     }
 
     /// <summary>
+    /// Verdad heredable de «esta ventana se dibuja activa». La publican las
+    /// ventanas del tema y la consultan las piezas que se apagan en ventana de
+    /// fondo (barras de desplazamiento, selección de listas, el chrome de la
+    /// paleta).
+    /// </summary>
+    /// <remarks>
+    /// Existe porque IsActive no alcanza: la regla no es la misma para todas las
+    /// ventanas. La de documento se dibuja activa cuando ella manda; la paleta,
+    /// mientras la aplicación mande, aunque el foco viva en su documento. Cuando
+    /// cada pieza consultaba a su ancestro por IsActive, dentro de una paleta con
+    /// dueña activa el chrome quedaba encendido y el contenido apagado a la vez —
+    /// un estado que en Mac OS 9 no existe. Heredable, además, llega a los popups
+    /// por el árbol lógico sin buscar ancestros, así que las hojas de menú dejan
+    /// de reportar enlaces sin origen en la depuración del consumidor. Por
+    /// omisión es verdadera: fuera de una ventana del tema (la sonda, un host
+    /// ajeno) todo se dibuja activo.
+    /// </remarks>
+    public static readonly DependencyProperty ShowsActiveProperty =
+        DependencyProperty.RegisterAttached(
+            "ShowsActive",
+            typeof(bool),
+            typeof(PlatinumWindow),
+            new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits));
+
+    public static bool GetShowsActive(DependencyObject element) =>
+        (bool)element.GetValue(ShowsActiveProperty);
+
+    public static void SetShowsActive(DependencyObject element, bool value) =>
+        element.SetValue(ShowsActiveProperty, value);
+
+    /// <summary>La regla de esta ventana; la paleta la sustituye por la suya.</summary>
+    protected virtual bool ComputeShowsActive() => IsActive;
+
+    /// <summary>Reevalúa la regla y publica el resultado para todo el contenido.</summary>
+    protected void RefreshShowsActive() => SetShowsActive(this, ComputeShowsActive());
+
+    protected override void OnActivated(EventArgs e)
+    {
+        base.OnActivated(e);
+        RefreshShowsActive();
+    }
+
+    protected override void OnDeactivated(EventArgs e)
+    {
+        base.OnDeactivated(e);
+        RefreshShowsActive();
+    }
+
+    /// <summary>
     /// Oculta el grow box en ventanas de tamaño fijo, como los diálogos.
     /// </summary>
     public static readonly DependencyProperty ShowGrowBoxProperty =
@@ -311,6 +360,10 @@ public class PlatinumWindow : Window
 
         int corners = DwmCornerDoNotRound;
         DwmSetWindowAttribute(source.Handle, DwmWindowCornerPreference, ref corners, sizeof(int));
+
+        // Una ventana que se muestra sin activarse (ShowActivated=False) no dispara
+        // Deactivated nunca: sin esta publicación inicial se dibujaría activa.
+        RefreshShowsActive();
     }
 
     private nint WindowProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
@@ -359,12 +412,17 @@ public class PlatinumWindow : Window
         // quedaba recortado contra el borde.
         DpiScale dpi = VisualTreeHelper.GetDpi(this);
         double barDips = TitleBarHeightInDips;
-        double anchoDips = Math.Max(150d, Sano(MinWidth));
+        double anchoDips = Math.Max(MinimumChromeWidthDips, Sano(MinWidth));
         double altoDips = IsCollapsed
             ? barDips + FrameTopDips + FrameBottomDips
-            : Math.Max(barDips + 40d, Sano(MinHeight));
+            : Math.Max(barDips + MinimumContentHeightDips, Sano(MinHeight));
         int minWidth = (int)Math.Ceiling(anchoDips * dpi.DpiScaleX);
-        int minHeight = (int)Math.Ceiling(altoDips * dpi.DpiScaleY);
+        // Enrollada el alto se redondea en vez de subir al techo: el windowshade
+        // fija Height ajustado al píxel con la misma cuenta, y con Ceiling el hwnd
+        // quedaba un píxel más alto que el visual y asomaba una fila sin pintar.
+        int minHeight = IsCollapsed
+            ? (int)Math.Round(altoDips * dpi.DpiScaleY)
+            : (int)Math.Ceiling(altoDips * dpi.DpiScaleY);
         minMax.MinTrackSize.X = Math.Max(minMax.MinTrackSize.X, minWidth);
         minMax.MinTrackSize.Y = Math.Max(minMax.MinTrackSize.Y, minHeight);
 
@@ -379,6 +437,16 @@ public class PlatinumWindow : Window
     {
         return double.IsNaN(valor) || double.IsInfinity(valor) ? 0d : valor;
     }
+
+    /// <summary>
+    /// Piso de ancho por debajo del cual el mobiliario de la barra ya no cabe.
+    /// Virtual porque cada chrome tiene el suyo: la paleta, con cajas de 11 y sin
+    /// zoom box, vive cómoda muy por debajo de los 150 de la ventana de documento.
+    /// </summary>
+    protected virtual double MinimumChromeWidthDips => 150d;
+
+    /// <summary>Alto mínimo del área de contenido bajo la barra, sin enrollar.</summary>
+    protected virtual double MinimumContentHeightDips => 40d;
 
     private void OnGrowBoxPressed(object sender, MouseButtonEventArgs e)
     {
@@ -403,6 +471,12 @@ public class PlatinumWindow : Window
     // un diálogo NoResize no debe despertar como CanResize.
     private ResizeMode expandedResizeMode = ResizeMode.CanResize;
 
+    // SizeToContent vigente antes de colapsar. Mientras dirige el alto, el Height
+    // que fija el windowshade se ignora y la ventana «enrollada» cambiaba de
+    // tamaño en los dos ejes; se suspende al enrollar y se devuelve al expandir,
+    // que además re-deriva el alto original del contenido.
+    private SizeToContent expandedSizeToContent = SizeToContent.Manual;
+
     private static void OnIsCollapsedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var window = (PlatinumWindow)d;
@@ -416,16 +490,32 @@ public class PlatinumWindow : Window
                 : window.Height;
             window.expandedResizeMode = window.ResizeMode;
 
+            // Enrollada, el tamaño lo manda la barra y nada más: si el contenido
+            // sigue dirigiendo algún eje, el alto que se fija aquí no prende —el
+            // contenido oculto ya no pide nada— y el ancho se encogería al de la
+            // barra. Una ventana enrollada conserva su ancho, así que los dos ejes
+            // pasan a manual y se devuelven al desenrollar, que es cuando el
+            // contenido vuelve a tener voz.
+            window.expandedSizeToContent = window.SizeToContent;
+            window.SizeToContent = SizeToContent.Manual;
+
             // El marco aporta tres filas al alto, no dos: filo negro exterior arriba,
             // realce blanco pegado a él y filo negro abajo. Con dos, la ventana
             // enrollada recortaba la última fila de la barra de título.
-            window.Height = window.TitleBarHeightInDips + FrameTopDips + FrameBottomDips;
+            //
+            // El alto se ajusta al píxel físico: a escalas fraccionarias la cuenta
+            // en unidades cae entre dos píxeles, el hwnd redondeaba hacia arriba y
+            // asomaba una fila sin pintar bajo la barra.
+            double dips = window.TitleBarHeightInDips + FrameTopDips + FrameBottomDips;
+            double scaleY = VisualTreeHelper.GetDpi(window).DpiScaleY;
+            window.Height = Math.Round(dips * scaleY) / scaleY;
             window.ResizeMode = ResizeMode.NoResize;
         }
         else
         {
             window.Height = window.expandedHeight;
             window.ResizeMode = window.expandedResizeMode;
+            window.SizeToContent = window.expandedSizeToContent;
         }
     }
 }

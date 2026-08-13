@@ -12,6 +12,102 @@
     <!-- fuerte con letras blancas, como en Mac OS 9. El azul claro con texto negro   -->
     <!-- queda para selecciones de contenido (listas, campos de texto).               -->
 
+    <!-- Cuando un menú no cabe en la pantalla, Mac OS 9 no lo recorta: pone un       -->
+    <!-- renglón blanco con un triángulo negro en el extremo que tenga más opciones,  -->
+    <!-- y detener el puntero encima desplaza renglón por renglón. El convertidor es  -->
+    <!-- el de WPF: decide cada flecha según el porcentaje desplazado (0 = arriba,    -->
+    <!-- 100 = abajo), así la flecha desaparece justo al llegar a su extremo.         -->
+    <MenuScrollingVisibilityConverter x:Key="MenuScrollingVisibilityConverter" />
+
+    <!-- Renglón de flecha: blanco liso como la hoja, sin bisel ni resalte, que es    -->
+    <!-- como lo dibujaba el sistema. Repite al ritmo del desplazamiento de menú      -->
+    <!-- original: parejo y renglón por renglón, sin acelerar. ClickMode Hover es lo  -->
+    <!-- que reproduce el gesto del original: detener el puntero encima desplaza sin  -->
+    <!-- presionar, y también sirve al arrastre con el botón sostenido desde el       -->
+    <!-- título; con el modo de clic había que soltar y presionar sobre la flecha.    -->
+    <Style x:Key="PlatinumMenuScrollButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClickMode" Value="Hover" />
+        <Setter Property="Delay" Value="150" />
+        <Setter Property="Interval" Value="120" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="{StaticResource ContentFaceBrush}"
+                            Padding="0,3">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Visor de hoja de menú: sin barras; solo el contenido y las dos flechas.      -->
+    <!-- Auto en la barra vertical no es estético —ninguna barra se dibuja— sino lo   -->
+    <!-- que alimenta ComputedVerticalScrollBarVisibility, la primera entrada del     -->
+    <!-- convertidor.                                                                 -->
+    <Style x:Key="PlatinumMenuScrollViewer" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="CanContentScroll" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollContentPresenter Grid.Row="1"
+                                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                                Margin="{TemplateBinding Padding}" />
+
+                        <RepeatButton Grid.Row="0"
+                                      Style="{StaticResource PlatinumMenuScrollButton}"
+                                      Command="{x:Static ScrollBar.LineUpCommand}"
+                                      CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                            <RepeatButton.Visibility>
+                                <MultiBinding Converter="{StaticResource MenuScrollingVisibilityConverter}"
+                                              ConverterParameter="0"
+                                              FallbackValue="Collapsed">
+                                    <Binding Path="ComputedVerticalScrollBarVisibility" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="VerticalOffset" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="ExtentHeight" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="ViewportHeight" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <controls:ArrowGlyph Direction="Up"
+                                                 Steps="4"
+                                                 Fill="{StaticResource TextBrush}" />
+                        </RepeatButton>
+
+                        <RepeatButton Grid.Row="2"
+                                      Style="{StaticResource PlatinumMenuScrollButton}"
+                                      Command="{x:Static ScrollBar.LineDownCommand}"
+                                      CommandTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                            <RepeatButton.Visibility>
+                                <MultiBinding Converter="{StaticResource MenuScrollingVisibilityConverter}"
+                                              ConverterParameter="100"
+                                              FallbackValue="Collapsed">
+                                    <Binding Path="ComputedVerticalScrollBarVisibility" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="VerticalOffset" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="ExtentHeight" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="ViewportHeight" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </MultiBinding>
+                            </RepeatButton.Visibility>
+                            <controls:ArrowGlyph Direction="Down"
+                                                 Steps="4"
+                                                 Fill="{StaticResource TextBrush}" />
+                        </RepeatButton>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Título de menú en la barra. -->
     <ControlTemplate x:Key="PlatinumTopLevelHeader" TargetType="{x:Type MenuItem}">
         <Grid SnapsToDevicePixels="True">
@@ -44,7 +140,9 @@
                     <Border Background="{StaticResource ContentFaceBrush}"
                             BorderBrush="{StaticResource TextBrush}"
                             BorderThickness="1">
-                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        <ScrollViewer Style="{StaticResource PlatinumMenuScrollViewer}">
+                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </ScrollViewer>
                     </Border>
                 </Grid>
             </Popup>
@@ -184,7 +282,9 @@
                                     Padding="0"
                                     MinWidth="400"
                                     IsTabStop="False">
-                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        <ScrollViewer Style="{StaticResource PlatinumMenuScrollViewer}">
+                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </ScrollViewer>
                     </ContentControl>
                 </Popup>
             </Grid>
@@ -224,7 +324,9 @@
                                     Padding="0"
                                     MinWidth="120"
                                     IsTabStop="False">
-                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        <ScrollViewer Style="{StaticResource PlatinumMenuScrollViewer}">
+                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </ScrollViewer>
                     </ContentControl>
                 </ControlTemplate>
             </Setter.Value>

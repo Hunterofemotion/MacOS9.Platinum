@@ -42,6 +42,27 @@ internal static class Program
         Console.WriteLine($"DPI del proceso: x{dpi.DpiScaleX} y{dpi.DpiScaleY}");
 
         SweepTemplates(app.Resources);
+
+        // El relojito se arma en memoria con el formato .cur; un encabezado mal
+        // medido truena aquí, en la construcción, no en la primera espera real.
+        // Sin ventana principal Wait siempre construye a factor 1, así que los
+        // factores de monitor escalado se ejercitan aparte, por reflexión: la
+        // aritmética del formato (stride de la máscara, tamaños, hotspot) depende
+        // del factor y una regresión ahí no la atraparía nadie más.
+        Try("cursor de espera", () =>
+        {
+            _ = PlatinumCursors.Wait;
+
+            var build = typeof(PlatinumCursors).GetMethod(
+                "Build",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+                ?? throw new InvalidOperationException("PlatinumCursors.Build ya no existe con ese nombre.");
+            for (var zoom = 1; zoom <= 3; zoom++)
+            {
+                _ = build.Invoke(null, [zoom]);
+            }
+        });
+
         RenderScenarios(dpi);
 
         Console.WriteLine(_failures == 0
@@ -285,12 +306,17 @@ internal static class Program
         Render("pestanas", dpi, Tabs());
         Render("menu", dpi, Bar());
         Render("desplegable", dpi, Combo());
+        Render("desplegable_editable", dpi, EditableCombo());
         Render("iconos", dpi, Icons());
+        Render("vista_iconos", dpi, IconGrid());
         Render("hoja", dpi, Sheet());
+        Render("divisor", dpi, Splitters());
+        Render("menu_flechas", dpi, MenuArrows());
 
         RenderWindow("ventana_angosta", dpi, 480);
         RenderWindow("ventana_ancha", dpi, 980);
         RenderWindow("ventana_enrollada", dpi, 480, collapsed: true);
+        RenderPalette("paleta", dpi);
     }
 
     private static FrameworkElement ConAnillo(double ancho, double alto = 26)
@@ -468,6 +494,125 @@ internal static class Program
         var b = new ComboBox { Width = 150, Items = { "Apagado" }, SelectedIndex = 0, IsEnabled = false, Margin = new Thickness(10, 0, 0, 0) };
         var c = new ComboBox { Width = 110, Items = { "Un elemento mucho más ancho que la caja" }, SelectedIndex = 0, Margin = new Thickness(10, 0, 0, 0) };
         return new StackPanel { Orientation = Orientation.Horizontal, Children = { a, b, c } };
+    }
+
+    // El combo editable cambia de anatomía completa: campo con pozo y tecla pegada.
+    private static FrameworkElement EditableCombo()
+    {
+        var a = new ComboBox { Width = 190, IsEditable = true, Items = { "Guadalajara", "Monterrey" }, Text = "Escriba o elija" };
+        var b = new ComboBox { Width = 150, IsEditable = true, IsEnabled = false, Text = "Apagado", Margin = new Thickness(10, 0, 0, 0) };
+        return new StackPanel { Orientation = Orientation.Horizontal, Children = { a, b } };
+    }
+
+    // La cuadrícula del Finder con una pieza elegida: el icono sombreado a su
+    // silueta y el rótulo con su bloque. Fuera de pantalla la lista no tiene foco,
+    // así que el bloque sale en el gris de selección inactiva; también eso queda
+    // vigilado.
+    private static FrameworkElement IconGrid()
+    {
+        var vista = new PlatinumIconView { Width = 330, Height = 170 };
+
+        (string llave, string texto)[] piezas =
+        [
+            ("IconHardDisk", "Macintosh HD"),
+            ("IconFolder", "Proyectos"),
+            ("IconDocument", "Informe anual"),
+            ("IconFloppy", "Respaldo"),
+            ("IconTrash", "Papelera"),
+            ("IconEnvelope", "Un nombre bastante más largo que su celda"),
+        ];
+
+        foreach (var (llave, texto) in piezas)
+        {
+            vista.Items.Add(new PlatinumIconViewItem
+            {
+                Icon = (ImageSource)Application.Current.Resources[llave],
+                Text = texto,
+            });
+        }
+
+        ((PlatinumIconViewItem)vista.Items[2]).IsSelected = true;
+        return vista;
+    }
+
+    // Vertical entre dos paneles y horizontal entre dos franjas, más el apagado.
+    private static FrameworkElement Splitters()
+    {
+        var cara = (Brush)Application.Current.Resources["ContentFaceBrush"];
+        var marco = (Brush)Application.Current.Resources["TextBrush"];
+
+        static Border Pane(Brush fondo, Brush borde) => new()
+        {
+            Background = fondo,
+            BorderBrush = borde,
+            BorderThickness = new Thickness(1),
+        };
+
+        var vertical = new Grid { Width = 240, Height = 90 };
+        vertical.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(90) });
+        vertical.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        vertical.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        vertical.Children.Add(Pane(cara, marco));
+        var divisorV = new GridSplitter { Width = 6 };
+        Grid.SetColumn(divisorV, 1);
+        vertical.Children.Add(divisorV);
+        var panelDerecho = Pane(cara, marco);
+        Grid.SetColumn(panelDerecho, 2);
+        vertical.Children.Add(panelDerecho);
+
+        var horizontal = new Grid { Width = 150, Height = 90, Margin = new Thickness(14, 0, 0, 0) };
+        horizontal.RowDefinitions.Add(new RowDefinition { Height = new GridLength(34) });
+        horizontal.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+        horizontal.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+        horizontal.Children.Add(Pane(cara, marco));
+        var divisorH = new GridSplitter { Height = 6, HorizontalAlignment = HorizontalAlignment.Stretch };
+        Grid.SetRow(divisorH, 1);
+        horizontal.Children.Add(divisorH);
+        var panelBajo = Pane(cara, marco);
+        Grid.SetRow(panelBajo, 2);
+        horizontal.Children.Add(panelBajo);
+
+        var apagado = new GridSplitter
+        {
+            Width = 6,
+            Height = 90,
+            IsEnabled = false,
+            Margin = new Thickness(14, 0, 0, 0),
+        };
+
+        return new StackPanel { Orientation = Orientation.Horizontal, Children = { vertical, horizontal, apagado } };
+    }
+
+    // La hoja de menú que no cabe: el visor recortado enseña la flecha inferior en
+    // su renglón blanco. La superior queda escondida porque el desplazamiento está
+    // en cero, y eso también es parte de lo que se comprueba.
+    private static FrameworkElement MenuArrows()
+    {
+        var renglones = new StackPanel();
+        for (var i = 1; i <= 10; i++)
+        {
+            renglones.Children.Add(new TextBlock
+            {
+                Text = $"  Opción {i}",
+                Margin = new Thickness(0, 3, 0, 3),
+            });
+        }
+
+        var visor = new ScrollViewer
+        {
+            Style = (Style)Application.Current.Resources["PlatinumMenuScrollViewer"],
+            Height = 120,
+            Width = 150,
+            Content = renglones,
+        };
+
+        return new Border
+        {
+            Background = (Brush)Application.Current.Resources["ContentFaceBrush"],
+            BorderBrush = (Brush)Application.Current.Resources["TextBrush"],
+            BorderThickness = new Thickness(1),
+            Child = visor,
+        };
     }
 
     private static FrameworkElement Medidor(double valor, LevelBandMode modo,
@@ -674,6 +819,41 @@ internal static class Program
 
             var root = (FrameworkElement)VisualTreeHelper.GetChild(w, 0);
             Save(name, root, dpi, new Size(width, height), exact: true);
+        });
+    }
+
+    // La paleta se renderiza con aspecto activo sin forzar nada: su atenuado pide
+    // que la dueña también esté de fondo, y sin dueña ese enlace no resuelve.
+    private static void RenderPalette(string name, DpiScale dpi)
+    {
+        Try($"render {name}", () =>
+        {
+            // Teclas de herramienta, no botones de diálogo: sin rótulo son celdas
+            // planas que se encienden al pasar, como en las paletas del original.
+            var herramientas = new WrapPanel { Margin = new Thickness(5), Width = 66 };
+            foreach (var llave in new[] { "IconMagnifier", "IconDocument", "IconTrash", "IconEnvelope" })
+            {
+                herramientas.Children.Add(new PlatinumToolButton
+                {
+                    Icon = (ImageSource)Application.Current.Resources[llave],
+                    IconSize = 16,
+                    Padding = new Thickness(6),
+                    Margin = new Thickness(2),
+                });
+            }
+
+            var w = new PlatinumPaletteWindow
+            {
+                Title = "Herramientas",
+                Width = 96,
+                Height = 130,
+                ShowInTaskbar = false,
+                Content = herramientas,
+            };
+            w.ApplyTemplate();
+
+            var root = (FrameworkElement)VisualTreeHelper.GetChild(w, 0);
+            Save(name, root, dpi, new Size(96, 130), exact: true);
         });
     }
 

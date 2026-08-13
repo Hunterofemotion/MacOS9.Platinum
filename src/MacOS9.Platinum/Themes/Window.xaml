@@ -280,4 +280,168 @@
          estilo implicito no se aplica a las derivadas. -->
     <Style TargetType="{x:Type controls:PlatinumAlert}"
            BasedOn="{StaticResource {x:Type controls:PlatinumWindow}}" />
+
+    <!-- Ventana de paleta: el windoid de Mac OS 9. Hereda del estilo de la ventana   -->
+    <!-- todo lo que no es dibujo (WindowChrome, tipografía, Display) y reemplaza el  -->
+    <!-- template: barra angosta rayada de lado a lado, cajas de 11 en vez de 15,     -->
+    <!-- canal de 4 en vez de 7. Sin barra de tareas: las paletas son muebles de su   -->
+    <!-- aplicación, no ventanas por derecho propio.                                  -->
+    <Style TargetType="{x:Type controls:PlatinumPaletteWindow}"
+           BasedOn="{StaticResource {x:Type controls:PlatinumWindow}}">
+        <Setter Property="TitleBarHeight" Value="14" />
+        <Setter Property="ShowGrowBox" Value="False" />
+        <Setter Property="ShowInTaskbar" Value="False" />
+        <!-- Sin marco de redimensionado: la paleta no lleva grow box, así que          -->
+        <!-- arrastrarle el borde no era gesto del original. Además arregla el tamaño   -->
+        <!-- cuando el consumidor la mide por su contenido: WPF suma el marco de        -->
+        <!-- redimensionado al calcular SizeToContent, y como WindowChrome ya extendió  -->
+        <!-- el área de cliente a toda la ventana, ese margen quedaba sin pintar —una   -->
+        <!-- banda negra a la derecha y abajo—. Sin marco la cuenta sale exacta.        -->
+        <Setter Property="ResizeMode" Value="NoResize" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumPaletteWindow}">
+                    <Border x:Name="PART_Root"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource TextBrush}">
+                        <Border BorderThickness="1,1,0,0"
+                                BorderBrush="{StaticResource BevelHighlightBrush}"
+                                Background="{TemplateBinding Background}">
+                        <Grid>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- La barra: rayas de lado a lado. A diferencia de la     -->
+                            <!-- ventana de documento no hay zoom box, y el título es   -->
+                            <!-- opcional: la mayoría de las paletas no lo llevan.      -->
+                            <Grid x:Name="TitleBar"
+                                  Height="{TemplateBinding TitleBarHeight}"
+                                  Background="{StaticResource TitleBarFaceBrush}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button x:Name="PART_CloseBox"
+                                        Grid.Column="0"
+                                        Width="11" Height="11"
+                                        Margin="5,0,2,0"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource PlatinumTitleBarBox}" />
+
+                                <Grid Grid.Column="1">
+                                    <controls:Pinstripe x:Name="Stripes"
+                                                        Margin="3,3"
+                                                        LightBrush="{x:Null}"
+                                                        DarkBrush="#FF8A8A8A" />
+
+                                    <!-- Título chico y sin negrita: en una barra de 14 -->
+                                    <!-- el rótulo de la ventana grande no cabe.        -->
+                                    <Border x:Name="TitleBack"
+                                            HorizontalAlignment="Center"
+                                            Background="{StaticResource TitleBarFaceBrush}"
+                                            Padding="5,0">
+                                        <TextBlock x:Name="TitleText"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="{TemplateBinding FontFamily}"
+                                                   FontSize="11"
+                                                   Foreground="{StaticResource TextBrush}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Text="{TemplateBinding Title}" />
+                                    </Border>
+                                </Grid>
+
+                                <Button x:Name="PART_CollapseBox"
+                                        Grid.Column="2"
+                                        Width="11" Height="11"
+                                        Margin="2,0,5,0"
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource PlatinumTitleBarBox}" />
+                            </Grid>
+
+                            <Border x:Name="ContentArea"
+                                    Grid.Row="1"
+                                    Margin="4,0,4,4"
+                                    BorderThickness="1"
+                                    BorderBrush="{StaticResource FrameShadowBrush}">
+                                <Border BorderThickness="1"
+                                        BorderBrush="{StaticResource TextBrush}">
+                                <Grid>
+                                    <ContentPresenter />
+
+                                    <Border x:Name="PART_GrowBox"
+                                            Width="16"
+                                            Height="16"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            BorderThickness="1,1,0,0"
+                                            BorderBrush="{StaticResource TextBrush}"
+                                            Background="{StaticResource GrowBoxHatchBrush}" />
+                                </Grid>
+                                </Border>
+                            </Border>
+                        </Grid>
+
+                            <!-- Canto de la ventana, el mismo espesor pintado de la   -->
+                            <!-- ventana de documento.                                 -->
+                            <Border Height="2"
+                                    VerticalAlignment="Bottom"
+                                    IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Offset="0.0" Color="#00444444" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource Gray11}" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+
+                            <Border Width="2"
+                                    HorizontalAlignment="Right"
+                                    IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0.0" Color="#00444444" />
+                                        <GradientStop Offset="1.0" Color="{StaticResource Gray11}" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                        </Grid>
+                        </Border>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Sin título no hay respaldo: si se queda, tapa un parche de -->
+                        <!-- rayas al centro sin nada que mostrar.                      -->
+                        <Trigger Property="Title" Value="">
+                            <Setter TargetName="TitleBack" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <!-- La paleta se apaga solo cuando la aplicación entera pasa   -->
+                        <!-- al fondo. La regla la calcula la propia ventana y la       -->
+                        <!-- publica en ShowsActive —la misma verdad que consultan sus  -->
+                        <!-- barras y listas—, así el chrome y el contenido cambian de  -->
+                        <!-- estado juntos, nunca a destiempo.                          -->
+                        <DataTrigger Binding="{Binding Path=(controls:PlatinumWindow.ShowsActive), RelativeSource={RelativeSource Self}}" Value="False">
+                            <Setter TargetName="Stripes" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="TitleText" Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="PART_CloseBox" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="PART_CollapseBox" Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+
+                        <Trigger Property="IsCollapsed" Value="True">
+                            <Setter TargetName="ContentArea" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
+                        <Trigger Property="ShowGrowBox" Value="False">
+                            <Setter TargetName="PART_GrowBox" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

@@ -1,0 +1,78 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Divisor de paneles: la banda gris realzada que separa dos zonas de una       -->
+    <!-- ventana, con el hoyuelo hundido al centro que traían los splitters de        -->
+    <!-- Platinum. El bisel corre por los cuatro lados en lugar de solo los dos       -->
+    <!-- largos porque GridSplitter no dice hacia dónde parte el espacio: los         -->
+    <!-- extremos cortos casi siempre mueren contra el marco de la ventana y ahí el   -->
+    <!-- bisel de más no se distingue.                                                -->
+    <!--                                                                              -->
+    <!-- El consumidor pone el ancho (vertical) o el alto (horizontal); seis          -->
+    <!-- unidades es la medida de casa: 1 de luz + 4 de cara + 1 de sombra.           -->
+    <Style x:Key="PlatinumGridSplitter" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="{StaticResource ControlFaceBrush}" />
+        <Setter Property="MinWidth" Value="6" />
+        <Setter Property="MinHeight" Value="6" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <!-- El anillo punteado de foco de WPF no existe en Platinum. -->
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Border x:Name="Face" Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Border x:Name="BevelLight"
+                                    BorderThickness="1,1,0,0"
+                                    BorderBrush="{StaticResource BevelHighlightBrush}"
+                                    IsHitTestVisible="False" />
+                            <Border x:Name="BevelDark"
+                                    BorderThickness="0,0,1,1"
+                                    BorderBrush="{StaticResource BevelShadowBrush}"
+                                    IsHitTestVisible="False" />
+
+                            <!-- Hoyuelo: sombra arriba-izquierda y luz abajo-derecha,  -->
+                            <!-- que es como se lee un hundido cuando la luz del tema   -->
+                            <!-- viene de arriba a la izquierda. Rectángulos alineados  -->
+                            <!-- y sin suavizado: una elipse de este tamaño se degrada  -->
+                            <!-- a manchas grises en escalas fraccionarias.             -->
+                            <Grid x:Name="Dimple"
+                                  Width="4" Height="4"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  IsHitTestVisible="False">
+                                <Rectangle Width="3" Height="3"
+                                           HorizontalAlignment="Right"
+                                           VerticalAlignment="Bottom"
+                                           Fill="{StaticResource BevelHighlightBrush}"
+                                           RenderOptions.EdgeMode="Aliased" />
+                                <Rectangle Width="3" Height="3"
+                                           HorizontalAlignment="Left"
+                                           VerticalAlignment="Top"
+                                           Fill="{StaticResource BevelShadowBrush}"
+                                           RenderOptions.EdgeMode="Aliased" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceDisabledBrush}" />
+                            <Setter TargetName="BevelLight" Property="BorderBrush" Value="Transparent" />
+                            <Setter TargetName="BevelDark" Property="BorderBrush" Value="Transparent" />
+                            <Setter TargetName="Dimple" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource PlatinumGridSplitter}" />
+
+</ResourceDictionary>

@@ -52,6 +52,13 @@
                     </Grid>
 
                     <ControlTemplate.Triggers>
+                        <!-- Sin rótulo, solo el icono: es la tecla de las paletas de   -->
+                        <!-- herramientas. El TextBlock vacío igual cobraba su renglón  -->
+                        <!-- y el icono quedaba flotando arriba de un hueco.            -->
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Label" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Face" Property="Background" Value="{StaticResource ControlFaceBrush}" />
                             <Setter TargetName="BevelLight" Property="BorderBrush" Value="{StaticResource BevelHighlightBrush}" />

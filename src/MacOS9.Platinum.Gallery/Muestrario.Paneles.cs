@@ -284,6 +284,20 @@ public partial class Muestrario
             Rotulo("Apagado", dos),
             Rotulo("Contenido de más", tres))));
 
+        // El combo del original: campo de captura con la tecla de la lista pegada.
+        var editable = new ComboBox { Width = 190, IsEditable = true };
+        foreach (string ciudad in new[] { "Guadalajara", "Monterrey", "Mérida", "Morelia" })
+        {
+            editable.Items.Add(ciudad);
+        }
+        editable.Text = "Escriba o elija";
+
+        var editableApagado = new ComboBox { Width = 150, IsEditable = true, IsEnabled = false, Text = "Apagado" };
+
+        todo.Children.Add(Bloque("Combo editable", Fila(
+            Rotulo("Editable", editable),
+            Rotulo("Apagado", editableApagado))));
+
         var deslizadores = Fila(
             Rotulo("Con marcas", new Slider { Width = 170, Value = 62, TickPlacement = System.Windows.Controls.Primitives.TickPlacement.BottomRight, TickFrequency = 10 }),
             Rotulo("Sin marcas", new Slider { Width = 170, Value = 30 }),
@@ -346,6 +360,32 @@ public partial class Muestrario
         riel.Items.Add(new PlatinumNavItem { Text = "Red", Icon = Pieza("base-r3c1", 32) });
 
         todo.Children.Add(Bloque("Riel de navegación", riel));
+
+        // La vista de iconos: cuadrícula del Finder con dos piezas ya elegidas para
+        // ver el icono sombreado y el rótulo resaltado. La marquesina hay que
+        // probarla en vivo: arrastre sobre el fondo blanco.
+        var iconos = new PlatinumIconView { Width = 420, Height = 200 };
+        foreach (var (pieza, rotulo) in new[]
+        {
+            ("base-r2c2", "Macintosh HD"),
+            ("hard-r1c2", "Disco externo"),
+            ("base-r1c1", "Proyectos"),
+            ("base-r1c3", "Informe anual"),
+            ("base-r1c4", "Notas de la reunión"),
+            ("base-r1c5", "Fotos del muelle"),
+            ("base-r2c1", "Respaldo"),
+            ("base-r2c3", "Instalador"),
+            ("arch-r1c1", "Sin título"),
+        })
+        {
+            iconos.Items.Add(new PlatinumIconViewItem { Text = rotulo, Icon = Pieza(pieza, 32) });
+        }
+        ((PlatinumIconViewItem)iconos.Items[3]).IsSelected = true;
+        ((PlatinumIconViewItem)iconos.Items[4]).IsSelected = true;
+
+        todo.Children.Add(Bloque("Vista de iconos", Columna(
+            iconos,
+            Nota("Arrastre sobre el fondo para la marquesina; Ctrl o Shift suman a lo elegido."))));
 
         return todo;
     }
@@ -566,6 +606,113 @@ public partial class Muestrario
             new Separator { Margin = new Thickness(0, 8, 0, 8) },
             new TextBlock { Text = "Abajo de la línea" })));
 
+        // El divisor reparte el espacio entre dos zonas; se prueba arrastrando la
+        // banda del hoyuelo.
+        var partido = new Grid { Width = 420, Height = 110 };
+        partido.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150), MinWidth = 70 });
+        partido.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        partido.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star), MinWidth = 70 });
+
+        var izquierda = new ListBox();
+        foreach (string x in new[] { "Bandeja", "Enviados", "Borradores" }) { izquierda.Items.Add(x); }
+        izquierda.SelectedIndex = 0;
+        partido.Children.Add(izquierda);
+
+        var divisor = new GridSplitter
+        {
+            Width = 6,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Stretch,
+            ResizeBehavior = GridResizeBehavior.PreviousAndNext,
+        };
+        Grid.SetColumn(divisor, 1);
+        partido.Children.Add(divisor);
+
+        var derecha = new TextBox
+        {
+            Text = "El panel de lectura toma lo que la lista le ceda.",
+            TextWrapping = TextWrapping.Wrap,
+            AcceptsReturn = true,
+            IsReadOnly = true,
+        };
+        Grid.SetColumn(derecha, 2);
+        partido.Children.Add(derecha);
+
+        todo.Children.Add(Bloque("Divisor de paneles", partido));
+
         return todo;
+    }
+
+    // ---- Ventanas ----------------------------------------------------------
+
+    private static UIElement PanelVentanas()
+    {
+        var todo = Columna();
+
+        todo.Children.Add(Nota(
+            "La paleta es la ventana de herramientas que flota sobre el documento: "
+            + "barra angosta toda rayada, close box chico y windowshade con la caja "
+            + "de la derecha. Tiene dueña, así que siempre queda encima del "
+            + "muestrario y se cierra con él."));
+
+        var abrir = new Button { Content = "Abrir paleta", Width = 130 };
+        abrir.Click += (remitente, _) => AbrirPaleta((Button)remitente);
+
+        var esperar = new Button { Content = "Cursor de espera (3 s)", Width = 170 };
+        esperar.Click += (_, _) =>
+        {
+            // El relojito de Mac OS 9 mientras «trabaja». Se quita solo: un cursor
+            // global olvidado deja la aplicación entera con cara de ocupada.
+            System.Windows.Input.Mouse.OverrideCursor = PlatinumCursors.Wait;
+            var reloj = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(3),
+            };
+            reloj.Tick += (_, _) =>
+            {
+                reloj.Stop();
+                System.Windows.Input.Mouse.OverrideCursor = null;
+            };
+            reloj.Start();
+        };
+
+        todo.Children.Add(Bloque("Piezas vivas", Fila(abrir, esperar)));
+
+        return todo;
+    }
+
+    private static void AbrirPaleta(Button origen)
+    {
+        // Teclas de herramienta sin rótulo: celdas planas que se encienden al
+        // pasar, como en las paletas del original.
+        var herramientas = new WrapPanel { Width = 66, Margin = new Thickness(5) };
+        foreach (string pieza in new[] { "dibujo-r1c2", "dibujo-r2c1", "base-r4c1", "arch-r3c2" })
+        {
+            herramientas.Children.Add(new PlatinumToolButton
+            {
+                Icon = Pieza(pieza, 16),
+                IconSize = 16,
+                Padding = new Thickness(6),
+                Margin = new Thickness(2),
+            });
+        }
+
+        var duena = Window.GetWindow(origen);
+        var paleta = new PlatinumPaletteWindow
+        {
+            Title = "Herramientas",
+            Owner = duena,
+            Content = herramientas,
+            SizeToContent = SizeToContent.WidthAndHeight,
+            WindowStartupLocation = WindowStartupLocation.Manual,
+        };
+
+        if (duena is not null)
+        {
+            paleta.Left = duena.Left + 40;
+            paleta.Top = duena.Top + 80;
+        }
+
+        paleta.Show();
     }
 }

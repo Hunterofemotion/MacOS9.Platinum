@@ -8,10 +8,18 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- Aire vertical propio. La marca mide 14 y el renglón de texto poco más, así   -->
+    <!-- que dos casillas apiladas quedaban pegadas, sin la franja de respiro que     -->
+    <!-- llevaban los grupos de opciones del original. Va como margen del control y   -->
+    <!-- no como relleno del contenedor para que cualquier consumidor lo herede sin   -->
+    <!-- medir nada; un valor local en el consumidor lo sustituye.                    -->
+    <Thickness x:Key="SelectionRowMargin" Left="0" Top="2" Right="0" Bottom="2" />
+
     <Style x:Key="PlatinumCheckBox" TargetType="{x:Type CheckBox}">
         <!-- Como en el resto del tema: Platinum no dibuja rectángulo punteado de     -->
         <!-- foco. Eran los únicos controles enfocables que lo conservaban.           -->
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Margin" Value="{StaticResource SelectionRowMargin}" />
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
         <Setter Property="FontWeight" Value="{StaticResource SystemFontWeight}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />
@@ -97,6 +105,7 @@
 
     <Style x:Key="PlatinumRadioButton" TargetType="{x:Type RadioButton}">
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Margin" Value="{StaticResource SelectionRowMargin}" />
         <Setter Property="FontFamily" Value="{StaticResource SystemFontFamily}" />
         <Setter Property="FontWeight" Value="{StaticResource SystemFontWeight}" />
         <Setter Property="FontSize" Value="{StaticResource SystemFontSize}" />

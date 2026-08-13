@@ -1,0 +1,151 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:MacOS9.Platinum.Controls">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Typography.xaml" />
+        <!-- Por el estilo de la barra embutida en el marco de la vista. -->
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ScrollBar.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Entrada de la vista de iconos: dibujo arriba, rótulo debajo. La selección es -->
+    <!-- la del Finder: el icono se oscurece —solo el dibujo, no su caja— y el rótulo -->
+    <!-- toma el bloque azul de selección de contenido.                               -->
+    <Style TargetType="{x:Type controls:PlatinumIconViewItem}">
+        <Setter Property="FontFamily" Value="{StaticResource ViewFontFamily}" />
+        <Setter Property="FontSize" Value="{StaticResource ViewFontSize}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Padding" Value="4,6,4,4" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumIconViewItem}">
+                    <StackPanel Margin="{TemplateBinding Padding}">
+                        <Grid Width="{TemplateBinding IconSize}"
+                              Height="{TemplateBinding IconSize}"
+                              HorizontalAlignment="Center">
+                            <Image x:Name="Glyph" Source="{TemplateBinding Icon}" />
+
+                            <!-- Sombreado de selección recortado a la silueta del     -->
+                            <!-- icono con su propia imagen como máscara: un velo      -->
+                            <!-- rectangular oscurecía también el fondo transparente y -->
+                            <!-- el icono elegido salía dentro de un cuadro gris.      -->
+                            <Border x:Name="Shade"
+                                    Background="{StaticResource TextBrush}"
+                                    Opacity="0.4"
+                                    Visibility="Collapsed">
+                                <Border.OpacityMask>
+                                    <!-- Uniform como el Image de al lado: el pincel   -->
+                                    <!-- estira por omisión, y con un icono no         -->
+                                    <!-- cuadrado la máscara dejaba de coincidir con   -->
+                                    <!-- el dibujo encajado.                           -->
+                                    <ImageBrush ImageSource="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Stretch="Uniform" />
+                                </Border.OpacityMask>
+                            </Border>
+                        </Grid>
+
+                        <!-- Una sola línea con elipsis: el Finder de la época          -->
+                        <!-- truncaba los nombres largos, no los partía en renglones.   -->
+                        <Border x:Name="LabelBack"
+                                HorizontalAlignment="Center"
+                                Margin="0,3,0,0"
+                                Padding="2,0">
+                            <TextBlock x:Name="Label"
+                                       Text="{TemplateBinding Text}"
+                                       TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" />
+                        </Border>
+                    </StackPanel>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Shade" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="LabelBack" Property="Background" Value="{StaticResource SelectionBrush}" />
+                        </Trigger>
+
+                        <!-- Sin foco el bloque del rótulo pasa a gris, como las demás  -->
+                        <!-- listas del tema; el icono conserva su sombra, que es lo    -->
+                        <!-- que hacía el Finder con las ventanas de fondo.             -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True" />
+                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="LabelBack" Property="Background" Value="{StaticResource SelectionInactiveBrush}" />
+                        </MultiTrigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Glyph" Property="Opacity" Value="0.4" />
+                            <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- La vista: pozo blanco con marco, cuadrícula que corre hacia abajo y la       -->
+    <!-- marquesina punteada por encima del visor. El ancho de celda fijo es lo que   -->
+    <!-- alinea las columnas; el alto lo pone cada renglón.                           -->
+    <Style TargetType="{x:Type controls:PlatinumIconView}">
+        <Setter Property="Background" Value="{StaticResource ContentFaceBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource TextBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="6" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel ItemWidth="76" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:PlatinumIconView}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid ClipToBounds="True">
+                            <ScrollViewer Padding="{TemplateBinding Padding}"
+                                          Focusable="False"
+                                          VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer.Resources>
+                                    <!-- Solo el filo izquierdo es de la barra: los     -->
+                                    <!-- otros tres los cierra el marco de la vista,    -->
+                                    <!-- como en el riel y en la lista de columnas.     -->
+                                    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource PlatinumScrollBar}">
+                                        <Setter Property="BorderThickness" Value="1,0,0,0" />
+                                    </Style>
+                                </ScrollViewer.Resources>
+                                <ItemsPresenter />
+                            </ScrollViewer>
+
+                            <!-- La marquesina vive fuera del visor para no desplazarse -->
+                            <!-- con el contenido; el código la posiciona en coordenadas -->
+                            <!-- de este lienzo. Punteado sin suavizar: la línea de      -->
+                            <!-- hormigas del Finder es de píxeles secos.                -->
+                            <Canvas x:Name="PART_MarqueeHost" IsHitTestVisible="False">
+                                <Rectangle x:Name="PART_Marquee"
+                                           Visibility="Collapsed"
+                                           Stroke="{StaticResource TextBrush}"
+                                           StrokeThickness="1"
+                                           StrokeDashArray="1 1"
+                                           RenderOptions.EdgeMode="Aliased"
+                                           SnapsToDevicePixels="True" />
+                            </Canvas>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

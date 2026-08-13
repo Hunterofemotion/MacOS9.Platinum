@@ -21,6 +21,7 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Menu.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Slider.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/GroupBox.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Splitter.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Expander.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/TreeView.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ProgressBar.xaml" />
@@ -28,6 +29,7 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/StatusBar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/ToolBar.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/NavRail.xaml" />
+        <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/IconView.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Led.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/LevelGauge.xaml" />
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Display.xaml" />

@@ -230,6 +230,44 @@
         <tr><td><code>PlatinumWindow</code></td><td>Chrome completo: barra de 24 px, marco de tres capas (filo negro, canal gris, filo interior), arrastre y redimensionado nativos vía <code>WindowChrome</code>, maximizado acotado al área de trabajo, windowshade</td></tr>
         <tr><td><code>Pinstripe</code></td><td>Rayado dibujado en píxeles físicos exactos; un mosaico en unidades lógicas se interpola y se ve lavado</td></tr>
       </table>
+      <p class="pend" style="margin:12px 0 0; font-size:11px">
+        Ventana de fondo: sin rayas, sin cajas y título en gris; además las barras de
+        desplazamiento del contenido se vacían y la selección de las listas pasa a
+        contorno. Es la señal de foco de Platinum: no hay cambio de color de fondo.
+      </p>
+    </div>
+  </div></div>
+
+  <!-- ============ PALETA Y CURSORES ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">PlatinumPaletteWindow · PlatinumCursors</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row" style="align-items:flex-start">
+        <div style="width:150px; border:1px solid #000; box-shadow:2px 2px 0 var(--gray9); background:var(--gray2)">
+          <div style="display:flex; align-items:center; gap:3px; padding:2px 4px; border-bottom:1px solid #000; background:linear-gradient(#fff,var(--gray2))">
+            <div class="tbox" style="width:9px; height:9px"></div>
+            <div class="stripes" style="flex:1; height:8px"></div>
+            <span style="font-size:10px">Herramientas</span>
+            <div class="stripes" style="flex:1; height:8px"></div>
+            <div class="tbox" style="width:9px; height:9px"></div>
+          </div>
+          <div style="margin:4px; border:1px solid var(--gray7); background:var(--gray2); padding:8px; display:grid; grid-template-columns:1fr 1fr; gap:6px; justify-items:center">
+            <span style="width:18px; height:18px; background:var(--gray4); border:1px solid var(--gray7)"></span>
+            <span style="width:18px; height:18px; background:var(--gray4); border:1px solid var(--gray7)"></span>
+            <span style="width:18px; height:18px; background:var(--gray4); border:1px solid var(--gray7)"></span>
+            <span style="width:18px; height:18px; background:var(--gray4); border:1px solid var(--gray7)"></span>
+          </div>
+        </div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumPaletteWindow</code></td><td>El windoid de las herramientas flotantes: barra angosta de 14 unidades toda rayada, close box y collapse box de 11, título opcional sin negrita, canal delgado. No se redimensiona ni tiene zoom —no llevaba grow box, y de paso eso hace que <code>SizeToContent</code> mida exacto: WPF suma el marco de redimensionado y, como <code>WindowChrome</code> ya extendió el cliente a toda la ventana, ese margen salía sin pintar—. No sale en la barra de tareas; con dueña (<code>Owner</code>) flota sobre el documento. Se apaga solo cuando la aplicación entera pasa al fondo —perder el foco frente a su documento no cuenta— y su contenido (barras, listas) sigue la misma regla vía <code>PlatinumWindow.ShowsActive</code>, la verdad heredable que cada ventana del tema publica con su propia regla de encendido</td></tr>
+        <tr><td><code>PlatinumCursors</code></td><td>El relojito de espera de Mac OS 9, dibujado píxel por píxel y empacado en memoria con el formato <code>.cur</code>; crece a píxel gordo entero en monitores de 150 % en adelante. Uso: <code>Mouse.OverrideCursor = PlatinumCursors.Wait</code> mientras dura la tarea, y de vuelta a <code>null</code> al terminar</td></tr>
+      </table>
     </div>
   </div></div>
 
@@ -250,7 +288,7 @@
       <table style="margin-top:16px">
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>PlatinumPushButton</code></td><td>Cuerpo físico: filo negro, bisel repartido por lado y sombra proyectada; al presionar baja sobre su propia sombra</td></tr>
-        <tr><td><code>DefaultRing</code></td><td>Contorno del botón por omisión, a 2 px equidistantes del filo negro, dibujado en píxeles físicos</td></tr>
+        <tr><td><code>DefaultRing</code></td><td>Contorno del botón por omisión, a 2 px equidistantes del filo negro, dibujado en píxeles físicos. Se pinta <em>fuera</em> del botón y no reserva espacio, como en Mac OS: el contenedor debe dejarle unas 3 unidades de holgura. Ojo con el <code>Padding</code> de un <code>ScrollViewer</code>, que queda fuera de su recorte —un botón pegado a esa orilla pierde el costado del anillo—; poner la holgura como margen del contenido lo resuelve</td></tr>
       </table>
     </div>
   </div></div>
@@ -282,6 +320,7 @@
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>PlatinumCheckBox</code></td><td>Cuadro levantado de 14 px con palomita contenida; estados marcado, vacío, indeterminado y deshabilitado</td></tr>
         <tr><td><code>PlatinumRadioButton</code></td><td>Mismo cuerpo en círculo; el bisel de un solo lado con radio dibuja las medias circunferencias de luz y sombra</td></tr>
+        <tr><td><code>SelectionRowMargin</code></td><td>Aire vertical de 2 unidades por lado que ambos traen de fábrica: apilados quedaban pegados, sin la franja de respiro de los grupos de opciones del original. Un margen local en el consumidor lo sustituye</td></tr>
       </table>
     </div>
   </div></div>
@@ -325,6 +364,8 @@
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>PlatinumComboBox</code></td><td>Mismo cuerpo físico del botón más línea separadora y par de flechas; al desplegarse el cuerpo se queda hundido</td></tr>
         <tr><td><code>PlatinumComboBoxItem</code></td><td>Renglón del menú con resalte azul claro y texto negro</td></tr>
+        <tr><td><code>IsEditable</code></td><td>Cambia la anatomía completa: campo de captura con pozo hundido y la tecla de la lista pegada a su derecha, como el campo de direcciones de los navegadores de la época</td></tr>
+        <tr><td><code>PlatinumComboBoxDropButton</code></td><td>La tecla cuadrada de la variante editable, con marco propio; se queda hundida mientras la hoja está abierta</td></tr>
       </table>
     </div>
   </div></div>
@@ -363,7 +404,9 @@
       </table>
       <p class="pend" style="margin:12px 0 0; font-size:11px">
         Las dos flechas van juntas al final del riel, no una en cada extremo: es la
-        disposición de Platinum con Smart Scrolling.
+        disposición de Platinum con Smart Scrolling. En una ventana de fondo la barra
+        se vacía por completo —canal plano, sin flechas ni thumb— y solo conserva el
+        marco negro, que es como el original distingue la ventana que no manda.
       </p>
     </div>
   </div></div>
@@ -426,8 +469,48 @@
       <table style="margin-top:16px">
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>PlatinumColumnHeader</code></td><td>Encabezado achatado con rótulo en 10 px, filo negro abajo y separador gris entre columnas; el encabezado de relleno de GridView se colapsa</td></tr>
-        <tr><td><code>PlatinumListViewItem</code></td><td>Renglón con divisor horizontal claro y resalte azul con texto negro; gris cuando la lista pierde el foco</td></tr>
+        <tr><td><code>PlatinumListViewItem</code></td><td>Renglón con divisor horizontal claro y resalte azul con texto negro; gris cuando la lista pierde el foco, y en ventana de fondo el relleno se apaga y queda solo un contorno del color del resalte</td></tr>
         <tr><td><code>PlatinumListView</code></td><td>Pozo hundido del campo de texto llevado a lista; franja gris tras los encabezados que rellena la esquina sobre la barra de desplazamiento</td></tr>
+      </table>
+    </div>
+  </div></div>
+
+  <!-- ============ VISTA DE ICONOS Y DIVISOR ============ -->
+  <div class="win"><div class="inner">
+    <div class="titlebar">
+      <div class="tbox"></div><div class="stripes"></div>
+      <div class="title">PlatinumIconView · GridSplitter</div>
+      <div class="stripes"></div><div class="tbox"></div><div class="tbox"></div>
+    </div>
+    <div class="body">
+      <div class="row" style="align-items:flex-start">
+        <div style="width:250px; background:#fff; border:1px solid #000; padding:10px; display:flex; gap:18px; font-size:10px">
+          <div style="text-align:center">
+            <div style="width:26px; height:26px; margin:0 auto; background:var(--gray4); border:2px solid #000"></div>
+            <div style="margin-top:3px">Proyectos</div>
+          </div>
+          <div style="text-align:center">
+            <div style="width:26px; height:26px; margin:0 auto; background:var(--gray8); border:2px solid #000"></div>
+            <div style="margin-top:3px; background:var(--accent); padding:0 2px">Informe anual</div>
+          </div>
+          <div style="text-align:center; position:relative">
+            <div style="width:26px; height:26px; margin:0 auto; background:var(--gray4); border:2px solid #000"></div>
+            <div style="margin-top:3px">Respaldo</div>
+            <div style="position:absolute; inset:-6px -8px; border:1px dashed var(--gray9)"></div>
+          </div>
+        </div>
+        <div style="width:120px; height:74px; display:flex">
+          <div style="flex:1; background:#fff; border:1px solid #000"></div>
+          <div style="width:6px; background:var(--gray2); border-top:1px solid #fff; border-left:1px solid #fff; border-right:1px solid var(--gray7); border-bottom:1px solid var(--gray7); position:relative">
+            <span style="position:absolute; top:50%; left:1px; width:3px; height:3px; background:var(--gray7); box-shadow:1px 1px 0 #fff"></span>
+          </div>
+          <div style="flex:1; background:#fff; border:1px solid #000"></div>
+        </div>
+      </div>
+      <table style="margin-top:16px">
+        <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
+        <tr><td><code>PlatinumIconView</code><br><code>PlatinumIconViewItem</code></td><td>La cuadrícula del Finder: icono con rótulo debajo en celdas de ancho fijo. La selección oscurece solo la silueta del dibujo —su propia imagen hace de máscara— y resalta el rótulo; arrastrar sobre el fondo dibuja la marquesina punteada, y Ctrl o Shift suman a lo elegido. Deriva de <code>ListBox</code>: selección múltiple y teclado de fábrica</td></tr>
+        <tr><td><code>PlatinumGridSplitter</code></td><td>Divisor de paneles: banda gris con bisel a los cuatro lados y el hoyuelo hundido al centro. Es el estilo implícito de <code>GridSplitter</code>; seis unidades es la medida de casa</td></tr>
       </table>
     </div>
   </div></div>
@@ -457,6 +540,7 @@
         <tr><td><code>PlatinumMenuItem</code></td><td>Cuatro roles; resalte azul fuerte con texto blanco (el único invertido del tema); palomita, gestos, submenús con flecha</td></tr>
         <tr><td><code>PlatinumContextMenu</code></td><td>Menú del clic derecho; sin él la hoja la ponía Windows alrededor de renglones Platinum</td></tr>
         <tr><td><code>PopupChrome.xaml</code></td><td>Hoja compartida (filo negro + sombra de 2 px): barra, submenú, menú contextual y tooltip</td></tr>
+        <tr><td><code>PlatinumMenuScrollViewer</code></td><td>Hoja más alta que la pantalla: renglón blanco con triángulo negro en el extremo que tenga más opciones, y desplazamiento renglón por renglón al mantener el puntero encima, como en el original</td></tr>
       </table>
     </div>
   </div></div>
@@ -480,7 +564,7 @@
       <table style="margin-top:16px">
         <tr><th style="width:180px">Elemento</th><th>Qué resuelve</th></tr>
         <tr><td><code>SliderThumbShape</code></td><td>Pentágono rasterizado a píxel físico (filo simétrico); horizontal y vertical, con marcas y estado deshabilitado</td></tr>
-        <tr><td><code>PlatinumProgressBar</code></td><td>Pozo blanco + relleno lavanda con realce; indeterminada con franjas diagonales; vertical por rotación; deshabilitada gris</td></tr>
+        <tr><td><code>PlatinumProgressBar</code></td><td>Pozo blanco + relleno lavanda con realce; indeterminada con el poste de barbero girando a saltos de ~2 unidades (se detiene apagada u oculta); vertical por rotación; deshabilitada gris</td></tr>
       </table>
     </div>
   </div></div>
@@ -728,6 +812,11 @@
         <tr><td><code>Themes/PasswordBox.xaml</code></td><td>Campo de contraseña</td></tr>
         <tr><td><code>Themes/LineGutter.xaml</code></td><td>Franja de números de renglón y el pozo que comparte con el texto</td></tr>
         <tr><td><code>Themes/Icons.xaml</code></td><td>Los diez íconos vectoriales del tema</td></tr>
+        <tr><td><code>Themes/Splitter.xaml</code></td><td>Divisor de paneles con su hoyuelo</td></tr>
+        <tr><td><code>Themes/IconView.xaml</code></td><td>Vista de iconos: la cuadrícula, sus entradas y la marquesina</td></tr>
+        <tr><td><code>Controls/PlatinumIconView.cs</code></td><td>Vista de iconos: contenedores y la selección por arrastre</td></tr>
+        <tr><td><code>Controls/PlatinumPaletteWindow.cs</code></td><td>Ventana de paleta (windoid)</td></tr>
+        <tr><td><code>Controls/PlatinumCursors.cs</code></td><td>El relojito de espera, dibujado y empacado como .cur en memoria</td></tr>
         <tr><td><code>Controls/TabShape.cs</code></td><td>Trapecio de la pestaña</td></tr>
         <tr><td><code>Controls/ArrowGlyph.cs</code></td><td>Triángulos de las flechas</td></tr>
         <tr><td><code>Controls/CheckerTexture.cs</code></td><td>Tablero del canal a píxel físico</td></tr>
@@ -746,11 +835,12 @@
       </p>
 
       <p class="pend" style="margin:14px 0 0; font-size:11px">
-        Pendientes conocidos: animación del barber pole indeterminado; variante editable
-        del popup menu (no existe en Mac OS 9, falta <code>PART_EditableTextBox</code>);
-        filo inferior de las pestañas cuando WPF las reparte en dos renglones; la primera
-        y la última marca del deslizador salen un píxel más largas porque
-        <code>TickBar</code> las dibuja así por diseño.
+        Pendientes conocidos: filo inferior de las pestañas cuando WPF las reparte en
+        dos renglones; la primera y la última marca del deslizador salen un píxel más
+        largas porque <code>TickBar</code> las dibuja así por diseño; el campo de
+        texto multilinea, la lista lisa y el árbol mostrarían doble filo contra su
+        marco el día que su contenido desborde (misma anatomía ya corregida en riel,
+        lista de columnas y vista de iconos).
         Nota de integración: la app consumidora debe apagar
         <code>UseAdornerForTextboxSelectionRendering</code> en su arranque para que la selección de texto se vea correcta.
       </p>

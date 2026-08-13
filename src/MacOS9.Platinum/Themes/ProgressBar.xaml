@@ -5,21 +5,6 @@
         <ResourceDictionary Source="/MacOS9.Platinum;component/Themes/Palette.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Franjas del estado indeterminado: diagonales lavanda, como el barber pole de -->
-    <!-- Mac OS 9. El degradado es absoluto y de paradas duras para que las bandas    -->
-    <!-- midan siempre lo mismo sin importar el ancho de la barra. Sin animación por  -->
-    <!-- ahora; queda anotado como pendiente.                                         -->
-    <LinearGradientBrush x:Key="ProgressStripesBrush"
-                         MappingMode="Absolute"
-                         StartPoint="0,0"
-                         EndPoint="12,12"
-                         SpreadMethod="Repeat">
-        <GradientStop Offset="0.0" Color="{StaticResource ThumbBlueColor}" />
-        <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueColor}" />
-        <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueDarkColor}" />
-        <GradientStop Offset="1.0" Color="{StaticResource ThumbBlueDarkColor}" />
-    </LinearGradientBrush>
-
     <!-- Barra de progreso: pozo blanco con filo negro y relleno lavanda con realce   -->
     <!-- superior, los mismos materiales del thumb del scrollbar.                     -->
     <Style x:Key="PlatinumProgressBar" TargetType="{x:Type ProgressBar}">
@@ -61,9 +46,30 @@
                                             BorderBrush="{StaticResource ScrollThumbHighlightBrush}" />
                                 </Border>
 
-                                <Border x:Name="Stripes"
-                                        Background="{StaticResource ProgressStripesBrush}"
-                                        Visibility="Collapsed" />
+                                <!-- Franjas del estado indeterminado: diagonales      -->
+                                <!-- lavanda, como el barber pole de Mac OS 9. El      -->
+                                <!-- degradado es absoluto y de paradas duras para que -->
+                                <!-- las bandas midan siempre lo mismo sin importar el -->
+                                <!-- ancho de la barra. Vive dentro de la plantilla y  -->
+                                <!-- no en los recursos porque se anima su transform:  -->
+                                <!-- un recurso compartido pondría a todas las barras  -->
+                                <!-- de la aplicación a moverse con un solo reloj.     -->
+                                <Border x:Name="Stripes" Visibility="Collapsed">
+                                    <Border.Background>
+                                        <LinearGradientBrush MappingMode="Absolute"
+                                                             StartPoint="0,0"
+                                                             EndPoint="12,12"
+                                                             SpreadMethod="Repeat">
+                                            <LinearGradientBrush.Transform>
+                                                <TranslateTransform />
+                                            </LinearGradientBrush.Transform>
+                                            <GradientStop Offset="0.0" Color="{StaticResource ThumbBlueColor}" />
+                                            <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueColor}" />
+                                            <GradientStop Offset="0.5" Color="{StaticResource ThumbBlueDarkColor}" />
+                                            <GradientStop Offset="1.0" Color="{StaticResource ThumbBlueDarkColor}" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
                             </Grid>
                         </Border>
                     </Grid>
@@ -73,6 +79,40 @@
                             <Setter TargetName="PART_Indicator" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="Stripes" Property="Visibility" Value="Visible" />
                         </Trigger>
+
+                        <!-- El poste gira solo si además está habilitada: apagada no  -->
+                        <!-- debe moverse, y el setter de deshabilitada cambia el      -->
+                        <!-- fondo por un gris compartido que no admite animación.     -->
+                        <!-- Corre 24 unidades por vuelta, que es el periodo exacto    -->
+                        <!-- del patrón bajo traslación horizontal (12·dx = 12²+12²).  -->
+                        <!-- A 15 cuadros por segundo avanza a saltos de ~2 unidades,  -->
+                        <!-- el paso tosco del original, y cuesta menos reloj que una  -->
+                        <!-- animación tersa.                                          -->
+                        <!-- IsVisible además de habilitada: una barra en una pestaña  -->
+                        <!-- oculta no debe gastar reloj, y en el render fuera de      -->
+                        <!-- pantalla de la sonda IsVisible nunca enciende, así que    -->
+                        <!-- las franjas se comparan siempre en su fase cero.          -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsIndeterminate" Value="True" />
+                                <Condition Property="IsEnabled" Value="True" />
+                                <Condition Property="IsVisible" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard x:Name="StripesScroll">
+                                    <Storyboard Timeline.DesiredFrameRate="15">
+                                        <DoubleAnimation Storyboard.TargetName="Stripes"
+                                                         Storyboard.TargetProperty="(Border.Background).(Brush.Transform).(TranslateTransform.X)"
+                                                         From="0" To="24"
+                                                         Duration="0:0:0.8"
+                                                         RepeatBehavior="Forever" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="StripesScroll" />
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
 
                         <!-- Vertical: se rota el interior. El indicador sigue         -->
                         <!-- midiendo su porcentaje sobre el eje horizontal del        -->
